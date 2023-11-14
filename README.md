@@ -3,6 +3,7 @@
 ```shell
 npm start
 ```
+or
 ```shell
 DEBUG=application:* npm start
 ```
