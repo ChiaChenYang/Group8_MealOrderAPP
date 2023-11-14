@@ -14,6 +14,7 @@ CREATE TABLE Consumers (
     ConsumerId INT AUTO_INCREMENT,
     UserCredentialId INT,
     DisplayName VARCHAR(16) NOT NULL,
+    Department VARCHAR(16) NOT NULL,
     JobTitle VARCHAR(16) NOT NULL,
     FactoryLocation VARCHAR(16) NOT NULL,
     Phone VARCHAR(16),
@@ -43,10 +44,12 @@ CREATE TABLE Restaurants (
     RestaurantPhone VARCHAR(16),
     RestaurantEmail VARCHAR(255),
     IsOpening BOOLEAN,
-    ServiceMethod ENUM(\'外帶\',\'內用\',\'外帶內用\'),
+    ServiceMethod ENUM('外帶','內用','外帶內用'),
     IsOrderAvailable BOOLEAN,
     IsTemporaryRestaurant BOOLEAN,
     Rating FLOAT(8),
+    StationStartDate DATETIME,
+    StationEndDate DATETIME,
     PRIMARY KEY (RestaurantId),
     FOREIGN KEY (OwnerId) REFERENCES Owners(OwnerId)
 );
@@ -54,7 +57,7 @@ CREATE TABLE Restaurants (
 CREATE TABLE RestaurantsOpenHours (
     OpenHoursId INT AUTO_INCREMENT,
     RestaurantId INT,
-    DayOfWeek ENUM(\'Monday\',\'Tuesday\',\'Wednesday\',\'Thursday\',\'Friday\',\'Saturday\',\'Sunday\',NOT NULL),
+    DayOfWeek ENUM('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
     StartTime TIME NOT NULL,
     EndTime TIME NOT NULL,
     PRIMARY KEY (OpenHoursId),
@@ -95,7 +98,7 @@ CREATE TABLE Menus (
 CREATE TABLE MenuHours (
     MenuHoursId INT AUTO_INCREMENT,
     MenuId INT,
-    DayOfWeek ENUM(\'Monday\',\'Tuesday\',\'Wednesday\',\'Thursday\',\'Friday\',\'Saturday\',\'Sunday\',NOT NULL),
+    DayOfWeek ENUM('Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'),
     StartTime TIME NOT NULL,
     EndTime TIME NOT NULL,
     PRIMARY KEY (MenuHoursId),
@@ -148,14 +151,101 @@ CREATE TABLE ItemTags (
 );
 
 CREATE TABLE ShoppingCarts (
-    CartId INT,
+    CartId INT AUTO_INCREMENT,
     ConsumerId INT,
     RestaurantId INT,
     CartNote VARCHAR(255),
-    ExpectedFinishedTime DATETIME,
-    ExpectedPickupTime DATETIME,
-    PickupMethod VARCHAR(16),
     PRIMARY KEY (CartId),
     FOREIGN KEY (ConsumerId) REFERENCES Consumers(ConsumerId),
     FOREIGN KEY (RestaurantId) REFERENCES Restaurants(RestaurantId)
 );
+
+CREATE TABLE CartItems (
+    CartItemId INT AUTO_INCREMENT,
+    ItemId INT,
+    CartId INT,
+    Quantity INT,
+    ItemNote VARCHAR(255),
+    PRIMARY KEY (CartItemId),
+    FOREIGN KEY (CartId) REFERENCES ShoppingCarts(CartId),
+    FOREIGN KEY (ItemId) REFERENCES MenuItems(ItemId)
+);
+
+CREATE TABLE Orders (
+    OrderId INT AUTO_INCREMENT,
+    CartId INT,
+    ConsumerId INT,
+    RestaurantId INT,
+    TotalPrice INT,
+    OrderedTime DATETIME,
+    OrderNote VARCHAR(255),
+    ExpectedFinishedTime DATETIME,
+    ExpectedPickupTime DATETIME,
+    ReceivedTime DATETIME,
+    FinishTime DATETIME,
+    CompleteTime DATETIME,
+    OrderStatus VARCHAR(16),
+    PaymentMethod VARCHAR(16),
+    PickupMethod VARCHAR(16),
+    Rating INT,
+    PRIMARY KEY (OrderId),
+    FOREIGN KEY (ConsumerId) REFERENCES Consumers(ConsumerId),
+    FOREIGN KEY (CartId) REFERENCES Carts(CartId),
+    FOREIGN KEY (RestaurantId) REFERENCES Restaurants(RestaurantId)
+);
+
+CREATE TABLE OrderItems (
+    OrderItemId INT AUTO_INCREMENT,
+    ItemId INT,
+    OrderId INT,
+    Quantity INT,
+    ItemNote VARCHAR(255),
+    PRIMARY KEY (OrderItemId),
+    FOREIGN KEY (ItemId) REFERENCES MenuItems(ItemId),
+    FOREIGN KEY (OrderId) REFERENCES Orders(OrderId)
+);
+
+CREATE TABLE ConsumerFavorites (
+    ConsumerId INT,
+    RestaurantId INT,
+    PRIMARY KEY (ConsumerId, RestaurantId),
+    FOREIGN KEY (ConsumerId) REFERENCES Consumers(ConsumerId),
+    FOREIGN KEY (RestaurantId) REFERENCES Restaurants(RestaurantId)
+);
+
+CREATE TABLE CombolItems (
+    ItemId INT,
+    ComboId INT,
+    PRIMARY KEY (ItemId, ComboId),
+    FOREIGN KEY (ItemId) REFERENCES MenuItems(ItemId),
+    FOREIGN KEY (CombolId) REFERENCES MenuItems(ItemId)
+);
+
+CREATE TABLE CustomizedOptions (
+    CustomizedOptionsId INT AUTO_INCREMENT,
+    ItemId INT,
+    MinSelection INT,
+    MaxSelection INT,
+    Explanation VARCHAR(255),
+    PRIMARY KEY (CustomizedOptionsId),
+    FOREIGN KEY (ItemId) REFERENCES MenuItems(ItemId)
+)
+
+CREATE TABLE SingleCustomize (
+    SingleCustomizeId INT AUTO_INCREMENT,
+    CustomizedOptionsId INT,
+    PriceChange INT,
+    Explanation VARCHAR(255),
+    PRIMARY KEY (SingleCustomizeId),
+    FOREIGN KEY (CustomizedOptionsId) REFERENCES CustomizedOptions(CustomizedOptionsId)
+)
+
+CREATE TABLE OrderItemCustomizedOptions (
+    OrderItemId INT,
+    CustomizedOptionsId INT,
+    SingleCustomizeId INT,
+    PRIMAEY KEY (OrderItemId, CustomizedOptionsId, SingleCustomizeId),
+    FOREIGN KEY (OrderItemId) OrderItems(OrderItemId),
+    FOREIGN KEY (CustomizedOptionsId) CustomizedOptions(CustomizedOptionsId),
+    FOREIGN KEY (SingleCustomizeId) SingleCustomize(SingleCustomizeId)
+)
