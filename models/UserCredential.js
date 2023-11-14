@@ -1,42 +1,55 @@
-var express = require('express');
-var mysql = require('mysql');
+const express = require('express');
+const { Sequelize, DataTypes } = require('sequelize');
+const CONFIG = require('../config.json')
 
-var conn = mysql.createConnection({
-    host: 'localhost',
-    user: process.env.DB_user,
-    password: process.env.DB_pass,
-    database: 'MealOrderDB'
+var exportedMethod = {}
+
+const sequelize = new Sequelize(CONFIG.db_name, CONFIG.db_user, CONFIG.db_password, {
+    host: CONFIG.db_host,
+    dialect: 'mysql',
 });
 
-conn.connect(function (err) {
-    if(err) console.error(err);
+const UserCredential = sequelize.define('UserCredential',{
+    CredentialId: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    UserName: {
+        type: DataTypes.STRING(16),
+        allowNull: false,
+        unique: true
+    },
+    HashedPassword: {
+        type: DataTypes.STRING(16),
+        allowNull: false
+    },
+    UserRole: {
+        type: DataTypes.ENUM('Consumer','Owner')
+    }
+}, {
+    tableName: 'UserCredentials',
+    createdAt: false,
+    updatedAt: false
 });
 
-var UserCredential = {};
-UserCredential.createUserCredential = function createUserCredential(newUser, callback){
-    var username = newUser.username;
-    var password = newUser.password;
-    var userrole = newUser.userrole;
-    sql = `INSERT INTO UserCredentials (UserName, HashedPassword, UserRole) VALUES ('${username}', '${password}', '${userrole}')`
-    conn.query(sql, function (err, result) {
-        if (err) {
-            console.error(`Error while proccessing sql query: ${sql}`);
-            callback(err);
-        }
-        console.log(`MYSQL query: ${sql}`);
+exportedMethod.createUserCredential = async (newUser) => {
+    const username = newUser.username;
+    const password = newUser.password;
+    const userrole = newUser.userrole;
+    const user = await UserCredential.create({
+        UserName: username,
+        HashedPassword: password,
+        UserRole: userrole
     });
-}
+    
+    console.log(user.toJSON());
+};
 
-UserCredential.getAllUserCredentials = function getAllUserCredentials(callback){
-    sql = `SELECT * FROM UserCredentials`
-    conn.query(sql, function(err, result, fields){
-        if (err) {
-            console.error(`Error while proccessing sql query: ${sql}`);
-            callback(err, NULL)
-        }
-        console.log(`MYSQL query: ${sql}`);
-        callback(err, result);
-    });
-}
+exportedMethod.getAllUserCredentials = async () => {
+    allusers = await UserCredential.findAll();
+    console.log("All users:", JSON.stringify(allusers, null, 2));
+    return allusers;
+};
 
-module.exports = UserCredential;
+module.exports = exportedMethod;

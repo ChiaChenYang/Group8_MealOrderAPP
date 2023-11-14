@@ -5,6 +5,6 @@ var router = express.Router();
 
 router.post('/signup', UserCredentialController.addUser);
 
-router.get('/showAllUsers', UserCredentialController.showAllUsers);
+router.get('/showall', UserCredentialController.showAllUsers);
 
 module.exports = router;
