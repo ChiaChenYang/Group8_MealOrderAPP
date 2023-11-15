@@ -113,14 +113,6 @@ CREATE TABLE MenuCategories (
     FOREIGN KEY (MenuId) references Menus(MenuId)
 );
 
-CREATE TABLE ItemMenuCategories (
-    ItemId INT,
-    MenuCategoryId INT,
-    PRIMARY KEY (ItemId, MenuCategoryId),
-    FOREIGN KEY (MenuCategoryId) references MenuCategories(MenuCategoryId),
-    FOREIGN KEY (ItemId) references MenuItems(ItemId)
-);
-
 CREATE TABLE MenuItems (
     ItemId INT AUTO_INCREMENT,
     MenuId INT,
@@ -134,6 +126,14 @@ CREATE TABLE MenuItems (
     AvailableQuantity INT,
     PRIMARY KEY (ItemId),
     FOREIGN KEY (MenuId) REFERENCES Menus(MenuId)
+);
+
+CREATE TABLE ItemMenuCategories (
+    ItemId INT,
+    MenuCategoryId INT,
+    PRIMARY KEY (ItemId, MenuCategoryId),
+    FOREIGN KEY (MenuCategoryId) references MenuCategories(MenuCategoryId),
+    FOREIGN KEY (ItemId) references MenuItems(ItemId)
 );
 
 CREATE TABLE Tags (
@@ -190,7 +190,7 @@ CREATE TABLE Orders (
     Rating INT,
     PRIMARY KEY (OrderId),
     FOREIGN KEY (ConsumerId) REFERENCES Consumers(ConsumerId),
-    FOREIGN KEY (CartId) REFERENCES Carts(CartId),
+    FOREIGN KEY (CartId) REFERENCES ShoppingCarts(CartId),
     FOREIGN KEY (RestaurantId) REFERENCES Restaurants(RestaurantId)
 );
 
@@ -218,7 +218,7 @@ CREATE TABLE CombolItems (
     ComboId INT,
     PRIMARY KEY (ItemId, ComboId),
     FOREIGN KEY (ItemId) REFERENCES MenuItems(ItemId),
-    FOREIGN KEY (CombolId) REFERENCES MenuItems(ItemId)
+    FOREIGN KEY (ComboId) REFERENCES MenuItems(ItemId)
 );
 
 CREATE TABLE CustomizedOptions (
@@ -229,7 +229,7 @@ CREATE TABLE CustomizedOptions (
     Explanation VARCHAR(255),
     PRIMARY KEY (CustomizedOptionsId),
     FOREIGN KEY (ItemId) REFERENCES MenuItems(ItemId)
-)
+);
 
 CREATE TABLE SingleCustomize (
     SingleCustomizeId INT AUTO_INCREMENT,
@@ -238,14 +238,14 @@ CREATE TABLE SingleCustomize (
     Explanation VARCHAR(255),
     PRIMARY KEY (SingleCustomizeId),
     FOREIGN KEY (CustomizedOptionsId) REFERENCES CustomizedOptions(CustomizedOptionsId)
-)
+);
 
 CREATE TABLE OrderItemCustomizedOptions (
     OrderItemId INT,
     CustomizedOptionsId INT,
     SingleCustomizeId INT,
-    PRIMAEY KEY (OrderItemId, CustomizedOptionsId, SingleCustomizeId),
-    FOREIGN KEY (OrderItemId) OrderItems(OrderItemId),
-    FOREIGN KEY (CustomizedOptionsId) CustomizedOptions(CustomizedOptionsId),
-    FOREIGN KEY (SingleCustomizeId) SingleCustomize(SingleCustomizeId)
-)
+    PRIMARY KEY (OrderItemId, CustomizedOptionsId, SingleCustomizeId),
+    FOREIGN KEY (OrderItemId) REFERENCES OrderItems(OrderItemId),
+    FOREIGN KEY (CustomizedOptionsId) REFERENCES CustomizedOptions(CustomizedOptionsId),
+    FOREIGN KEY (SingleCustomizeId) REFERENCES SingleCustomize(SingleCustomizeId)
+);

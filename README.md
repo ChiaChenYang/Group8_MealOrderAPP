@@ -1,4 +1,13 @@
 # Meal Order App Backend
+## Requirement
+Set up the database by the following command
+```shell
+mysql -u <your MYSQL user name> -p < setup_command.sql
+```
+Install the dependency
+```shell
+npm install
+```
 ## Execution
 ```shell
 npm start
@@ -18,5 +27,3 @@ DEBUG=application:* npm start
 [http://localhost:3000/signup.html](http://localhost:3000/signup.html)
 ### show all users
 [http://localhost:3000/users/showall](http://localhost:3000/users/showall)
-## TODO
-Check DB Setup Command
