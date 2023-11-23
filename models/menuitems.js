@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         itemImage: {
             // 品項圖片
             type: DataTypes.BLOB('long'), 
-            allowNull: false, 
+            allowNull: true, 
         },
         descriptionText: {
             // 品項描述
@@ -36,17 +36,17 @@ module.exports = (sequelize, DataTypes) => {
         calories: {
             // 品項熱量
             type: DataTypes.INTEGER, 
-            allowNull: false, 
+            allowNull: true, 
         },
         prepareTime: {
             // 品項準備時間
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         },
         price: {
             // 品項價格
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         },
         isAvailable: {
             // 是否可售
@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
         availableQuantity: {
             // 可售數量
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         }
 
         
