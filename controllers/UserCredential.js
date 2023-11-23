@@ -1,7 +1,6 @@
 const express = require('express');
-const mysql = require('mysql');
 const asyncHandler = require("express-async-handler");
-const UserCredentialService = require('../services/UserCredentialService')
+const UserCredentialService = require('../services/UserCredentialService');
 
 exports.addUser = asyncHandler(async (req, res, next) => {
     const newUser = req.body;

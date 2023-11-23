@@ -6,12 +6,13 @@ const logger = require('morgan');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/Users');
+const ordersRouter = require('./routes/Orders');
 
 const db = require('./models');
 
 const app = express();
 
-db.sequelize.sync({ alter: false });
+db.sequelize.sync({ alter: true });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,6 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/orders', ordersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

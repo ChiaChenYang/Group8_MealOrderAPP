@@ -1,5 +1,5 @@
 var express = require('express');
-var UserCredentialController = require('../controllers/UserCredential')
+var UserCredentialController = require('../controllers/UserCredential');
 
 var router = express.Router();
 

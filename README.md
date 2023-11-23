@@ -1,9 +1,5 @@
 # Meal Order App Backend
 ## Requirement
-Set up the database by the following command
-```shell
-mysql -u <your MYSQL user name> -p < setup_command.sql
-```
 Install the dependency
 ```shell
 npm install
