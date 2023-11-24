@@ -10,12 +10,14 @@ INSERT INTO orders (totalPrice, orderTime, status, paymentMethod, pickupMethod) 
 
 UPDATE orders Set restaurantId=1;
 
+INSERT INTO menus (restaurantId, menuName, menuTime) VALUES (1, '中午菜單', '午段');
+
 INSERT INTO menuitems (menuId, itemName, prepareTime, price, availableQuantity) VALUES (1, '大麥克', 5, 50, 26);
 
 INSERT INTO menuitems (menuId, itemName, prepareTime, price, availableQuantity) VALUES (1, '雙層牛肉吉士堡', 8, 60, 13);
 
-INSERT INTO orderitems (itemId, orderId, orderQuantity, orderItemNote) VALUES (1, 2, 1, '小辣')
+INSERT INTO orderitems (itemId, orderId, orderQuantity, orderItemNote) VALUES (2, 2, 1, '小辣');
 
-INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (2, 2, 2)
+INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (3, 2, 2);
 
-INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (2, 3, 1)
+INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (3, 3, 1);

@@ -38,10 +38,12 @@ exports.getOrdersWithStatus = async (rid, s) => {
 
             var all_items = []
             for (let j=0; j < num_items; j++){
+                console.log(restaurant.orders[i].menuitems[j]);
+                console.log(restaurant.orders[i].menuitems[j].orderQuantity);
                 all_items.push({
                     itemName: restaurant.orders[i].menuitems[j].itemName,
-                    number: restaurant.orders[i].menuitems[j].orderQuantity,
-                    remark: restaurant.orders[i].menuitems[j].orderItemNote
+                    number: restaurant.orders[i].menuitems[j].orderitems.orderQuantity,
+                    remark: restaurant.orders[i].menuitems[j].orderitems.orderItemNote
                 });
             }
 
