@@ -12,7 +12,12 @@ export default function MenuManagementDrawer() {
 	const theme = useTheme();
 	const pathname = usePathname();
 	const pageName = pathname.split('/').slice(-1)[0];
-	const pageNames = ['overview', 'menus', 'items-control'];
+	const pageNames = [
+		'incoming-orders',
+		'processing-orders',
+		'waiting-orders',
+		'completed-orders',
+	];
 	const getButtonVariant = (index: number) =>
 		pageName === pageNames[index] ? 'contained' : 'text';
 	return (
@@ -46,18 +51,18 @@ export default function MenuManagementDrawer() {
 			<Box className="my-3 flex items-center justify-center">
 				<InsertChartOutlined sx={{ fontSize: 40, mr: 1 }} />
 				<Typography variant="h4" fontWeight="bold" align="center">
-					菜單管理
+					訂單管理
 				</Typography>
 			</Box>
 
 			<Box className="mb-[200px] flex h-full flex-col justify-center">
 				<List>
-					{['概覽', '菜單', '品項控管'].map((text, index) => (
+					{['新訂單', '進行中', '等待取餐', '已完成'].map((text, index) => (
 						<ListItem key={text} disablePadding className="my-2 flex-1">
 							<Box className="w-full" sx={{ padding: theme.spacing(2) }}>
 								<Button
 									className="rounded-2xl px-2 py-3 text-2xl"
-									href={`/menus-management/${pageNames[index]}`}
+									href={`/orders-management/${pageNames[index]}`}
 									variant={getButtonVariant(index)}
 									fullWidth
 									sx={{
