@@ -59,3 +59,16 @@ exports.getOrdersWithStatus = async (rid, s) => {
         return all_orders;
     }
 };
+
+exports.updateOrderStatus = async (order_id, old_status, new_status) => {
+    const order = await orders.findByPk(order_id);
+    if (order === null){
+        throw new Error(`Error: Order with id ${order_id} does not exist`);
+    }
+    else if (order.status != old_status){
+        throw new Error(`Error: The order with id ${order_id} is in ${order.status} state! (expected ${old_status})`);
+    }
+    else{
+        await order.update({ status: new_status });
+    }
+};
