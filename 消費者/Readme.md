@@ -9,7 +9,7 @@ and
 cd backend
 npm install
 ```
-```
+
 ## Execution
 ```shell
 cd frontend
