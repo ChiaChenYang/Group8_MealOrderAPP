@@ -21,3 +21,7 @@ INSERT INTO orderitems (itemId, orderId, orderQuantity, orderItemNote) VALUES (2
 INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (3, 2, 2);
 
 INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (3, 3, 1);
+
+INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (3, 1, 1);
+
+UPDATE orders Set expectedFinishedTime=ADDTIME(orderTime, '0:20:0');

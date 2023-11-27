@@ -82,7 +82,7 @@ exports.delayOrder = async (order_id, delay_time) => {
         throw new Error(`Error: The expected finish time of order with id ${order_id} was not set!`);
     }
     else{
-        new_expected_time = order.expectedFinishedTime + delay_time;
+        new_expected_time = sequelize.fn('ADDTIME', orders.expectedFinishedTime, delay_time*60);
         await order.update({ expectedFinishedTime: new_expected_time });
     }
 };
@@ -96,7 +96,7 @@ exports.getSingleOrder = async (order_id) => {
             }
         }],
         order: [
-            [orders, 'orderTime', 'DESC']
+            ['orderTime', 'DESC']
         ]
     });
     if (order === null){
@@ -117,7 +117,7 @@ exports.getSingleOrder = async (order_id) => {
         for (let i = 0; i < items_number; i++){
             return_order.orderItems.push({
                 itemName: order.menuitems[i].itemName,
-                number: order.menuitems[j].orderitems.orderQuantity,
+                number: order.menuitems[i].orderitems.orderQuantity,
             });
         }
 
@@ -142,7 +142,7 @@ exports.getHistoryOrders = async (rid) => {
             status: 'completed'
         },
         order: [
-            [orderTime, 'DESC']
+            ['orderTime', 'DESC']
         ]
     });
 

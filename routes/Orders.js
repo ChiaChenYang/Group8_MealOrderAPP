@@ -19,7 +19,7 @@ router.put('/:id/complete', OrderController.completeOrder);
 
 router.put('/:id/reject', OrderController.rejectOrder);
 
-router.put('/:id/delay', OrderController.delayOrder);
+router.put('/delay', OrderController.delayOrder);
 
 router.get('/:id/get/single', OrderController.getSingleOrder);
 

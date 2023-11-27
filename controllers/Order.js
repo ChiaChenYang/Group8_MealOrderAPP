@@ -52,8 +52,8 @@ exports.rejectOrder = asyncHandler(async (req, res, next) => {
 
 exports.delayOrder = asyncHandler(async (req, res, next) => {
     const delayed_order = req.body;
-    const order_id = delayed_order.orderId;
-    const delay_time = delayed_order.delayTime;
+    const order_id = parseInt(delayed_order.orderId);
+    const delay_time = parseInt(delayed_order.delayTime);
     await OrderService.delayOrder(order_id, delay_time);
     res.status(200).end();
 });
