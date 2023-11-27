@@ -93,11 +93,13 @@ module.exports = (sequelize, DataTypes) => {
         },
         orderRating: {
             // 評價
-            type: DataTypes.FLOAT,
+            type: DataTypes.INTEGER,
             allowNull: true,
         },
-        
-
+        comment: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        }
     }, {
         timestamps: false, // 禁用 createdAt 和 updatedAt 欄位
 

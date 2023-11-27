@@ -49,3 +49,23 @@ exports.rejectOrder = asyncHandler(async (req, res, next) => {
     await OrderService.updateOrderStatus(order_id, 'incoming', 'rejected');
     res.status(200).end();
 });
+
+exports.delayOrder = asyncHandler(async (req, res, next) => {
+    const delayed_order = req.body;
+    const order_id = delayed_order.orderId;
+    const delay_time = delayed_order.delayTime;
+    await OrderService.delayOrder(order_id, delay_time);
+    res.status(200).end();
+});
+
+exports.getSingleOrder = asyncHandler(async (req, res, next) => {
+    const order_id = parseInt(req.params.id);
+    retrieved_order = await OrderService.getSingleOrder(order_id);
+    res.json(retrieved_order);
+});
+
+exports.getHistoryOrders = asyncHandler(async (req, res, next) => {
+    const restaurant_id = parseInt(req.params.id);
+    retrieved_orders = await OrderService.getHistoryOrders(restaurant_id);
+    res.json(retrieved_orders);
+});
