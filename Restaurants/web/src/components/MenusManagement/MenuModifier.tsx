@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
+import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Button, TextField, Box } from '@mui/material';
+import { ButtonBase, Button, TextField, Box, Snackbar, Alert } from '@mui/material';
 import {
 	Accordion,
 	AccordionSummary,
@@ -13,17 +14,38 @@ import {
 import { useTheme } from '@mui/material/styles';
 
 import SingleItem from '@/components/MenusManagement/SingleItem';
-import type { ItemMenuProps, MenuModifierProps } from '@/lib/types';
+import type { CategoryData, ItemMenuProps, MenuModifierProps } from '@/lib/types';
 
 export default function MenuModifier({ setMenuList, selectedMenu }: MenuModifierProps) {
 	const [menuData, setMenuData] = useState(selectedMenu);
 	const theme = useTheme();
 	const [expanded, setExpanded] = useState<string | false>(false);
 
+	const [isError, setIsError] = useState(false);
+	const [errorMessage, setErrorMessage] = useState('');
+
 	const handleAccordionChange =
 		(panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
 			setExpanded(isExpanded ? panel : false);
 		};
+
+	const handleAddCategory = (newCategory: CategoryData) => {
+		const updatedCategories = [...menuData.categories, newCategory];
+		setMenuData({ ...menuData, categories: updatedCategories });
+	};
+
+	const handleAddItem = (categoryId: number, newItem: ItemMenuProps) => {
+		const updatedCategories = menuData.categories?.map((category) => {
+			if (category.categoryId === categoryId) {
+				return {
+					...category,
+					items: [...category.items, newItem],
+				};
+			}
+			return category;
+		});
+		setMenuData({ ...menuData, categories: updatedCategories });
+	};
 
 	const handleDeleteCategory = (categoryId: number) => {
 		const updatedCategories = menuData.categories?.filter(
@@ -38,6 +60,21 @@ export default function MenuModifier({ setMenuList, selectedMenu }: MenuModifier
 				return {
 					...category,
 					items: category.items.filter((item) => item.id !== id),
+				};
+			}
+			return category;
+		});
+		setMenuData({ ...menuData, categories: updatedCategories });
+	};
+
+	const handleCategoryNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = event.target;
+		const categoryId = parseInt(name);
+		const updatedCategories = menuData.categories?.map((category) => {
+			if (category.categoryId === categoryId) {
+				return {
+					...category,
+					categoryName: value,
 				};
 			}
 			return category;
@@ -65,13 +102,46 @@ export default function MenuModifier({ setMenuList, selectedMenu }: MenuModifier
 
 	const handleSave = () => {
 		if (!menuData.menuName) {
-			alert('菜單名稱不能為空');
+			setErrorMessage('菜單名稱不能為空');
+			setIsError(true);
 			return;
 		}
 
-		setMenuList((prevMenuList) =>
-			prevMenuList.map((menu) => (menu.menuId === menuData.menuId ? menuData : menu)),
-		);
+		const categories = menuData.categories;
+		categories.forEach((category) => {
+			if (category.categoryName === '') {
+				setErrorMessage('類別名稱不能為空');
+				setIsError(true);
+			}
+			category.items.forEach((item) => {
+				if (item.itemName === '') {
+					setErrorMessage(`${category.categoryName} 類別中，品項名稱不能為空`);
+					setIsError(true);
+				}
+			});
+		});
+		// Posting to Backend
+	};
+
+	const createNewCategory = () => {
+		const newCategory: CategoryData = {
+			categoryId: Math.floor(Math.random() * 100000000),
+			categoryName: '',
+			items: [],
+		};
+		handleAddCategory(newCategory);
+	};
+
+	const createNewItem = (categoryId: number) => {
+		const newItem: ItemMenuProps = {
+			id: Math.floor(Math.random() * 100000000),
+			itemName: '請輸入品項名稱',
+			itemDescription: '',
+			itemPrice: 0,
+			itemCalories: 0,
+			itemTags: [],
+		};
+		handleAddItem(categoryId, newItem);
 	};
 
 	const menuTypes = ['預購', '非預購'];
@@ -179,9 +249,17 @@ export default function MenuModifier({ setMenuList, selectedMenu }: MenuModifier
 									alignItems: 'center',
 								}}
 							>
-								<Typography sx={{ flexShrink: 0 }}>
-									{category.categoryName}
-								</Typography>
+								<TextField
+									id="category-name"
+									name={category.categoryId.toString()}
+									label="類別名稱"
+									type="text"
+									variant="standard"
+									value={category.categoryName || ''}
+									onChange={handleCategoryNameChange}
+									required
+								/>
+
 								<Box sx={{ display: 'flex', alignItems: 'center' }}>
 									<Typography
 										sx={{ color: 'text.secondary', marginRight: '16px' }}
@@ -238,9 +316,28 @@ export default function MenuModifier({ setMenuList, selectedMenu }: MenuModifier
 									</AccordionDetails>
 								</Accordion>
 							))}
+							<Box className="mb-[10px] flex w-full border shadow">
+								<ButtonBase
+									className="w-full"
+									onClick={() => createNewItem(category.categoryId)}
+								>
+									<Box className="my-2 flex w-full justify-center">
+										<Typography className="text-slate-500">新增品項</Typography>
+										<AddIcon color="disabled" />
+									</Box>
+								</ButtonBase>
+							</Box>
 						</AccordionDetails>
 					</Accordion>
 				))}
+				<Box className="mb-[10px] flex w-[90%] border shadow">
+					<ButtonBase className="w-full" onClick={() => createNewCategory()}>
+						<Box className="my-2 flex w-full justify-center">
+							<Typography className="text-slate-500">新增類別</Typography>
+							<AddIcon color="disabled" />
+						</Box>
+					</ButtonBase>
+				</Box>
 			</Box>
 
 			<Box sx={{ position: 'fixed', bottom: 16, right: 16 }}>
@@ -258,6 +355,11 @@ export default function MenuModifier({ setMenuList, selectedMenu }: MenuModifier
 					儲存
 				</Button>
 			</Box>
+			<Snackbar open={isError} autoHideDuration={6000} onClose={() => setIsError(false)}>
+				<Alert onClose={() => setIsError(false)} severity="error" sx={{ width: '100%' }}>
+					{errorMessage}
+				</Alert>
+			</Snackbar>
 		</Box>
 	);
 }

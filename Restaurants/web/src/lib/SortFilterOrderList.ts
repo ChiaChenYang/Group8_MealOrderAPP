@@ -5,12 +5,22 @@ import type {
 	CompletedOrderList,
 	WaitingOrderType,
 	CompletedOrderType,
+	HistoryOrderList,
+	HistoryOrderType,
 } from './types';
 
-type AllOrderList = IncomingOrderList | ProcessingOrderList | WaitingOrderList | CompletedOrderList;
+type AllOrderList =
+	| IncomingOrderList
+	| ProcessingOrderList
+	| WaitingOrderList
+	| CompletedOrderList
+	| HistoryOrderList;
 
 function getFinishTime(order: WaitingOrderType | CompletedOrderType) {
 	return order.finishTime;
+}
+function getRating(order: HistoryOrderType) {
+	return order.rating;
 }
 
 export default function SortFilterOrderList(
@@ -42,6 +52,22 @@ export default function SortFilterOrderList(
 				return orderA.orderId - orderB.orderId;
 			} else {
 				return finishTimeA - finishTimeB;
+			}
+		} else if (sortBy == 'ratingHigh') {
+			const ratingA = getRating(orderA as HistoryOrderType);
+			const ratingB = getRating(orderB as HistoryOrderType);
+			if (ratingA == ratingB) {
+				return orderA.orderId - orderB.orderId;
+			} else {
+				return -(ratingA - ratingB);
+			}
+		} else if (sortBy == 'ratingLow') {
+			const ratingA = getRating(orderA as HistoryOrderType);
+			const ratingB = getRating(orderB as HistoryOrderType);
+			if (ratingA == ratingB) {
+				return orderA.orderId - orderB.orderId;
+			} else {
+				return ratingA - ratingB;
 			}
 		} else {
 			alert('Sorting Error!');

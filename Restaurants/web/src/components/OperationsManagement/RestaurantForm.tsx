@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { Button } from '@mui/material';
 import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
@@ -16,6 +17,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 import type dayjs from 'dayjs';
 
+import { LocationMapType } from '@/lib/types';
 import type {
 	RestaurantFormType,
 	RestaruantGroups,
@@ -29,7 +31,8 @@ const sampleRestaurant: RestaurantFormType = {
 	restaurantGroup: '流動櫃',
 	restaurantType: '中式',
 	telephoneNumber: '0912345678',
-	factoryLocation: '新竹',
+	factoryArea: '新竹',
+	factoryLocation: '晶圓二廠',
 	restaurantLocation: '十三廠一樓 23 櫃',
 	latestNews: ['白飯買一送一', '周年慶'],
 	isOpening: true,
@@ -47,19 +50,59 @@ const sampleRestaurant: RestaurantFormType = {
 	],
 	prepareTime: 10,
 };
-
-const sampleTypes: RestaruantTypes = ['中式', '日式', '甜點'];
+const sampleTypes: RestaruantTypes = [
+	'健康',
+	'甜點',
+	'飲品',
+	'中式',
+	'日式',
+	'韓式',
+	'義式',
+	'美式',
+	'泰式',
+];
 const sampleGroups: RestaruantGroups = ['固定櫃', '流動櫃'];
-const sampleLocations: RestaurantLocations = ['新竹', '台北', '台南'];
+const sampleAreas = ['桃園', '新竹', '苗栗', '台中', '台南'];
+const locationsMap: LocationMapType = {
+	桃園: ['先進封測三廠'],
+	新竹: [
+		'台積總部及晶圓十二A廠',
+		'研發中心及晶圓十二B廠',
+		'晶圓二廠',
+		'晶圓三廠',
+		'晶圓五廠',
+		'晶圓八廠',
+		'先進封測一廠',
+	],
+	苗栗: ['先進封測六廠'],
+	台中: ['晶圓十五廠', '先進封測五廠', '擴廠'],
+	台南: ['晶圓六廠', '晶圓十四廠', '晶圓十八廠', '先進封測二廠'],
+};
 
 function RestaurantForm() {
-	const [data, setData] = useState(sampleRestaurant);
 	const allTypes = sampleTypes;
 	const allGroups = sampleGroups;
-	const allLocations = sampleLocations;
+	const allAreas = sampleAreas;
+	const [data, setData] = useState(sampleRestaurant);
+	const [area, setArea] = useState('新竹');
 	const [startTime, setStartTime] = useState<dayjs.Dayjs | null>(null);
 	const [endTime, setEndTime] = useState<dayjs.Dayjs | null>(null);
 	const theme = useTheme();
+
+	const existingImageUrl = data?.restaurantImage && URL.createObjectURL(data?.restaurantImage);
+	const [preview, setPreview] = useState(existingImageUrl || '');
+
+	const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (!event.target.files) return;
+		const file = event.target.files[0];
+		if (file) {
+			if (preview) URL.revokeObjectURL(preview);
+			const newData = { ...data, itemImage: file };
+			setData(newData);
+			const filePreview = URL.createObjectURL(file);
+			setPreview(filePreview);
+		}
+	};
 
 	const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = event.target;
@@ -129,26 +172,38 @@ function RestaurantForm() {
 						onChange={handleTextChange}
 						defaultValue="請輸入最新消息"
 					/>
-					<Box className="mx-4 my-2">
-						<FormControl variant="standard">
-							<Stack direction="row" spacing={1} alignItems="center">
-								<Typography variant="subtitle1" component="div">
-									營運狀態
-								</Typography>
-								<Typography>Off</Typography>
-								<Switch
-									checked={data.isOpening}
-									onChange={() =>
-										setData((prevData) => ({
-											...prevData,
-											isOpening: !prevData.isOpening,
-										}))
-									}
-									inputProps={{ 'aria-label': 'controlled' }}
+
+					<Box className="m-6 flex w-full flex-col">
+						<Typography className="my-2 text-sm">商家圖片</Typography>
+						<Box className="flex w-2/5 flex-col items-center justify-center">
+							{preview && (
+								<div>
+									<img
+										src={preview}
+										alt="Preview"
+										className="w-30 h-30 object-cover"
+										style={{ objectFit: 'cover' }}
+									/>
+								</div>
+							)}
+							<Button
+								variant="contained"
+								component="label"
+								size="small"
+								className="mt-2 flex w-4/5 justify-around"
+							>
+								<div>上傳</div>
+								<div>
+									<AddAPhotoIcon />
+								</div>
+								<input
+									type="file"
+									hidden
+									accept="image/*"
+									onChange={handleImageChange}
 								/>
-								<Typography>On</Typography>
-							</Stack>
-						</FormControl>
+							</Button>
+						</Box>
 					</Box>
 				</Box>
 
@@ -192,21 +247,41 @@ function RestaurantForm() {
 							</MenuItem>
 						))}
 					</TextField>
-					<TextField
-						label="廠區"
-						id="factoryLocation"
-						name="factoryLocation"
-						value={data.factoryLocation}
-						select
-						onChange={handleTextChange}
-						variant="standard"
-					>
-						{allLocations.map((location) => (
-							<MenuItem key={location} value={location}>
-								{location}
-							</MenuItem>
-						))}
-					</TextField>
+
+					<Box className="flex">
+						<TextField
+							label="地區"
+							id="factoryArea"
+							name="factoryArea"
+							value={area}
+							select
+							onChange={(e) => setArea(e.target.value)}
+							variant="standard"
+						>
+							{allAreas.map((area) => (
+								<MenuItem key={area} value={area}>
+									{area}
+								</MenuItem>
+							))}
+						</TextField>
+
+						<TextField
+							label="廠區"
+							id="factoryLocation"
+							name="factoryLocation"
+							value={data.factoryLocation}
+							select
+							onChange={handleTextChange}
+							variant="standard"
+						>
+							{locationsMap[area].map((location) => (
+								<MenuItem key={location} value={location}>
+									{location}
+								</MenuItem>
+							))}
+						</TextField>
+					</Box>
+
 					<TextField
 						label="預估準備時間"
 						id="prepareTime"
@@ -226,7 +301,6 @@ function RestaurantForm() {
 					<Box className="mx-[26px] my-2 mt-5 flex">
 						<label>
 							From:
-							{/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
 							<DemoItem>
 								<DateTimePicker
 									maxDateTime={endTime}
@@ -234,11 +308,9 @@ function RestaurantForm() {
 									views={['year', 'month', 'day']}
 								/>
 							</DemoItem>
-							{/* </LocalizationProvider> */}
 						</label>
 						<label>
 							To:
-							{/* <LocalizationProvider dateAdapter={AdapterDayjs}> */}
 							<DemoItem>
 								<DateTimePicker
 									minDateTime={startTime}
@@ -246,7 +318,6 @@ function RestaurantForm() {
 									views={['year', 'month', 'day']}
 								/>
 							</DemoItem>
-							{/* </LocalizationProvider> */}
 						</label>
 					</Box>
 					<Box sx={{ position: 'fixed', bottom: 30, right: 30 }}>
@@ -262,6 +333,28 @@ function RestaurantForm() {
 						>
 							儲存
 						</Button>
+					</Box>
+
+					<Box className="mx-4 my-2">
+						<FormControl variant="standard">
+							<Stack direction="row" spacing={1} alignItems="center">
+								<Typography variant="subtitle1" component="div">
+									營運狀態
+								</Typography>
+								<Typography>Off</Typography>
+								<Switch
+									checked={data.isOpening}
+									onChange={() =>
+										setData((prevData) => ({
+											...prevData,
+											isOpening: !prevData.isOpening,
+										}))
+									}
+									inputProps={{ 'aria-label': 'controlled' }}
+								/>
+								<Typography>On</Typography>
+							</Stack>
+						</FormControl>
 					</Box>
 				</Box>
 			</Box>

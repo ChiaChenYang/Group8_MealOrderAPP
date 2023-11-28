@@ -4,7 +4,7 @@ import Drawer from '@/components/MenusManagement/Drawer';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
 	return (
-		<Box className="flex h-screen w-screen flex-row bg-white">
+		<Box className="flex min-h-screen w-screen flex-row bg-white">
 			<Box className="flex w-[21%]">
 				<Drawer />
 			</Box>

@@ -17,7 +17,9 @@ export type RestaurantFormType = {
 	restaurantName: string;
 	restaurantGroup: string;
 	restaurantType: string;
+	restaurantImage?: File;
 	telephoneNumber: string;
+	factoryArea: string;
 	factoryLocation: string;
 	restaurantLocation: string;
 	latestNews: string[];
@@ -100,18 +102,28 @@ type OrderType = {
 	totalPrice: number;
 	finishTime: Date;
 	completeTime: Date;
+	rating: number;
+	comment: string;
 };
 
-export type IncomingOrderType = Omit<OrderType, 'finishTime' | 'completeTime'>;
-export type ProcessingOrderType = Omit<OrderType, 'finishTime' | 'completeTime'>;
-export type WaitingOrderType = Omit<OrderType, 'completeTime'>;
-export type CompletedOrderType = OrderType;
+export type IncomingOrderType = Omit<
+	OrderType,
+	'finishTime' | 'completeTime' | 'rating' | 'comment'
+>;
+export type ProcessingOrderType = Omit<
+	OrderType,
+	'finishTime' | 'completeTime' | 'rating' | 'comment'
+>;
+export type WaitingOrderType = Omit<OrderType, 'completeTime' | 'rating' | 'comment'>;
+export type CompletedOrderType = Omit<OrderType, 'rating' | 'comment'>;
+export type HistoryOrderType = Omit<OrderType, 'completeTime' | 'finishTime' | 'noteFromUser'>;
 
 export type OrderList = OrderType[];
 export type IncomingOrderList = IncomingOrderType[];
 export type ProcessingOrderList = ProcessingOrderType[];
 export type WaitingOrderList = WaitingOrderType[];
 export type CompletedOrderList = CompletedOrderType[];
+export type HistoryOrderList = HistoryOrderType[];
 
 export type IncomingOrderCardProps = {
 	order: IncomingOrderType;
@@ -127,4 +139,32 @@ export type WaitingOrderCardProps = {
 
 export type CompletedOrderCardProps = {
 	order: CompletedOrderType;
+};
+
+export type HistoryOrderCardProps = {
+	order: HistoryOrderType;
+};
+
+export type StatisticChartType = {
+	type: string;
+	year: number;
+	month?: number;
+	week?: number;
+	day?: number;
+	timeOfDay: string;
+};
+
+export type TimeRangeSelectionProps = {
+	timeRange: StatisticChartType;
+	setTimeRange: React.Dispatch<React.SetStateAction<StatisticChartType>>;
+};
+
+export type HistoryRating = number[];
+
+export type NewCategoryButtonProps = {
+	onAddCategory: (newCategory: CategoryData) => void;
+};
+
+export type LocationMapType = {
+	[key: string]: string[]; // Keys are strings, values are arrays of strings
 };
