@@ -90,7 +90,7 @@ module.exports = (sequelize, DataTypes) => {
         rating: {
             // 餐廳評價
             type: DataTypes.FLOAT,
-            allowNull: false,
+            allowNull: true,
         },
         
 

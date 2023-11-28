@@ -23,3 +23,16 @@ exports.getＷeeklyReport = asyncHandler(async (req, res, next) => {
     weeklyreport = await RestaurantSalesReportService.getWeeklyReport(restaurantId, year, month, day, timeOfDay);
     res.json(weeklyreport);
 });
+
+exports.getDailyReport = asyncHandler(async (req, res, next) => {
+    const restaurantId = req.params.restaurantId;
+    const { year, month, day, timeOfDay } = req.query;
+    dailyreport = await RestaurantSalesReportService.getDailyReport(restaurantId, year, month, day, timeOfDay);
+    res.json(dailyreport);
+});
+
+exports.getHistoryRating = asyncHandler(async (req, res, next) => {
+    const restaurantId = req.params.restaurantId;
+    restauranthistoryrating = await RestaurantSalesReportService.getHistoryRating(restaurantId);
+    res.json(restauranthistoryrating);
+});

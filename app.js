@@ -11,6 +11,7 @@ var restaurantsRouter = require('./routes/Restaurants');
 const db = require('./models');
 
 const app = express();
+app.use(express.json({ limit: '50mb' }));  // 設置請求體大小限制為 50MB
 
 db.sequelize.sync({ alter: false });
 
