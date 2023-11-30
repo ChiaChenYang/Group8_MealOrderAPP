@@ -92,7 +92,7 @@ exports.updateSoldQuantity = async (order_id) => {
         for (let j=0; j<ordered_items[i].orders.length; j++){
             ordered_items[i].soldQuantity += ordered_items[i].orders[j].orderitems.orderQuantity;
         }
-        ordered_items[i].save();
+        await ordered_items[i].save();
     }
 }
 
