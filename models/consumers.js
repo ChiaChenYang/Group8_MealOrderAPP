@@ -33,11 +33,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING(16),
             allowNull: false,
         },
-        department: {
-            // 單位名稱
-            type: DataTypes.STRING(16),
-            allowNull: false,
-        },
         consumerFactoryLocation: {
             // 消費者工作廠區
             type: DataTypes.STRING(16),

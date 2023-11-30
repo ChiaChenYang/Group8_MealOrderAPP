@@ -70,3 +70,9 @@ exports.getHistoryOrders = asyncHandler(async (req, res, next) => {
     retrieved_orders = await OrderService.getHistoryOrders(restaurant_id);
     res.json(retrieved_orders);
 });
+
+exports.getProgressingOrdersForConsumer(async (req, res, next) => {
+    const consumer_id = parseInt(req.params.id);
+    retrieved_orders = await OrderService.getProgressingOrdersForConsumer(consumer_id);
+    res.json(retrieved_orders);
+});

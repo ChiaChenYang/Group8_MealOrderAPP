@@ -31,7 +31,19 @@ module.exports = (sequelize, DataTypes) => {
             // 整筆訂單備註，消費者預設備註可放這
             type: DataTypes.STRING,
             allowNull: true,
-        }, 
+        },
+        price: {
+            // 總價錢
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
+        quantity: {
+            // 總數量
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        } 
     }, {
         timestamps: false, // 禁用 createdAt 和 updatedAt 欄位
 
@@ -57,6 +69,12 @@ module.exports = (sequelize, DataTypes) => {
             onDelete: "cascade",
             onUpdate: "cascade",
         }); 
+        // 購物車與訂單表: 一對一
+        shoppingcarts.hasOne(models.orders, {
+            foreignKey: 'cartId',
+            onDelete: "cascade",
+            onUpdate: "cascade",
+        });
     };
     
     return shoppingcarts

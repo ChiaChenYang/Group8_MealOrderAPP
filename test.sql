@@ -33,3 +33,9 @@ INSERT INTO orders (orderId, totalPrice, orderTime, status, paymentMethod, picku
 INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (2, 5, 2);
 
 INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (2, 6, 3);
+
+INSERT INTO consumers (displayName, department, jobTitle, consumerFactoryLocation, consumerPhone, consumerEmail) VALUES ('Andrew','研發','經理','新竹','0950-123-456','test@gmail.com');
+
+INSERT INTO shoppingcarts (consumerId, restaurantId) VALUES (1, 1);
+
+INSERT INTO consumers (displayName, department, jobTitle, consumerFactoryLocation, consumerPhone, consumerEmail) VALUES ('Joe','測試','工程師','新竹','0950-321-456','test@gmail.com');

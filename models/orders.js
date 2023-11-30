@@ -36,10 +36,17 @@ module.exports = (sequelize, DataTypes) => {
                 key: 'restaurantId'   // 列名
             },
         },
+        totalQuantity: {
+            // 訂單品項總數量
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        },
         totalPrice: { 
             // 訂單總金額
             type: DataTypes.INTEGER, 
             allowNull: false, 
+            defaultValue: 0
         },
         orderTime: { 
             // 訂購時間（使用者按下訂單送出的時間）

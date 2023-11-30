@@ -87,7 +87,7 @@ exports.updateSoldQuantity = async (order_id) => {
             }
         }]
     });
-    num_items = ordered_items.length;
+    const num_items = ordered_items.length;
     for (let i=0; i<num_items; i++){
         for (let j=0; j<ordered_items[i].orders.length; j++){
             ordered_items[i].soldQuantity += ordered_items[i].orders[j].orderitems.orderQuantity;
@@ -127,7 +127,7 @@ exports.getSingleOrder = async (order_id) => {
         throw new Error(`Error: Order with id ${order_id} does not exist`);
     }
     else {
-        return_order = {};
+        var return_order = {};
         return_order.orderId = order.orderId;
         return_order.type = order.status;
         return_order.orderTime = order.orderTime;
@@ -174,11 +174,11 @@ exports.getHistoryOrders = async (rid) => {
         return [];
     }
     else {
-        num_orders = history_orders.length;
+        const num_orders = history_orders.length;
         console.log(`${num_orders} history orders were found.`);
-        return_orders = []
+        var return_orders = []
         for (let i=0; i<num_orders; i++){
-            all_items = []
+            var all_items = []
             for (let j=0; j<history_orders[i].menuitems.length; j++){
                 all_items.push({
                     itemName: history_orders[i].menuitems[j].itemName,
@@ -198,5 +198,45 @@ exports.getHistoryOrders = async (rid) => {
         }
 
         return return_orders;
+    }
+};
+
+exports.getProgressingOrdersForConsumer = async (consumer_id) => {
+    const progressing_orders = await orders.findAll({
+        include: [{
+            model: consumers,
+            where: {
+                consumerId: consumer_id
+            }
+        }, {
+            model: restaurants,
+            attributes: ['restaurantId','restaurantName','restaurantImage']
+        }],
+        where: {
+            status: 'progressing'
+        },
+        order: [
+            ['orderTime', 'DESC']
+        ]
+    });
+
+    if (progressing_orders === null || progressing_orders.length === 0){
+        return {};
+    }
+    else {
+        var return_orders = {};
+        for (let i=0; i<progressing_orders.length; i++) {
+            if (progressing_orders[i].restaurant === null) {
+                throw new Error(`There is not any restaurant corresponding to the order ${progressing_orders[i].orderId}`);
+            }
+            return_orders[i] = {
+                "id": progressing_orders[i].restaurant.restaurantId,
+                "shop_name": progressing_orders[i].restaurant.restaurantName,
+                "quantity": progressing_orders[i].totalQuantity,
+                "price": progressing_orders[i].totalPrice,
+                "image": progressing_orders[i].restaurant.restaurantImage,
+                "time": progressing_orders[i].expectedFinishedTime
+            };
+        }
     }
 };
