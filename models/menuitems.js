@@ -54,13 +54,16 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: true,
         },
-        availableQuantity: {
+        totalQuantity: {
             // 可售數量
             type: DataTypes.INTEGER,
             allowNull: false,
-        }
-
-        
+        },
+        soldQuantity: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        } 
     },{
         timestamps: false, // 禁用 createdAt 和 updatedAt 欄位
 

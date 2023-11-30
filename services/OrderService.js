@@ -1,6 +1,8 @@
 const express = require('express');
 const asyncHandler = require("express-async-handler");
 const { orders, restaurants, menuitems, orderitems } = require("../models");
+const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = new Sequelize('sqlite::memory:');
 
 exports.getOrdersWithStatus = async (rid, s) => {
     const restaurant = await restaurants.findByPk(rid, {
@@ -73,6 +75,27 @@ exports.updateOrderStatus = async (order_id, old_status, new_status) => {
     }
 };
 
+exports.updateSoldQuantity = async (order_id) => {
+    const ordered_items = await menuitems.findAll({
+        include: [{
+            model: orders,
+            through: {
+                attributes: ['orderQuantity']
+            },
+            where: {
+                orderId: order_id
+            }
+        }]
+    });
+    num_items = ordered_items.length;
+    for (let i=0; i<num_items; i++){
+        for (let j=0; j<ordered_items[i].orders.length; j++){
+            ordered_items[i].soldQuantity += ordered_items[i].orders[j].orderitems.orderQuantity;
+        }
+        ordered_items[i].save();
+    }
+}
+
 exports.delayOrder = async (order_id, delay_time) => {
     const order = await orders.findByPk(order_id);
     if (order === null){
@@ -82,8 +105,9 @@ exports.delayOrder = async (order_id, delay_time) => {
         throw new Error(`Error: The expected finish time of order with id ${order_id} was not set!`);
     }
     else{
-        new_expected_time = sequelize.fn('ADDTIME', orders.expectedFinishedTime, delay_time*60);
-        await order.update({ expectedFinishedTime: new_expected_time });
+        await order.update({ 
+            expectedFinishedTime: sequelize.fn('ADDDATE', sequelize.col('expectedFinishedTime'), sequelize.literal(`INTERVAL ${delay_time} MINUTE`)) 
+        });
     }
 };
 

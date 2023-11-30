@@ -25,3 +25,11 @@ INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (3, 3, 1);
 INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (3, 1, 1);
 
 UPDATE orders Set expectedFinishedTime=ADDTIME(orderTime, '0:20:0');
+
+INSERT INTO orders (orderId, totalPrice, orderTime, status, paymentMethod, pickupMethod) VALUES (5, 100, '2023-11-21 13:05:33', 'incoming', 'creditCard', '外帶');
+
+INSERT INTO orders (orderId, totalPrice, orderTime, status, paymentMethod, pickupMethod) VALUES (6, 150, '2023-11-21 13:06:31', 'incoming', 'creditCard', '外帶');
+
+INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (2, 5, 2);
+
+INSERT INTO orderitems (itemId, orderId, orderQuantity) VALUES (2, 6, 3);

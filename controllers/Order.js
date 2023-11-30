@@ -29,6 +29,7 @@ exports.getCompletedOrders = asyncHandler(async (req, res, next) => {
 exports.acceptOrder = asyncHandler(async (req, res, next) => {
     const order_id = parseInt(req.params.id);
     await OrderService.updateOrderStatus(order_id, 'incoming', 'progressing');
+    await OrderService.updateSoldQuantity(order_id);
     res.status(200).end();
 });
 
