@@ -41,20 +41,25 @@ app.post('/login', (req, res) => {
             return res.json("Error sql");
         }
         if (data.length > 0) {
-            return res.json("Success");
+            return res.json({ status: "Success", userId: data[0].id });
         } else {
             return res.json("Error");
         }
     });
 });
 
-app.get('/user', (req, res) => {
-    const sql = "SELECT * FROM login";
-    db.query(sql, (err, data) => {
+app.get('/user/:userId', (req, res) => {
+    const userId = req.params.userId;
+    const sql = "SELECT * FROM login WHERE `id` = ?";
+    db.query(sql, [userId], (err, data) => {
         if (err) {
             console.log(err);
+            return res.json({ error: "Error in SQL query" });
+        }
+        if (data.length > 0) {
+            return res.send(data);
         } else {
-            res.send(data);
+            return res.json({ error: "User not found" });
         }
     });
 });
