@@ -30,19 +30,17 @@ function Shop() {
   }
 
   const handleCountChange = (itemId, newCount) => {
-    setCounts((prevCounts) => {
-      return {
-        ...prevCounts,
-        [itemId]: newCount,
-      };
-    });
+    setCounts((prevCounts) => ({
+      ...prevCounts,
+      [itemId]: newCount,
+    }));
   };
-
+  
   // Calculate subtotal for each item
   const subtotals = Object.keys(item.items).map(itemId => {
     const currentItem = item.items[itemId];
     const count = counts[itemId] || 0; // Use 0 if count is not set
-    return count * currentItem.price;
+    return count > 0 ? count * currentItem.price : 0; // Use 0 if count is 0
   });
 
   const total = subtotals.reduce((acc, subtotal) => acc + subtotal, 0);
@@ -71,7 +69,7 @@ function Shop() {
                 <span style={{ fontSize: '25px' }}><strong>{currentItem.name}</strong></span>
                 <span style={{ marginLeft: '150px' }}> <img src={currentItem.image} style={{ width: '30%' }} alt='圖片'/> </span>
                 <Counter initialValue={parseInt(currentItem.quantity, 10)} onCountChange={(newCount) => handleCountChange(itemId, newCount)} />
-                <p style={{ marginLeft: '300px' }}>$ {currentItem.price * counts[itemId] || currentItem.price * currentItem.quantity}</p>
+                <p style={{ marginLeft: '300px' }}>$ {currentItem.price * counts[itemId] || currentItem.price * 0}</p>
                 <p style={{ borderBottom: '2px solid gray' }}></p>
               </div>
             );

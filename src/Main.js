@@ -28,7 +28,25 @@ function Main() {
     },
     2: {
       id: 1,
-      name: "麥當勞",
+      name: "麥當勞2",
+      image:
+        "https://yt3.googleusercontent.com/ytc/APkrFKZi46pled4Gcj8WhRnYE1vO9Py1S-hDB1ntiybvCQ=s900-c-k-c0x00ffffff-no-rj",
+      prepare_time: 20,
+      evaluate: 5,
+      service: "內用|外帶",
+    },
+    3: {
+      id: 1,
+      name: "麥當勞3",
+      image:
+        "https://yt3.googleusercontent.com/ytc/APkrFKZi46pled4Gcj8WhRnYE1vO9Py1S-hDB1ntiybvCQ=s900-c-k-c0x00ffffff-no-rj",
+      prepare_time: 20,
+      evaluate: 5,
+      service: "內用|外帶",
+    },
+    4: {
+      id: 1,
+      name: "麥當勞4",
       image:
         "https://yt3.googleusercontent.com/ytc/APkrFKZi46pled4Gcj8WhRnYE1vO9Py1S-hDB1ntiybvCQ=s900-c-k-c0x00ffffff-no-rj",
       prepare_time: 20,

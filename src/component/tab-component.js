@@ -6,6 +6,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import DishComponent from './calorie-component';
 
 let menu = {
     id:1,
@@ -125,6 +126,7 @@ export default function BasicTabs() {
     setValue(newValue);
   };
 
+
   return (
     <Box sx={{width:'100%'}}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -146,11 +148,13 @@ export default function BasicTabs() {
             style={{ textDecoration: 'none', color: 'inherit' }}>
             <div onClick={() => handleDishClick(dish, index)} key={dish.name} style={{ display: 'flex', alignItems: 'center',borderBottom:'2px solid gray' }}>
                 <div style={{ flex: '1', padding: '10px' }}>
-                <p>
-                    <strong>{dish.name}</strong>
-                    </p>
-                <p style={{marginTop:"-15px"}}>${dish.price}</p>
-                <p style={{marginTop:"-15px",marginBottom:"0px"}}>Calorie：{dish.Calorie}</p>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <strong style={{marginTop:"-20px"}}>{dish.name}</strong>
+                    <span style={{ marginLeft: '10px' }}>
+                        <DishComponent dish={dish} />
+                    </span>
+                    </div>
+                <p>${dish.price}</p>
                 <div style={{ display: 'inline',marginTop:"-15px" }}>
                 {dish.tag.map((tag, index) => (
                     <div
@@ -182,10 +186,13 @@ export default function BasicTabs() {
                 style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div onClick={() => handleDishClick(dish)} key={dish.name} style={{ display: 'flex', alignItems: 'center' }}>
                     <div style={{ flex: '1', padding: '10px' }}>
-                    <p>
-                        <strong>{dish.name}</strong>
-                        </p>
-                    <p style={{marginTop:"-15px"}}>${dish.price}</p>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <strong style={{marginTop:"-20px"}}>{dish.name}</strong>
+                    <span style={{ marginLeft: '10px' }}>
+                        <DishComponent dish={dish} />
+                    </span>
+                    </div>
+                <p>${dish.price}</p>
                     <p style={{marginTop:"-15px",marginBottom:"0px"}}>Calorie：{dish.Calorie}</p>
                     <div style={{ display: 'inline' }}>
                     {dish.tag.map((tag, index) => (
@@ -221,10 +228,13 @@ export default function BasicTabs() {
             style={{ textDecoration: 'none', color: 'inherit' }}>
             <div key={dish.name} style={{ display: 'flex', alignItems: 'center' ,borderBottom:'2px solid gray'}}>
                 <div style={{ flex: '1', padding: '10px' }}>
-                <p>
-                    <strong>{dish.name}</strong>
-                </p>
-                <p style={{marginTop:"-15px"}}>${dish.price}</p>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <strong style={{marginTop:"-20px"}}>{dish.name}</strong>
+                    <span style={{ marginLeft: '10px' }}>
+                        <DishComponent dish={dish} />
+                    </span>
+                    </div>
+                <p>${dish.price}</p>
                 <p style={{marginTop:"-15px",marginBottom:"0px"}}>{dish.Calorie}</p>
                 <div style={{ display: 'inline' }}>
                     {dish.tag.map((tag, index) => (
@@ -257,10 +267,13 @@ export default function BasicTabs() {
             style={{ textDecoration: 'none', color: 'inherit' }}>
             <div key={dish.name} style={{ display: 'flex', alignItems: 'center',borderBottom:'2px solid gray' }}>
                 <div style={{ flex: '1', padding: '10px' }}>
-                <p>
-                    <strong>{dish.name}</strong>
-                </p>
-                <p style={{marginTop:"-15px"}}>${dish.price}</p>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <strong style={{marginTop:"-20px"}}>{dish.name}</strong>
+                    <span style={{ marginLeft: '10px' }}>
+                        <DishComponent dish={dish} />
+                    </span>
+                    </div>
+                <p>${dish.price}</p>
                 <p style={{marginTop:"-15px",marginBottom:"0px"}}>{dish.Calorie}</p>
                 <div style={{ display: 'inline' }}>
                     {dish.tag.map((tag, index) => (
@@ -296,10 +309,13 @@ export default function BasicTabs() {
             style={{ textDecoration: 'none', color: 'inherit' }}>
             <div key={dish.name} style={{ display: 'flex', alignItems: 'center',borderBottom:'2px solid gray' }}>
                 <div style={{ flex: '1', padding: '10px' }}>
-                <p>
-                    <strong>{dish.name}</strong>
-                    </p>
-                <p style={{marginTop:"-15px"}}>${dish.price}</p>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <strong style={{marginTop:"-20px"}}>{dish.name}</strong>
+                    <span style={{ marginLeft: '10px' }}>
+                        <DishComponent dish={dish} />
+                    </span>
+                    </div>
+                <p>${dish.price}</p>
                 <p style={{marginTop:"-15px",marginBottom:"0px"}}>{dish.Calorie}</p>
                 <div style={{ display: 'inline' }}>
                 {dish.tag.map((tag, index) => (
@@ -332,10 +348,13 @@ export default function BasicTabs() {
                 style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div key={dish.name} style={{ display: 'flex', alignItems: 'center',borderBottom:'2px solid gray' }}>
                     <div style={{ flex: '1', padding: '10px' }}>
-                    <p>
-                        <strong>{dish.name}</strong>
-                        </p>
-                    <p style={{marginTop:"-15px"}}>${dish.price}</p>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <strong style={{marginTop:"-20px"}}>{dish.name}</strong>
+                    <span style={{ marginLeft: '10px' }}>
+                        <DishComponent dish={dish} />
+                    </span>
+                    </div>
+                <p>${dish.price}</p>
                     <p style={{marginTop:"-15px",marginBottom:"0px"}}>{dish.Calorie}</p>
                     <div style={{ display: 'inline' }}>
                     {dish.tag.map((tag, index) => (

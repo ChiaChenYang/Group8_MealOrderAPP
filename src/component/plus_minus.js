@@ -11,9 +11,12 @@ const Counter = ({ initialValue, onCountChange }) => {
   };
 
   const handleDecrement = () => {
-    const updatedCount = count - 1;
-    setCount(updatedCount);
-    onCountChange(updatedCount);
+    // Prevent decrementing below 0
+    if (count > 0) {
+      const updatedCount = count - 1;
+      setCount(updatedCount);
+      onCountChange(updatedCount);
+    }
   };
 
   useEffect(() => {
