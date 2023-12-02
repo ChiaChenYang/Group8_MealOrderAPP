@@ -36,6 +36,13 @@ const Timeline = ({ orderState }) => {
     left: "25%", // Adjust as needed
   };
 
+  const acceptTimeStyle = {
+    ...pointStyle,
+    background: orderState.accept ? "#35A996" : "white",
+    border: `2px solid ${orderState.accept ? "#35A996" : "#35A996"}`,
+    left: "50%", // Adjust as needed
+  };
+
   const orderTimeStyle = {
     ...pointStyle,
     background: orderState.process ? "#35A996" : "white",
@@ -62,7 +69,19 @@ const Timeline = ({ orderState }) => {
           left: "17%",
         }}
       >
-        訂單已接收
+        訂單已送出
+      </div>
+      <div style={acceptTimeStyle}></div>
+      <div style={{ ...timeTextStyle, left: "50%" }}>{orderState.acceptTime}</div>
+      <div
+        style={{
+          position: "absolute",
+          top: "100%",
+          fontWeight: "bold",
+          left: "42.5%",
+        }}
+      >
+        訂單已確認
       </div>
       <div style={orderTimeStyle}></div>
       <div style={{ ...timeTextStyle, left: "72%" }}>{orderState.time}</div>

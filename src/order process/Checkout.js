@@ -81,7 +81,7 @@ function Checkout() {
           <span style={{ fontSize: "15px", marginLeft: "150px" }}>
             {checking.location}
           </span></p>
-          <p style={{ fontSize: "15px" }}>{checking.prepare_time}</p>
+          <p style={{ fontSize: "15px", marginLeft: "10px" }}>{checking.prepare_time}</p>
         <p style={{ fontSize: "20px", marginLeft: "10px" }}>
           <strong>用餐方式</strong>
         </p>

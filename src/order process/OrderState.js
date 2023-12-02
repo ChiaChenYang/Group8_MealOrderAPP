@@ -10,6 +10,7 @@ function OrderState() {
     location: "台積總部及晶圓十二A廠",
     time: "12:30",
     process: false,
+    accept: true,
     meals: {
       1: {
         name: "牛肉麵",

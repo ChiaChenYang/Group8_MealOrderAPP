@@ -3,11 +3,11 @@ import ControllableStates from "./component/location";
 import image from "./image/main.png";
 import Navbar from "./component/navbar-component";
 import StarIcon from "@mui/icons-material/Star";
-import mainp from "./image/mainp.png";
 import { Link, useParams } from "react-router-dom";
 import imagei from "./image/imagei.jpg";
 import Selector from "./component/class";
 import Search from "./component/search";
+import CabinetDisplay from "./component/cabinet-component";
 
 function Main() {
   const [selectedClass, setSelectedClass] = useState("全類別");
@@ -55,6 +55,19 @@ function Main() {
     },
   };
 
+  let cabinet_information = {
+    1: {
+      name:"蘿拉點心舖1",
+      image:"https://yt3.googleusercontent.com/ytc/APkrFKZi46pled4Gcj8WhRnYE1vO9Py1S-hDB1ntiybvCQ=s900-c-k-c0x00ffffff-no-rj",
+      LatestNews: "情人節預購開始了"
+    },
+    2: {
+      name:"蘿拉點心舖1",
+      image:"https://yt3.googleusercontent.com/ytc/APkrFKZi46pled4Gcj8WhRnYE1vO9Py1S-hDB1ntiybvCQ=s900-c-k-c0x00ffffff-no-rj",
+      LatestNews: "情人節預購開始了"
+    },
+  }
+
   const handleClassChange = (selectedValue) => {
     setSelectedClass(selectedValue);
   };
@@ -83,23 +96,25 @@ function Main() {
                 width: "50%",
                 position: "relative",
                 left: "30px",
-                bottom: "20px",
+                bottom: "30px",
               }}
             />
           </h2>
           <div>
-            <img
-              src={mainp}
-              alt="mainp"
+          <div
               style={{
-                width: "90%",
+                width: "100%", // Set the width as needed
+                overflowX: "auto", // Enable horizontal scrolling
+                margin: "0 auto", // Center the div
                 position: "absolute",
                 top: "180px",
-                right: "20px",
+                right: "0px",
               }}
-            />
+            >
+              <CabinetDisplay cabinetInformation={cabinet_information} />
+              </div>
           </div>
-          <p style={{ marginTop: "80px" }}></p>
+          <p style={{ marginTop: "55px" }}></p>
         </div>
         <div style={{ marginBottom: "10px", width: "100%" }}>
           <Selector onValueChange={handleClassChange} />
