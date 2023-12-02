@@ -16,7 +16,7 @@ const sampleMenuList: MenuListType = [
 		menuId: 3,
 		menuName: '午間菜單',
 		menuType: '預購',
-		menuTime: '午段',
+		menuTime: '午間',
 		categories: [
 			{
 				categoryId: 1,

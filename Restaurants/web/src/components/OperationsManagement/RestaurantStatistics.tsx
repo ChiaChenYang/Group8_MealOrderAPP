@@ -7,6 +7,20 @@ import { StatisticChartType, TimeRangeSelectionProps } from '@/lib/types';
 
 import StatisticChart from './StatisticChart';
 
+const toChinese = (en: string): string => {
+    const mapping: { [key: string]: string } = {
+        "year": '年',
+        "month": '月',
+        "week": '周',
+        "day": '日',
+		"afternoon": '午間',
+		"evening": '晚間',
+		"all": '全日'
+    }
+    return mapping[en];
+}
+
+
 function TimeRangeSelection({ timeRange, setTimeRange }: TimeRangeSelectionProps) {
 	const handleTypeChange = (type: string) => {
 		const newTimeRange: StatisticChartType = {
@@ -44,11 +58,17 @@ function TimeRangeSelection({ timeRange, setTimeRange }: TimeRangeSelectionProps
 					variant={timeRange.type === type ? 'contained' : 'outlined'}
 					onClick={() => handleTypeChange(type)}
 				>
-					{type}
+					{toChinese(type)}
 				</Button>
 			))}
 
-			<TextField value={timeRange.year} name="year" select onChange={handleTimeChange}>
+			<TextField 
+				value={timeRange.year} 
+				name="year" 
+				label="年" 
+				select 
+				onChange={handleTimeChange}
+			>
 				{yearsOptions.map((year) => (
 					<MenuItem key={year} value={year}>
 						{year}
@@ -60,6 +80,7 @@ function TimeRangeSelection({ timeRange, setTimeRange }: TimeRangeSelectionProps
 				<TextField
 					value={timeRange.month || monthsOptions[0]}
 					name="month"
+					label="月"
 					select
 					onChange={handleTimeChange}
 				>
@@ -75,6 +96,7 @@ function TimeRangeSelection({ timeRange, setTimeRange }: TimeRangeSelectionProps
 				<TextField
 					value={timeRange.day || daysOptions[0]}
 					name="day"
+					label="日" 
 					select
 					onChange={handleTimeChange}
 				>
@@ -88,12 +110,13 @@ function TimeRangeSelection({ timeRange, setTimeRange }: TimeRangeSelectionProps
 			<TextField
 				value={timeRange.timeOfDay || timeOfDaysOptions[0]}
 				name="timeOfDay"
+				label="時段" 
 				select
 				onChange={handleTimeChange}
 			>
 				{timeOfDaysOptions.map((timeOfDay) => (
 					<MenuItem key={timeOfDay} value={timeOfDay}>
-						{timeOfDay}
+						{toChinese(timeOfDay)}
 					</MenuItem>
 				))}
 			</TextField>

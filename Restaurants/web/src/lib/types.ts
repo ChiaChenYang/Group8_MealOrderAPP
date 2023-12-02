@@ -24,8 +24,10 @@ export type RestaurantFormType = {
 	restaurantLocation: string;
 	latestNews: string[];
 	isOpening: boolean;
-	openHours: openHour[];
 	prepareTime: number;
+	startTime: Date;
+	endTime: Date;
+	acceptingOrderType: string;
 };
 
 export type RestaruantGroups = string[];
@@ -55,6 +57,13 @@ export type MenuSelectorProps = {
 	selectedMenu: MenuData;
 	setSelectedMenu: React.Dispatch<React.SetStateAction<MenuData>>;
 };
+
+export type OverviewSelectorProps = Omit<MenuSelectorProps, "setMenuList">;
+
+export type OverviewItemListProps = {
+	menu: MenuData;
+	category: string;
+}
 
 export type MenuModifierProps = {
 	setMenuList: React.Dispatch<React.SetStateAction<MenuListType>>;

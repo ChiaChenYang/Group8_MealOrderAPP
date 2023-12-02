@@ -13,7 +13,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IncomingOrderCard from '@/components/OrdersManagement/IncomingOrderCard';
 import SearchBar from '@/components/OrdersManagement/SearchBar';
 import SortFilterOrderList from '@/lib/SortFilterOrderList';
-import type { IncomingOrderList } from '@/lib/types';
+import type { IncomingOrderList, IncomingOrderType } from '@/lib/types';
 
 const sampleOrderList: IncomingOrderList = [
 	{
@@ -175,7 +175,7 @@ export default function Management() {
 					}}
 				>
 					{currentOrders.map((order) => (
-						<IncomingOrderCard key={order.orderId} order={order} />
+						<IncomingOrderCard key={order.orderId} order={order as IncomingOrderType} />
 					))}
 				</Box>
 			</Box>

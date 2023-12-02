@@ -13,7 +13,7 @@ import Toolbar from '@mui/material/Toolbar';
 import ProcessingOrderCard from '@/components/OrdersManagement/ProcessingOrderCard';
 import SearchBar from '@/components/OrdersManagement/SearchBar';
 import SortFilterOrderList from '@/lib/SortFilterOrderList';
-import type { ProcessingOrderList } from '@/lib/types';
+import type { ProcessingOrderList, ProcessingOrderType } from '@/lib/types';
 
 const sampleOrderList: ProcessingOrderList = [
 	{
@@ -170,7 +170,7 @@ export default function Management() {
 					}}
 				>
 					{currentOrders.map((order) => (
-						<ProcessingOrderCard key={order.orderId} order={order} />
+						<ProcessingOrderCard key={order.orderId} order={order as ProcessingOrderType} />
 					))}
 				</Box>
 			</Box>

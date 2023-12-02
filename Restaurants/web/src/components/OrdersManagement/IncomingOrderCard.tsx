@@ -63,7 +63,7 @@ export default function OrderCard({ order }: IncomingOrderCardProps) {
 						fontSize: '24px',
 					}}
 				>
-					{`取餐時間：${format(order.orderTime, 'HH:mm')}`}
+					{`${format(order.orderTime, 'MM/dd HH:mm')}`}
 				</Typography>
 				<CloseIcon onClick={handleClose} sx={{ cursor: 'pointer' }} />
 			</Box>

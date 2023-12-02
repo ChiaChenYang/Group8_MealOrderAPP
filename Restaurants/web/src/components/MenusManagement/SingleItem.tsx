@@ -63,11 +63,11 @@ function SingleItem({ item, setItem }: SingleItemProps) {
 				<Box className="my-4 flex w-full justify-between">
 					<Box className="flex w-2/5 flex-col items-center justify-center">
 						{preview && (
-							<div>
+							<div style={{ width: '100px', height: '100px' }}>
 								<img
 									src={preview}
 									alt="Preview"
-									className="w-30 h-30 object-cover"
+									className="w-full h-full object-cover"
 									style={{ objectFit: 'cover' }}
 								/>
 							</div>

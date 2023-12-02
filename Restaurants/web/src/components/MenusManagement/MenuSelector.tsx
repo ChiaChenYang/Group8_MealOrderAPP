@@ -146,8 +146,8 @@ export default function MenuSelector({
 							onChange={handleFieldChange('menuTime')}
 							row
 						>
-							<FormControlLabel value="午段" control={<Radio />} label="午段" />
-							<FormControlLabel value="晚段" control={<Radio />} label="晚段" />
+							<FormControlLabel value="午間" control={<Radio />} label="午段" />
+							<FormControlLabel value="晚間" control={<Radio />} label="晚段" />
 							<FormControlLabel value="全日" control={<Radio />} label="全日" />
 						</RadioGroup>
 					</FormControl>

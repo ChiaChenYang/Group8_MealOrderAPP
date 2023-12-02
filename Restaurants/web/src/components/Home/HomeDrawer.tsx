@@ -39,17 +39,17 @@ export default function HomeDrawer({ activePage }: HomeDrawer) {
 					<Box textAlign="center" className="w-full flex-1">
 						<Avatar
 							alt="Logo"
-							src="https://static.104.com.tw/b_profile/cust_picture/3349/130000000173349/logo.jpg?v=20220306104155"
+							src="/logo.png"
 							sx={{
 								marginX: 'auto',
-								width: 150,
-								height: 150,
+								width: 200,
+								height: 200,
 								marginBottom: '20px',
 							}}
 						/>
 						<Box mt={2}>
 							<Typography variant="h4" fontWeight="bold" align="center">
-								野飯甜
+								快點
 							</Typography>
 						</Box>
 					</Box>

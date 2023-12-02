@@ -145,7 +145,7 @@ export default function MenuModifier({ setMenuList, selectedMenu }: MenuModifier
 	};
 
 	const menuTypes = ['預購', '非預購'];
-	const menuTimes = ['午段', '晚段', '全日'];
+	const menuTimes = ['午間', '晚間', '全日'];
 
 	return (
 		<Box>

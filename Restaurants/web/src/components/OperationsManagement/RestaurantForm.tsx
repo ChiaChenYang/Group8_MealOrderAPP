@@ -36,20 +36,12 @@ const sampleRestaurant: RestaurantFormType = {
 	restaurantLocation: '十三廠一樓 23 櫃',
 	latestNews: ['白飯買一送一', '周年慶'],
 	isOpening: true,
-	openHours: [
-		{
-			day: 'Monday',
-			startTime: new Date('9:30'),
-			endTime: new Date('17:30'),
-		},
-		{
-			day: 'Tuesday',
-			startTime: new Date('9:30'),
-			endTime: new Date('17:30'),
-		},
-	],
 	prepareTime: 10,
+	startTime: new Date("2023/11/28"),
+	endTime: new Date("2023/12/28"),
+	acceptingOrderType: '外帶',
 };
+
 const sampleTypes: RestaruantTypes = [
 	'健康',
 	'甜點',
@@ -63,6 +55,7 @@ const sampleTypes: RestaruantTypes = [
 ];
 const sampleGroups: RestaruantGroups = ['固定櫃', '流動櫃'];
 const sampleAreas = ['桃園', '新竹', '苗栗', '台中', '台南'];
+const sampleOrderTypes = ['內用', '外帶', '皆可'];
 const locationsMap: LocationMapType = {
 	桃園: ['先進封測三廠'],
 	新竹: [
@@ -83,8 +76,8 @@ function RestaurantForm() {
 	const allTypes = sampleTypes;
 	const allGroups = sampleGroups;
 	const allAreas = sampleAreas;
+	const allOrderTypes = sampleOrderTypes;
 	const [data, setData] = useState(sampleRestaurant);
-	const [area, setArea] = useState('新竹');
 	const [startTime, setStartTime] = useState<dayjs.Dayjs | null>(null);
 	const [endTime, setEndTime] = useState<dayjs.Dayjs | null>(null);
 	const theme = useTheme();
@@ -175,13 +168,13 @@ function RestaurantForm() {
 
 					<Box className="m-6 flex w-full flex-col">
 						<Typography className="my-2 text-sm">商家圖片</Typography>
-						<Box className="flex w-2/5 flex-col items-center justify-center">
+						<Box className="ml-5 flex w-1/2 flex-col items-center justify-center">
 							{preview && (
-								<div>
+								<div className="w-[224px] h-[126px]">
 									<img
 										src={preview}
 										alt="Preview"
-										className="w-30 h-30 object-cover"
+										className="w-full h-full object-cover"
 										style={{ objectFit: 'cover' }}
 									/>
 								</div>
@@ -205,6 +198,24 @@ function RestaurantForm() {
 							</Button>
 						</Box>
 					</Box>
+					<TextField
+						label="接受訂單種類"
+						id="acceptingOrderType"
+						name="acceptingOrderType"
+						select
+						value={data.acceptingOrderType}
+						onChange={handleTextChange}
+						variant="standard"
+					>
+						{allOrderTypes.map((type) => (
+							<MenuItem key={type} value={type}>
+								{type}
+							</MenuItem>
+						))}
+					</TextField>
+
+
+
 				</Box>
 
 				<Box
@@ -253,9 +264,9 @@ function RestaurantForm() {
 							label="地區"
 							id="factoryArea"
 							name="factoryArea"
-							value={area}
+							value={data.factoryArea}
 							select
-							onChange={(e) => setArea(e.target.value)}
+							onChange={handleTextChange}
 							variant="standard"
 						>
 							{allAreas.map((area) => (
@@ -274,7 +285,7 @@ function RestaurantForm() {
 							onChange={handleTextChange}
 							variant="standard"
 						>
-							{locationsMap[area].map((location) => (
+							{locationsMap[data.factoryArea].map((location) => (
 								<MenuItem key={location} value={location}>
 									{location}
 								</MenuItem>
