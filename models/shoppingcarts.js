@@ -43,6 +43,17 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 0
+        },
+        expectedFinishedTime: { 
+            // 預估製作完畢時間，可透過品項的準備時間推算
+            type: DataTypes.DATE, 
+            allowNull: false,
+            defaultValue: 0
+        },
+        checkout: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
         } 
     }, {
         timestamps: false, // 禁用 createdAt 和 updatedAt 欄位

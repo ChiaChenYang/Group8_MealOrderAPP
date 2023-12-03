@@ -25,4 +25,6 @@ router.get('/:id/get/single', OrderController.getSingleOrder);
 
 router.get('/:id/get/history', OrderController.getHistoryOrders);
 
+router.get('/consumer/:id/get/current', OrderController.getCurrentOrdersForConsumer);
+
 module.exports = router;

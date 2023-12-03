@@ -1,7 +1,7 @@
 const express = require('express');
 const asyncHandler = require("express-async-handler");
-const { orders, restaurants, menuitems, orderitems } = require("../models");
-const { Sequelize, DataTypes } = require('sequelize');
+const { orders, restaurants, menuitems, orderitems, consumers } = require("../models");
+const { Sequelize, DataTypes, Op } = require('sequelize');
 const sequelize = new Sequelize('sqlite::memory:');
 
 exports.getOrdersWithStatus = async (rid, s) => {
@@ -54,7 +54,7 @@ exports.getOrdersWithStatus = async (rid, s) => {
                 orderItems: all_items,
                 noteFromUser: restaurant.orders[i].orderNote,
                 totalPrice: restaurant.orders[i].totalPrice,
-                finishTime: restaurant.orders[i].expectedFinishedTime,
+                finishTime: restaurant.orders[i].finishTime,
                 completeTime: restaurant.orders[i].completeTime
             });
         }
@@ -71,7 +71,18 @@ exports.updateOrderStatus = async (order_id, old_status, new_status) => {
         throw new Error(`Error: The order with id ${order_id} is in ${order.status} state! (expected ${old_status})`);
     }
     else{
-        await order.update({ status: new_status });
+        if (new_status === 'progressing'){
+            await order.update({ status: new_status, receivedTime: new Date() });
+        }
+        else if (new_status === 'waiting'){
+            await order.update({ status: new_status, finishTime: new Date() });
+        }
+        else if (new_status === 'completed'){
+            await order.update({ status: new_status, completeTime: new Date() });
+        }
+        else {
+            await order.update({ status: new_status });
+        }
     }
 };
 
@@ -91,6 +102,9 @@ exports.updateSoldQuantity = async (order_id) => {
     for (let i=0; i<num_items; i++){
         for (let j=0; j<ordered_items[i].orders.length; j++){
             ordered_items[i].soldQuantity += ordered_items[i].orders[j].orderitems.orderQuantity;
+            if (ordered_items[i].soldQuantity >= ordered_items[i].totalQuantity) {
+                ordered_items[i].isAvailable = false;
+            }
         }
         await ordered_items[i].save();
     }
@@ -201,7 +215,7 @@ exports.getHistoryOrders = async (rid) => {
     }
 };
 
-exports.getProgressingOrdersForConsumer = async (consumer_id) => {
+exports.getCurrentOrdersForConsumer = async (consumer_id) => {
     const progressing_orders = await orders.findAll({
         include: [{
             model: consumers,
@@ -213,7 +227,9 @@ exports.getProgressingOrdersForConsumer = async (consumer_id) => {
             attributes: ['restaurantId','restaurantName','restaurantImage']
         }],
         where: {
-            status: 'progressing'
+            status: {
+                [Op.or]: ['incoming', 'progressing', 'waiting']
+            }
         },
         order: [
             ['orderTime', 'DESC']
@@ -238,5 +254,6 @@ exports.getProgressingOrdersForConsumer = async (consumer_id) => {
                 "time": progressing_orders[i].expectedFinishedTime
             };
         }
+        return return_orders;
     }
 };

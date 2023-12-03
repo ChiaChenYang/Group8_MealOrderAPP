@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         consumerId: {
             // 消費者 id（FK）
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             references: {
                 model: 'consumers', // 表名
                 key: 'consumerId'   // 列名
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         restaurantId: {
             // 餐廳 id（FK）
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             references: {
                 model: 'restaurants', // 表名
                 key: 'restaurantId'   // 列名
@@ -91,12 +91,12 @@ module.exports = (sequelize, DataTypes) => {
         paymentMethod: {
             // 付款方式，如信用卡、現金等
             type: DataTypes.STRING(16), 
-            allowNull: false, 
+            allowNull: true, 
         },
         pickupMethod: { 
             // 取餐方式
             type: DataTypes.ENUM('外帶', '內用', '外帶內用'), 
-            allowNull: false, 
+            allowNull: true, 
         },
         orderRating: {
             // 評價
