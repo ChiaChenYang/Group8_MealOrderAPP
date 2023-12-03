@@ -5,7 +5,7 @@ const ShoppingCartService = require('../services/ShoppingCartService');
 
 exports.getShoppingCartsForUser = asyncHandler(async (req, res, next) => {
     const user_id = parseInt(req.params.id);
-    all_carts = await ShoppingCartService.getShoppingCartsForUser(user_id);
+    const all_carts = await ShoppingCartService.getShoppingCartsForUser(user_id);
     res.json(all_carts);
 });
 
@@ -20,4 +20,11 @@ exports.addNote = asyncHandler(async (req, res, next) => {
     const note = req.body.addition;
     await ShoppingCartService.addNote(user_id, shop_id, note);
     res.status(200).end();
+});
+
+exports.checkout = asyncHandler(async (req, res, next) => {
+    const user_id = req.body.user_id;
+    const shop_id = req.body.shop_id;
+    const new_order = await ShoppingCartService.checkout(user_id, shop_id);
+    res.json(new_order);
 });

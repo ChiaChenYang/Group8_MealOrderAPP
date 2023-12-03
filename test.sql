@@ -12,9 +12,9 @@ UPDATE orders Set restaurantId=1;
 
 INSERT INTO menus (restaurantId, menuName, menuTime) VALUES (1, '中午菜單', '午段');
 
-INSERT INTO menuitems (menuId, itemName, prepareTime, price, availableQuantity) VALUES (1, '大麥克', 5, 50, 26);
+INSERT INTO menuitems (menuId, itemName, prepareTime, price, totalQuantity) VALUES (1, '大麥克', 5, 50, 26);
 
-INSERT INTO menuitems (menuId, itemName, prepareTime, price, availableQuantity) VALUES (1, '雙層牛肉吉士堡', 8, 60, 13);
+INSERT INTO menuitems (menuId, itemName, prepareTime, price, totalQuantity) VALUES (1, '雙層牛肉吉士堡', 8, 60, 13);
 
 INSERT INTO orderitems (itemId, orderId, orderQuantity, orderItemNote) VALUES (2, 2, 1, '小辣');
 

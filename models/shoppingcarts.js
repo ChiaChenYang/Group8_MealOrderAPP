@@ -44,9 +44,9 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 0
         },
-        expectedFinishedTime: { 
+        totalPrepareTime: { 
             // 預估製作完畢時間，可透過品項的準備時間推算
-            type: DataTypes.DATE, 
+            type: DataTypes.INTEGER, 
             allowNull: false,
             defaultValue: 0
         },
