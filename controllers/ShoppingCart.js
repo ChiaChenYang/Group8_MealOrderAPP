@@ -22,6 +22,15 @@ exports.addNote = asyncHandler(async (req, res, next) => {
     res.status(200).end();
 });
 
+exports.setReservationTime = asyncHandler(async (req, res, next) => {
+    const user_id = req.body.user_id;
+    const shop_id = req.body.shop_id;
+    const estimate_time_hour = req.body.estimate_time_hour;
+    const estimate_time_minute = req.body.estimate_time_minute;
+    await ShoppingCartService.setReservationTime(user_id, shop_id, estimate_time_hour, estimate_time_minute);
+    res.status(200).end();
+})
+
 exports.checkout = asyncHandler(async (req, res, next) => {
     const user_id = req.body.user_id;
     const shop_id = req.body.shop_id;

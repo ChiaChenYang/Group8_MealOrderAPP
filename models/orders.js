@@ -53,13 +53,18 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE, 
             allowNull: false, 
         },
+        reservationTime: {
+            // 使用者預定取餐的時間
+            type: DataTypes.DATE,
+            allowNull: false
+        },
         orderNote: {
             // 整筆訂單備註，消費者預設備註可放這
             type: DataTypes.STRING,
             allowNull: true,
         },
         expectedFinishedTime: { 
-            // 預估製作完畢時間，好像是說可以不用有這個，可透過品項的準備時間推算
+            // 預估製作完畢時間
             type: DataTypes.DATE, 
             allowNull: true, 
         },

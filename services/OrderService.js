@@ -1,6 +1,7 @@
 const express = require('express');
 const asyncHandler = require("express-async-handler");
 const { orders, restaurants, menuitems, orderitems, consumers } = require("../models");
+const utils = require("../utils");
 const { Sequelize, DataTypes, Op } = require('sequelize');
 const sequelize = new Sequelize('sqlite::memory:');
 
@@ -50,12 +51,12 @@ exports.getOrdersWithStatus = async (rid, s) => {
             all_orders.push({
                 orderId: order_id,
                 type: restaurant.orders[i].status,
-                orderTime: restaurant.orders[i].orderTime.toString(),
+                orderTime: utils.formatDate(restaurant.orders[i].reservationTime),
                 orderItems: all_items,
                 noteFromUser: restaurant.orders[i].orderNote,
                 totalPrice: restaurant.orders[i].totalPrice,
-                finishTime: restaurant.orders[i].finishTime,
-                completeTime: restaurant.orders[i].completeTime
+                finishTime: utils.formatDate(restaurant.orders[i].finishTime),
+                completeTime: utils.formatDate(restaurant.orders[i].completeTime)
             });
         }
         return all_orders;
@@ -245,13 +246,13 @@ exports.getCurrentOrdersForConsumer = async (consumer_id) => {
             if (progressing_orders[i].restaurant === null) {
                 throw new Error(`There is not any restaurant corresponding to the order ${progressing_orders[i].orderId}`);
             }
-            return_orders[i] = {
+            return_orders[i+1] = {
                 "id": progressing_orders[i].restaurant.restaurantId,
                 "shop_name": progressing_orders[i].restaurant.restaurantName,
                 "quantity": progressing_orders[i].totalQuantity,
                 "price": progressing_orders[i].totalPrice,
                 "image": progressing_orders[i].restaurant.restaurantImage,
-                "time": progressing_orders[i].expectedFinishedTime
+                "time": utils.formatDate(progressing_orders[i].expectedFinishedTime)
             };
         }
         return return_orders;

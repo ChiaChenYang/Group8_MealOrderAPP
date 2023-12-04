@@ -9,6 +9,8 @@ router.post('/add/item', ShopingCartController.addItemToCart);
 
 router.post('/add/note', ShopingCartController.addNote);
 
+router.post('/set/reservation/time', ShopingCartController.setReservationTime);
+
 router.get('/checkout', ShopingCartController.checkout);
 
 module.exports = router;

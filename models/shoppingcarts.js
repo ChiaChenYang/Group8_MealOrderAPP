@@ -44,11 +44,15 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 0
         },
-        totalPrepareTime: { 
+        /*totalPrepareTime: { 
             // 預估製作完畢時間，可透過品項的準備時間推算
             type: DataTypes.INTEGER, 
             allowNull: false,
             defaultValue: 0
+        },*/
+        reservationTime: {
+            type: DataTypes.DATE,
+            allowNull: true
         },
         checkout: {
             type: DataTypes.BOOLEAN,
