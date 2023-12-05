@@ -22,3 +22,17 @@ exports.formatDate = (date) => {
         );
     }
 };
+
+exports.formatDateHHMM = (date) => {
+    if (date === null){
+        return null
+    }
+    else{
+        return (
+            [
+                padTo2Digits(date.getHours()),
+                padTo2Digits(date.getMinutes()),
+            ].join(':')
+        );
+    }
+}

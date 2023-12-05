@@ -37,3 +37,10 @@ exports.checkout = asyncHandler(async (req, res, next) => {
     const new_order = await ShoppingCartService.checkout(user_id, shop_id);
     res.json(new_order);
 });
+
+exports.getCartInfo = asyncHandler(async (req, res, next) => {
+    const user_id = req.body.user_id;
+    const shop_id = req.body.shop_id;
+    const cart_info = await ShoppingCartService.getCartInfo(user_id, shop_id);
+    res.json(cart_info);
+});

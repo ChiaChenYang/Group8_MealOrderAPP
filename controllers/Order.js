@@ -76,3 +76,9 @@ exports.getCurrentOrdersForConsumer = asyncHandler(async (req, res, next) => {
     retrieved_orders = await OrderService.getCurrentOrdersForConsumer(consumer_id);
     res.json(retrieved_orders);
 });
+
+exports.getOrderState = asyncHandler(async (req, res, next) => {
+    const order_id = parseInt(req.params.id);
+    order_state = await OrderService.getOrderState(order_id);
+    res.json(order_state);
+});

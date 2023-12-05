@@ -258,3 +258,51 @@ exports.getCurrentOrdersForConsumer = async (consumer_id) => {
         return return_orders;
     }
 };
+
+exports.getOrderState = async (order_id) => {
+    const order = await orders.findByPk(order_id, {
+        include: [{
+            model: menuitems,
+            through: {
+                attributes: ['orderQuantity', 'orderItemNote']
+            }
+        }, {
+            model: restaurants
+        }]
+    });
+    if (order === null){
+        throw new Error(`Error: Order with id ${order_id} does not exist`);
+    }
+    else{
+        var all_order_items = {};
+        for (let i=0; i<order.menuitems.length; i++) {
+            all_order_items[i+1] = {
+                name: order.menuitems[i].itemName,
+                image: order.menuitems[i].itemImage,
+                quantity: order.menuitems[i].orderitems.orderQuantity,
+                addition: order.menuitems[i].orderitems.orderItemNote
+            }
+        }
+
+        var process = false;
+        var accept = true;
+        if (order.status === 'waiting' || order.status === 'completed'){
+            process = true;
+        }
+        if (order.status === 'rejected'){
+            accept = false;
+        }
+
+        var order_state = {
+            id: order.restaurant.restaurantId,
+            name: order.restaurant.restaurantName,
+            location: order.restaurant.factoryLocation,
+            time: utils.formatDate(order.expectedFinishedTime),
+            process: process,
+            accept: accept,
+            Meals: all_order_items,
+            addition: order.orderNote
+        };
+        return order_state;
+    }
+};

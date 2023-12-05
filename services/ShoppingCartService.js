@@ -41,6 +41,54 @@ exports.getShoppingCartsForUser = async (user_id) => {
     }
 };
 
+exports.getCartInfo = async (user_id, shop_id) => {
+    var shop_cart = await shoppingcarts.findOne({
+        include: [{
+            model: consumers,
+            where: {
+                consumerId: user_id
+            }
+        }, {
+            model: restaurants,
+            where: {
+                restaurantId: shop_id
+            }
+        }, {
+            model: menuitems,
+            through: {
+                attributes: ['cartQuantity']
+            }
+        }],
+        where: {
+            checkout: false
+        }
+    });
+
+    if (shop_cart === null) {
+        throw new Error(`The shopping cart does not exist! (consumerId: ${user_id}, restaurantId: ${shop_id})`);        
+    }
+    else {
+        var all_cart_items = {};
+        for (let i=0; i<shop_cart.menuitems.length; i++){
+            all_cart_items[i+1] = {
+                name: shop_cart.menuitems[i].itemName,
+                price: shop_cart.menuitems[i].price,
+                quantity: shop_cart.menuitems[i].cartitems.cartQuantity,
+                image: shop_cart.menuitems[i].itemImage
+            };
+        }
+
+        var return_shop_cart = {
+            shop_cart_id: shop_cart.cartId,
+            restaurant: shop_cart.restaurant.restaurantName,
+            total: shop_cart.price,
+            items: all_cart_items,
+        };
+        return return_shop_cart;
+    }
+
+};
+
 exports.addItemToCart = async (item_info) => {
     var shop_cart = await shoppingcarts.findOne({
         include: [{

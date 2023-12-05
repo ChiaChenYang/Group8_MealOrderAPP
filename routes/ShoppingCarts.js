@@ -5,6 +5,8 @@ var router = express.Router();
 
 router.get('/:id/get/carts', ShopingCartController.getShoppingCartsForUser);
 
+router.get('/cartinfo', ShopingCartController.getCartInfo);
+
 router.post('/add/item', ShopingCartController.addItemToCart);
 
 router.post('/add/note', ShopingCartController.addNote);
