@@ -14,11 +14,13 @@ exports.addItemToCart = asyncHandler(async (req, res, next) => {
     res.status(200).end();
 });
 
-exports.addNote = asyncHandler(async (req, res, next) => {
+exports.addNoteAndSyncCartItems = asyncHandler(async (req, res, next) => {
     const user_id = req.body.user_id;
     const shop_id = req.body.shop_id;
+    const items = req.body.items;
     const note = req.body.addition;
     await ShoppingCartService.addNote(user_id, shop_id, note);
+    await ShoppingCartService.syncAllCartItems(user_id, shop_id, items);
     res.status(200).end();
 });
 

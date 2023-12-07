@@ -9,7 +9,7 @@ router.get('/cartinfo', ShopingCartController.getCartInfo);
 
 router.post('/add/item', ShopingCartController.addItemToCart);
 
-router.post('/add/note', ShopingCartController.addNote);
+router.post('/update/items/note', ShopingCartController.addNoteAndSyncCartItems);
 
 router.post('/set/reservation/time', ShopingCartController.setReservationTime);
 

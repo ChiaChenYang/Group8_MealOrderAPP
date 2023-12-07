@@ -108,6 +108,7 @@ exports.addItemToCart = async (item_info) => {
     });
     if (shop_cart === null) {
         // create a new shopping cart
+        console.log("Create a new shopping cart.");
         const new_shop_cart = await shoppingcarts.create({ consumerId: item_info.user_id, restaurantId: item_info.shop_id });
         if ( new_shop_cart === null ) {
             throw new Error(`Failed to create a new shopping cart! (consumerId: ${item_info.user_id}, restaurantId: ${item_info.shop_id})`);
@@ -116,6 +117,7 @@ exports.addItemToCart = async (item_info) => {
             shop_cart = new_shop_cart;
         }
     }
+
     const added_item = await menuitems.findOne({
         include: [{
             model: menus,
@@ -134,14 +136,96 @@ exports.addItemToCart = async (item_info) => {
         throw new Error(`The price of ${item_info.name} is not consistent! (restaurantId: ${item_info.shop_id}, menuId: ${item_info.menu_id})`)
     }
     else {
-        const cart_item = await cartitems.findOne({ itemId: added_item.itemId, cartId: shop_cart.cartId });
-        const new_cart_item = await cartitems.create({ itemId: added_item.itemId, cartId: shop_cart.cartId, cartQuantity: item_info.quantity, cartItemNote: item_info.note });
-        if (new_cart_item === null) {
-            throw new Error(`Failed to create a new cart item! (consumerId: ${item_info.user_id}, restaurantId: ${item_info.shop_id}, itemName: ${item_info.name}`);
+        const cart_item = await cartitems.findOne({
+            where: {
+                [Op.and]:[
+                    {itemId: added_item.itemId},
+                    {cartId: shop_cart.cartId}
+                ]
+            }
+        });
+        if ( cart_item === null ){
+            if (item_info.quantity === 0) {
+                throw new Error(`Adding item with quantity 0 to shopping cart! (restaurantId: ${item_info.shop_id}, consumerId: ${item_info.user_id})`);
+            }
+            console.log("Add new cart item.");
+
+            const new_cart_item = await cartitems.create({ itemId: added_item.itemId, cartId: shop_cart.cartId, cartQuantity: item_info.quantity, cartItemNote: item_info.note });
+            if (new_cart_item === null) {
+                throw new Error(`Failed to create a new cart item! (consumerId: ${item_info.user_id}, restaurantId: ${item_info.shop_id}, itemName: ${item_info.name}`);
+            }
+            shop_cart.quantity += new_cart_item.cartQuantity;
+            shop_cart.price += (new_cart_item.cartQuantity * added_item.price);
+            // shop_cart.totalPrepareTime = Math.max(shop_cart.totalPrepareTime, added_item.prepareTime);
+            await shop_cart.save();
         }
-        shop_cart.quantity += new_cart_item.cartQuantity;
-        shop_cart.price += (new_cart_item.cartQuantity * added_item.price);
-        // shop_cart.totalPrepareTime = Math.max(shop_cart.totalPrepareTime, added_item.prepareTime);
+        else {
+            const old_quantity = cart_item.cartQuantity;
+            const new_quantity = item_info.quantity;
+            if (new_quantity > 0){
+                console.log("Change the quantity of an original cart item");
+                await cart_item.update({ cartQuantity: new_quantity })
+                shop_cart.quantity += (new_quantity - old_quantity);
+                shop_cart.price += (added_item.price * (new_quantity - old_quantity));
+                await shop_cart.save();
+            }
+            else {
+                console.log("Delete a cart item.");
+                await cart_item.destroy();
+                shop_cart.quantity -= old_quantity;
+                shop_cart.price -= (added_item.price * old_quantity);
+                await shop_cart.save();
+            }
+        }
+    }
+};
+
+exports.syncAllCartItems = async (user_id, shop_id, items) => {
+    const shop_cart = await shoppingcarts.findOne({
+        include: [{
+            model: consumers,
+            where: {
+                consumerId: user_id
+            }
+        }, {
+            model: restaurants,
+            where: {
+                restaurantId: shop_id
+            }
+        }, {
+            model: menuitems,
+            through: {
+                attributes: ['cartQuantity', 'cartItemId']
+            }
+        }],
+        where: {
+            checkout: false
+        }
+    });
+
+    if (shop_cart === null) {
+        throw new Error(`The shopping cart does not exist! (consumerId: ${user_id}, restaurantId: ${shop_id})`);        
+    }
+    else {
+        //console.log(items);
+        for (const key in items){
+            for (let i=0; i<shop_cart.menuitems.length; i++){
+                if (items[key].name === shop_cart.menuitems[i].itemName && items[key].quantity != shop_cart.menuitems[i].cartitems.cartQuantity){
+                    const saved_item = await cartitems.findByPk(shop_cart.menuitems[i].cartitems.cartItemId); 
+                    shop_cart.menuitems[i].cartitems.cartQuantity = items[key].quantity;
+                    saved_item.cartQuantity = items[key].quantity;
+                    await saved_item.save();
+                    console.log("update the quantity of a cart item");
+                }
+            }
+        }
+
+        shop_cart.price = 0;
+        shop_cart.quantity = 0;
+        for (let i=0; i<shop_cart.menuitems.length; i++){
+            shop_cart.price += (shop_cart.menuitems[i].price * shop_cart.menuitems[i].cartitems.cartQuantity);
+            shop_cart.quantity += (shop_cart.menuitems[i].cartitems.cartQuantity);
+        }
         await shop_cart.save();
     }
 };
