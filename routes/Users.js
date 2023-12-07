@@ -3,8 +3,12 @@ var UserCredentialController = require('../controllers/UserCredential')
 
 var router = express.Router();
 
-router.post('/signup', UserCredentialController.addUser);
+router.post('/consumer/signup', UserCredentialController.addConsumerUser);
+router.post('/consumer/login', UserCredentialController.validateConsumerUser);
+router.post('/merchant/signup', UserCredentialController.addMerchantUser);
+router.post('/merchant/login', UserCredentialController.validateMerchantUser);
 
-router.get('/showall', UserCredentialController.showAllUsers);
+// router.post('/signup', UserCredentialController.addUser);
+// router.get('/showall', UserCredentialController.showAllUsers);
 
 module.exports = router;
