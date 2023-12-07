@@ -29,4 +29,8 @@ router.get('/consumer/:id/get/current', OrderController.getCurrentOrdersForConsu
 
 router.get('/:id/orderstate', OrderController.getOrderState);
 
+router.get('/:id/restaurantinfo', OrderController.getRestaurantInfo);
+
+router.post('/set/rating', OrderController.setOrderRating);
+
 module.exports = router;

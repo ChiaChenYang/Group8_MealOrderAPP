@@ -4,25 +4,25 @@ const OrderService = require('../services/OrderService');
 
 exports.getProgressingOrders = asyncHandler(async (req, res, next) => {
     const restaurant_id = parseInt(req.params.id);
-    all_orders = await OrderService.getOrdersWithStatus(restaurant_id, 'progressing');
+    const all_orders = await OrderService.getOrdersWithStatus(restaurant_id, 'progressing');
     res.json(all_orders);
 });
 
 exports.getIncomingOrders = asyncHandler(async (req, res, next) => {
     const restaurant_id = parseInt(req.params.id);
-    all_orders = await OrderService.getOrdersWithStatus(restaurant_id, 'incoming');
+    const all_orders = await OrderService.getOrdersWithStatus(restaurant_id, 'incoming');
     res.json(all_orders);
 });
 
 exports.getWaitingOrders = asyncHandler(async (req, res, next) => {
     const restaurant_id = parseInt(req.params.id);
-    all_orders = await OrderService.getOrdersWithStatus(restaurant_id, 'waiting');
+    const all_orders = await OrderService.getOrdersWithStatus(restaurant_id, 'waiting');
     res.json(all_orders);
 });
 
 exports.getCompletedOrders = asyncHandler(async (req, res, next) => {
     const restaurant_id = parseInt(req.params.id);
-    all_orders = await OrderService.getOrdersWithStatus(restaurant_id, 'completed');
+    const all_orders = await OrderService.getOrdersWithStatus(restaurant_id, 'completed');
     res.json(all_orders);
 });
 
@@ -61,24 +61,37 @@ exports.delayOrder = asyncHandler(async (req, res, next) => {
 
 exports.getSingleOrder = asyncHandler(async (req, res, next) => {
     const order_id = parseInt(req.params.id);
-    retrieved_order = await OrderService.getSingleOrder(order_id);
+    const retrieved_order = await OrderService.getSingleOrder(order_id);
     res.json(retrieved_order);
 });
 
 exports.getHistoryOrders = asyncHandler(async (req, res, next) => {
     const restaurant_id = parseInt(req.params.id);
-    retrieved_orders = await OrderService.getHistoryOrders(restaurant_id);
+    const retrieved_orders = await OrderService.getHistoryOrders(restaurant_id);
     res.json(retrieved_orders);
 });
 
 exports.getCurrentOrdersForConsumer = asyncHandler(async (req, res, next) => {
     const consumer_id = parseInt(req.params.id);
-    retrieved_orders = await OrderService.getCurrentOrdersForConsumer(consumer_id);
+    const retrieved_orders = await OrderService.getCurrentOrdersForConsumer(consumer_id);
     res.json(retrieved_orders);
 });
 
 exports.getOrderState = asyncHandler(async (req, res, next) => {
     const order_id = parseInt(req.params.id);
-    order_state = await OrderService.getOrderState(order_id);
+    const order_state = await OrderService.getOrderState(order_id);
     res.json(order_state);
+});
+
+exports.getRestaurantInfo = asyncHandler(async (req, res, next) => {
+    const order_id = parseInt(req.params.id);
+    const restaurant_info = await OrderService.getRestaurantInfo(order_id);
+    res.json(restaurant_info);
+});
+
+exports.setOrderRating = asyncHandler(async (req, res, next) => {
+    const order_id = req.body.id;
+    const rating = req.body.star;
+    await OrderService.setOrderRating(order_id, rating);
+    res.status(200).end();
 });

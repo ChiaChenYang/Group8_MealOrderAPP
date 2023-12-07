@@ -306,3 +306,60 @@ exports.getOrderState = async (order_id) => {
         return order_state;
     }
 };
+
+exports.getRestaurantInfo = async (order_id) => {
+    const order = await orders.findByPk(order_id, {
+        include: [{
+            model: restaurants,
+            attributes: ['restaurantName','factoryLocation','restaurantImage']
+        }]
+    });
+
+    if (order === null){
+        throw new Error(`The order with id ${order_id} does not exist`);
+    }
+
+    return {
+        name: order.restaurant.restaurantName,
+        location: order.restaurant.factoryLocation,
+        image: order.restaurant.restaurantImage
+    };
+};
+
+exports.setOrderRating = async (order_id, rating) => {
+    const order = await orders.findByPk(order_id);
+    if (order === null){
+        throw new Error(`The order with id ${order_id} does not exist`);
+    }
+
+    await order.update({ orderRating: rating });
+};
+
+exports.getRatingInfo = async (restaurant_id) => {
+    const all_orders = await orders.findAll({
+        where: {
+            [Op.and]: [{
+                restaurantId: restaurant_id
+            }, {
+                orderRating: {[Op.ne]: null}
+            }]
+        }
+    });
+
+    if (all_orders.length === 0){
+        return {
+            evaluation: null,
+            comment: 0
+        };
+    }
+
+    var avg_rating = 0;
+    for (let i=0; i<all_orders.length; i++){
+        avg_rating += all_orders[i].orderRating;
+    }
+    avg_rating = avg_rating / all_orders.length;
+    return {
+        evaluation: avg_rating,
+        comment: all_orders.length
+    };
+}

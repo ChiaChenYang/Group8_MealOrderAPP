@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         cartId: {
             // 購物車 id（FK）
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             references: {
                 model: 'shoppingcarts', // 表名
                 key: 'cartId'   // 列名
