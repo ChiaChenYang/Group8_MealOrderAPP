@@ -6,50 +6,63 @@ exports.createRestaurantInfo = async(restaurantInfo) => {
     try {
         // console.log(restaurantInfo);
         const { 
+                restaurantId,
                 restaurantName, 
+                restaurantGroup,
                 restaurantType, 
+                telephoneNumber,
+                factoryArea,
+                factoryLocation,
                 restaurantLocation, 
                 latestNews, 
                 isOpening, 
-                startDate, 
-                endDate, 
-                logo,
                 prepareTime,
+                startTime, 
+                endTime, 
+                acceptingOrderType,
+                logo,
                 // 其他欄位
-                ownerId, 
-                factoryLocation,
-                restaurantPhone,
-                restaurantMail,
-                serviceMethod,
-                isorderAvailable,
-                istemporaryRestaurant,
+                // ownerId,
+                // restaurantPhone,
+                // restaurantMail,
+                // serviceMethod,
+                // isorderAvailable,
+                // istemporaryRestaurant,
                 // rating,
             } = restaurantInfo;
     
         // 檢查 restaurantType 是否是字符串，如果是，則轉換為列表
         const types = Array.isArray(restaurantType) ? restaurantType : [restaurantType];
 
+        // 檢查 restaurantGroup 是流動櫃還是固定櫃
+        let istemporaryRestaurant = false;
+        if (restaurantGroup == '流動櫃'){
+            istemporaryRestaurant = true;
+        } 
+
         // 檢查 latestNews 是否是字符串，如果是，則轉換為列表
         const latestnews = Array.isArray(latestNews) ? latestNews : [latestNews];
         
         // 創建新的餐廳
         const newRestaurant = await restaurants.create({
+            restaurantId: restaurantId,
             restaurantName: restaurantName,
             restaurantLocation: restaurantLocation,
             isOpening: isOpening,
-            stationStartDate: new Date(startDate),
-            stationEndDate: new Date(endDate),
+            stationStartDate: new Date(startTime),
+            stationEndDate: new Date(endTime),
             restaurantImage: logo,
             prepareTime: prepareTime,
             // 其他欄位
-            ownerId: ownerId, 
+            ownerId: restaurantId, // restaurantId 為 ownerId
+            factoryArea: factoryArea,
             factoryLocation: factoryLocation,
-            restaurantPhone: restaurantPhone,
-            restaurantMail: restaurantMail,
-            serviceMethod: serviceMethod,
-            isorderAvailable: isorderAvailable,
+            restaurantPhone: telephoneNumber,
+            // restaurantMail: restaurantMail,
+            serviceMethod: acceptingOrderType,
+            // isorderAvailable: isorderAvailable,
             istemporaryRestaurant: istemporaryRestaurant,
-            rating: 0
+            // rating: 0
         });
         // 處理最新消息
         let currentDate = new Date();
@@ -80,30 +93,41 @@ exports.createRestaurantInfo = async(restaurantInfo) => {
 exports.modifyRestaurantInfo = async(restaurantInfo) => {
     try {
         // console.log(restaurantInfo);
-        const { restaurantId,
-                restaurantName, 
-                restaurantType, 
-                restaurantLocation, 
-                latestNews, 
-                isOpening, 
-                startDate, 
-                endDate, 
-                logo,
-                prepareTime,
-                // 其他欄位
-                ownerId, 
-                factoryLocation,
-                restaurantPhone,
-                restaurantMail,
-                serviceMethod,
-                isorderAvailable,
-                istemporaryRestaurant,
-                // rating,
+        const {  
+            restaurantId,
+            restaurantName, 
+            restaurantGroup,
+            restaurantType, 
+            telephoneNumber,
+            factoryArea,
+            factoryLocation,
+            restaurantLocation, 
+            latestNews, 
+            isOpening, 
+            prepareTime,
+            startTime, 
+            endTime, 
+            acceptingOrderType,
+            logo,
+            // 其他欄位
+            // ownerId,
+            // restaurantPhone,
+            // restaurantMail,
+            // serviceMethod,
+            // isorderAvailable,
+            // istemporaryRestaurant,
+            // rating,
             } = restaurantInfo;
     
         // 檢查 restaurantType 是否是字符串，如果是，則轉換為列表
         const types = Array.isArray(restaurantType) ? restaurantType : [restaurantType];
         
+        // 檢查 restaurantGroup 是流動櫃還是固定櫃
+        let istemporaryRestaurant = false;
+        if (restaurantGroup == '流動櫃'){
+            istemporaryRestaurant = true;
+        }
+
         // 檢查 latestNews 是否是字符串，如果是，則轉換為列表
         const latestnews = Array.isArray(latestNews) ? latestNews : [latestNews];
 
@@ -118,21 +142,27 @@ exports.modifyRestaurantInfo = async(restaurantInfo) => {
                 restaurantName: restaurantName,
                 restaurantLocation: restaurantLocation,
                 isOpening: isOpening,
-                stationStartDate: new Date(startDate),
-                stationEndDate: new Date(endDate),
+                stationStartDate: new Date(startTime),
+                stationEndDate: new Date(endTime),
                 restaurantImage: logo,
                 prepareTime: prepareTime,
                 // 其他欄位
-                ownerId: ownerId, 
+                // ownerId: restaurantId, 
+                factoryArea: factoryArea,
                 factoryLocation: factoryLocation,
-                restaurantPhone: restaurantPhone,
-                restaurantMail: restaurantMail,
-                serviceMethod: serviceMethod,
-                isorderAvailable: isorderAvailable,
+                restaurantPhone: telephoneNumber,
+                // restaurantMail: restaurantMail,
+                serviceMethod: acceptingOrderType,
+                // isorderAvailable: isorderAvailable,
                 istemporaryRestaurant: istemporaryRestaurant,
-                rating: 0
+                // rating: 0
             });
             // 更新 latestNews 等相關資訊
+            await restaurantlatestnews.destroy({
+                where: {
+                  restaurantId: existingRestaurant.restaurantId,
+                },
+            });
             let currentDate = new Date();
             currentDate = currentDate.setHours(currentDate.getHours()+8);
             for (const news of latestnews) {
@@ -179,20 +209,28 @@ exports.getRestaurantInfo = async (restaurantId) => {
         return 'restaurantInfo 出現錯誤';
     }
 
+    const restaurantGroup = '固定櫃';
+    if (restaurantInfo.istemporaryRestaurant){
+        restaurantGroup = '流動櫃';
+    }
+    
     // 建立所需的格式
     const formattedRestaurantInfo = {
         restaurantId: restaurantInfo.restaurantId,
         restaurantName: restaurantInfo.restaurantName,
+        restaurantGroup: restaurantGroup,
         restaurantType: restaurantInfo.categories.map(category => category.categoryName).join(', '),
         telephoneNumber: restaurantInfo.restaurantPhone,
+        factoryArea: restaurantInfo.factoryArea,
         factoryLocation: restaurantInfo.factoryLocation,
         restaurantLocation: restaurantInfo.restaurantLocation,
         latestNews: restaurantInfo.restaurantlatestnews.map(news => news.newsContent),
         isOpening: restaurantInfo.isOpening == 1,
-        startDate: restaurantInfo.stationStartDate,
-        endDate: restaurantInfo.stationEndDate,
+        prepareTime: restaurantInfo.prepareTime,
+        startTime: restaurantInfo.stationStartDate,
+        endTime: restaurantInfo.stationEndDate,
         // logo: restaurantInfo.restaurantImage,
-        prepareTime: restaurantInfo.prepareTime
+        acceptingOrderType: restaurantInfo.serviceMethod
     };
 
     console.log("Formatted Restaurant Info:", JSON.stringify(formattedRestaurantInfo, null, 2));
@@ -227,4 +265,249 @@ exports.showInfoStatus = async(restaurantId) => {
         }
     }
     return nullcols;
+};
+
+// 以下為消費者端 API
+
+exports.showAllRestaurants = async (location) => {
+    const allrestaurants = await restaurants.findAll({
+        include: [
+            {
+                model: categories,
+                through: { attributes: [] },
+                attributes: ['categoryName']
+            },
+            {
+                model: restaurantlatestnews,
+                attributes: ['newsContent']
+            }
+        ],
+        attributes: [
+            'restaurantId', 
+            'restaurantName', 
+            'restaurantImage', 
+            'serviceMethod', 
+            'prepareTime',
+        ],
+        where: {
+            factoryLocation: location,
+            istemporaryRestaurant: false
+        }
+    });
+    // console.log(allrestaurants);
+
+    let results = {};
+
+    for (const restaurant of allrestaurants) {
+        let restaurantId = restaurant.dataValues.restaurantId;
+
+        // 計算歷史評價
+        let currentDate = new Date();
+        currentDate = currentDate.setHours(currentDate.getHours()+8);
+        currentDate = new Date(currentDate);
+
+        const historyRating = await orders.findAll({
+            attributes: [
+                [Sequelize.fn('AVG', Sequelize.col('orderRating')), 'avgRating']
+            ],
+            where: {
+                restaurantId: restaurantId,
+                completeTime: {
+                    [Sequelize.Op.lte]: currentDate
+                }
+            }
+        });
+        const historyRatingValue = historyRating[0].dataValues.avgRating || 0;
+        // 四捨五入到小數點第二位
+        const roundedHistoryRating = parseFloat(historyRatingValue.toFixed(2));
+        
+        let result = {};
+        // console.log('這裡這裡這裡這裡這裡這裡這裡', restaurant.dataValues.categories)
+        result['id'] = restaurantId;
+        result['name'] = restaurant.dataValues.restaurantName;
+        result['type'] = restaurant.dataValues.categories[0].dataValues.categoryName;
+        result['image'] = restaurant.dataValues.restaurantImage;
+        result['service'] = restaurant.dataValues.serviceMethod;
+        result['rating'] = roundedHistoryRating;
+
+        results[restaurantId] = result;
+    }
+    
+    return results;
+};
+
+exports.showCategoryRestaurants = async (location, category) => {
+    const allrestaurants = await restaurants.findAll({
+        include: [
+            {
+                model: categories,
+                through: { attributes: [] },
+                attributes: ['categoryName'],
+                where: {
+                    categoryName: category
+                }
+            },
+            {
+                model: restaurantlatestnews,
+                attributes: ['newsContent']
+            }
+        ],
+        attributes: [
+            'restaurantId', 
+            'restaurantName', 
+            'restaurantImage', 
+            'serviceMethod', 
+            'prepareTime',
+        ],
+        where: {
+            factoryLocation: location,
+            istemporaryRestaurant: false
+        }
+    });
+    // console.log(allrestaurants);
+
+    let results = {};
+
+    for (const restaurant of allrestaurants) {
+        let restaurantId = restaurant.dataValues.restaurantId;
+
+        // 計算歷史評價
+        let currentDate = new Date();
+        currentDate = currentDate.setHours(currentDate.getHours()+8);
+        currentDate = new Date(currentDate);
+        
+        const historyRating = await orders.findAll({
+            attributes: [
+                [Sequelize.fn('AVG', Sequelize.col('orderRating')), 'avgRating']
+            ],
+            where: {
+                restaurantId: restaurantId,
+                completeTime: {
+                    [Sequelize.Op.lte]: currentDate
+                }
+            }
+        });
+        const historyRatingValue = historyRating[0].dataValues.avgRating || 0;
+        // 四捨五入到小數點第二位
+        const roundedHistoryRating = parseFloat(historyRatingValue.toFixed(2));
+        
+        let result = {};
+       
+        result['id'] = restaurantId;
+        result['name'] = restaurant.dataValues.restaurantName;
+        result['type'] = restaurant.dataValues.categories[0].dataValues.categoryName;
+        result['image'] = restaurant.dataValues.restaurantImage;
+        result['service'] = restaurant.dataValues.serviceMethod;
+        result['rating'] = roundedHistoryRating;
+
+        results[restaurantId] = result;
+    }
+    
+    return results;
+};
+
+exports.showTempRestaurantsNews = async(location) => {
+    const restaurantnewses = await restaurants.findAll({
+        include: [
+            {
+                model: categories,
+                through: { attributes: [] },
+                attributes: ['categoryName']
+            },
+            {
+                model: restaurantlatestnews,
+                attributes: ['newsContent']
+            }
+        ],
+        attributes: [
+            'restaurantId', 
+            'restaurantName', 
+            'restaurantImage', 
+            'serviceMethod',
+            'stationStartDate',
+            'stationEndDate',
+            'prepareTime'
+        ],
+        where:{
+            factoryLocation: location,
+            istemporaryRestaurant: true
+        }
+    });
+    // console.log(restaurantnewses);
+    let results = {};
+    
+    // 計算現在時間
+    let currentDate = new Date();
+    currentDate = currentDate.setHours(currentDate.getHours()+8);
+    currentDate = new Date(currentDate);
+
+    for (const restaurantnews of restaurantnewses) {
+        
+        let result = {};
+        // console.log(currentDate);
+
+        let startTime = restaurantnews.dataValues.stationStartDate;
+        if (typeof startTime === 'string') {
+            startTime = new Date(startTime);
+            // startTime = startTime.setHours(startTime.getHours()+8);
+            // startTime = new Date(startTime);
+        } else {
+            startTime = restaurantnews.dataValues.stationStartDate;
+        }
+        let endTime = restaurantnews.dataValues.stationEndDate;
+        if (typeof endTime === 'string') {
+            endTime = new Date(endTime);
+            // endTime = endTime.setHours(endTime.getHours()+8);
+            // endTime = new Date(endTime);
+        } else {
+            endTime = restaurantnews.dataValues.stationEndDate;
+        }
+
+        // console.log(startTime);
+        // console.log(endTime);
+
+        if (currentDate >= startTime && currentDate <= endTime) {
+            
+            let restaurantId = restaurantnews.dataValues.restaurantId;
+            
+            // 計算歷史評價
+            const historyRating = await orders.findAll({
+                attributes: [
+                    [Sequelize.fn('AVG', Sequelize.col('orderRating')), 'avgRating']
+                ],
+                where: {
+                    restaurantId: restaurantId,
+                    completeTime: {
+                        [Sequelize.Op.lte]: currentDate
+                    }
+                }
+            });
+            const historyRatingValue = historyRating[0].dataValues.avgRating || 0;
+            // 四捨五入到小數點第二位
+            const roundedHistoryRating = parseFloat(historyRatingValue.toFixed(2));
+            
+            result['isBetweenStartEndTime'] = true;
+            // result['id'] = restaurantId;
+            result['name'] = restaurantnews.dataValues.restaurantName;
+            result['type'] = restaurantnews.dataValues.categories[0].dataValues.categoryName;
+            // result['image'] = restaurantnews.dataValues.restaurantImage;
+            result['service'] = restaurantnews.dataValues.serviceMethod;
+            result['rating'] = roundedHistoryRating;
+
+            results[restaurantId] = result;
+
+        } else {
+            result['isBetweenStartEndTime'] = false;
+            result['name'] = restaurantnews.dataValues.restaurantName;
+            // result['image'] = restaurantnews.dataValues.restaurantImage;
+            let newscontents = []
+            for (const content of restaurantnews.restaurantlatestnews){
+                newscontents.push(content.newsContent);
+            }
+            result['LatestNews'] = newscontents;
+            results[restaurantnews.dataValues.restaurantId] = result;
+        }
+    }
+    
+    return results;
 };

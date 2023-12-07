@@ -34,3 +34,21 @@ exports.showInfoStatus = asyncHandler(async(req, res, next) => {
     restaurantinfostatus = await RestaurantsInfoService.showInfoStatus(restaurantId);
     res.json(restaurantinfostatus);
 });
+
+exports.showAllRestaurants = asyncHandler(async (req, res, next) => {
+    const {location} = req.query;
+    restaurants = await RestaurantsInfoService.showAllRestaurants(location);
+    res.json(restaurants);
+});
+
+exports.showCategoryRestaurants = asyncHandler(async (req, res, next) => {
+    const {location, category} = req.query;
+    restaurants = await RestaurantsInfoService.showCategoryRestaurants(location, category);
+    res.json(restaurants);
+});
+
+exports.showTempRestaurantsNews = asyncHandler(async(req, res, next) => {
+    const {location} = req.query;
+    temprestaurantsnews = await RestaurantsInfoService.showTempRestaurantsNews(location);
+    res.json(temprestaurantsnews);
+});

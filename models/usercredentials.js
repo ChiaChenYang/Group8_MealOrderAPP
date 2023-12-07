@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         hashedPassword: {
             // 用戶密碼
-            type: DataTypes.STRING(16),
+            type: DataTypes.STRING(100),
             allowNull: false,
         },
         userRole: { 

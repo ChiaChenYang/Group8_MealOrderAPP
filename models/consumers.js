@@ -21,37 +21,42 @@ module.exports = (sequelize, DataTypes) => {
         displayName: {
             // 消費者顯示名稱
             type: DataTypes.STRING(16),
-            allowNull: false,
+            allowNull: true,
         },
         department: {
             // 單位名稱
             type: DataTypes.STRING(16),
-            allowNull: false,
+            allowNull: true,
         },
         jobTitle: {
             // 消費者職位名稱
             type: DataTypes.STRING(16),
-            allowNull: false,
+            allowNull: true,
         },
         department: {
             // 單位名稱
             type: DataTypes.STRING(16),
-            allowNull: false,
+            allowNull: true,
+        },
+        consumerImage: {
+            // 消費者圖片
+            type: DataTypes.BLOB('long'), 
+            allowNull: true, 
         },
         consumerFactoryLocation: {
             // 消費者工作廠區
             type: DataTypes.STRING(16),
-            allowNull: false,
+            allowNull: true,
         },
         consumerPhone: { 
             // 消費者手機號碼
             type: DataTypes.STRING(16), 
-            allowNull: false, 
+            allowNull: true, 
         },
         consumerEmail: { 
             // 消費者信箱
             type: DataTypes.STRING, 
-            allowNull: false, 
+            allowNull: true, 
         },
         customizationNote: {
             // 客製化備註，於之後點餐時作為整筆訂單備註的預設內容

@@ -27,16 +27,21 @@ module.exports = (sequelize, DataTypes) => {
         restaurantImage: {
             // 餐廳圖片
             type: DataTypes.BLOB('long'), 
+            allowNull: true, 
+        },
+        factoryArea: {
+            // 廠區區域
+            type: DataTypes.STRING(16), 
+            allowNull: false,
+        },
+        factoryLocation: { 
+            // 餐廳所在廠區
+            type: DataTypes.STRING(16), 
             allowNull: false, 
         },
         restaurantLocation: { 
             // 餐廳位置
             type: DataTypes.STRING, 
-            allowNull: false, 
-        },
-        factoryLocation: { 
-            // 餐廳所在廠區
-            type: DataTypes.STRING(16), 
             allowNull: false, 
         },
         restaurantPhone: { 
@@ -47,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
         restaurantMail: { 
             // 餐廳信箱
             type: DataTypes.STRING, 
-            allowNull: false, 
+            allowNull: true, 
         },
         isOpening: { 
             // 餐廳是否營業
