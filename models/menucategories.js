@@ -21,7 +21,6 @@ module.exports = (sequelize, DataTypes) => {
         menuCategoryName: { 
             // 菜單類別名稱
             type: DataTypes.STRING, 
-            unique: true,
             allowNull: false, 
         },
 
@@ -32,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     
    
     menucategories.associate = (models) => {
-         // 菜單類別表跟菜單表: 多對一
+        // 菜單類別表跟菜單表: 多對一
         menucategories.belongsTo(models.menus, {
             foreignKey: 'menuId',
             onDelete: "cascade",

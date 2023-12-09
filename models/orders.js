@@ -94,7 +94,7 @@ module.exports = (sequelize, DataTypes) => {
         orderRating: {
             // 評價
             type: DataTypes.FLOAT,
-            allowNull: false,
+            allowNull: true,
         },
         
 

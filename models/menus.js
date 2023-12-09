@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'restaurants', // 表名
                 key: 'restaurantId'   // 列名
             },
-            allowNull: false,
+            allowNull: true,
         },
         menuName: { 
             // 菜單名稱
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         menuType: {
             // 菜單類型，輪動櫃為預購，其他為即時供應
-            type: DataTypes.ENUM('預購', '即時供應'), 
+            type: DataTypes.ENUM('預購', '非預購'), 
             allowNull: true, 
         },
         
@@ -43,6 +43,18 @@ module.exports = (sequelize, DataTypes) => {
         // 菜單表跟餐廳表: 多對一
         menus.belongsTo(models.restaurants, {
             foreignKey: 'restaurantId',
+            onDelete: "cascade",
+            onUpdate: "cascade"
+        });
+        // 菜單跟菜單類別表: 一對多
+        menus.hasMany(models.menucategories, {
+            foreignKey: 'menuId',
+            onDelete: "cascade",
+            onUpdate: "cascade",
+        });
+        // 菜單與菜單品項: 一對多
+        menus.hasMany(models.menuitems, {
+            foreignKey: 'menuId',
             onDelete: "cascade",
             onUpdate: "cascade"
         });
