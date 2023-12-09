@@ -91,7 +91,7 @@ const sampleMenuList: MenuListType = [
 ];
 
 export default function ItemsControl() {
-	const [menuList, setMenuList] = useState(sampleMenuList);
+	const menuList = sampleMenuList;
 	const [selectedMenu, setSelectedMenu] = useState(sampleMenuList[0]);
 	return (
 		<Box className="flex w-full flex-col items-center overflow-scroll bg-white">

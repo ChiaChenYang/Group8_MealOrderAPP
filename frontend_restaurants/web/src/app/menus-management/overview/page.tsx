@@ -87,7 +87,6 @@ const sampleMenuList: MenuListType = [
 					},
 				],
 			},
-			
 		],
 	},
 ];

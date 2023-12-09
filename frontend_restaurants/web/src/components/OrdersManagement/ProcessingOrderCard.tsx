@@ -77,7 +77,9 @@ function ModalBody({ order, handleClose }: ModalBodyProps) {
 						fontSize: '18px',
 					}}
 				>
-					{`剩餘：${calculateRemainingTime(order.orderTime)} 分鐘`}
+					{calculateRemainingTime(order.orderTime) < 0
+						? `超時：${-calculateRemainingTime(order.orderTime)} 分鐘`
+						: `剩餘：${calculateRemainingTime(order.orderTime)} 分鐘`}
 				</Typography>
 				<CloseIcon
 					onClick={handleClose}
@@ -232,7 +234,9 @@ export default function ProcessingOrderCard({ order }: ProcessingOrderCardProps)
 						fontSize: '24px',
 					}}
 				>
-					{`剩餘：${calculateRemainingTime(order.orderTime)} 分鐘`}
+					{calculateRemainingTime(order.orderTime) < 0
+						? `超時：${-calculateRemainingTime(order.orderTime)} 分鐘`
+						: `剩餘：${calculateRemainingTime(order.orderTime)} 分鐘`}
 				</Typography>
 			</Box>
 

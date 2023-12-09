@@ -102,6 +102,13 @@ function Page() {
 						>
 							註冊
 						</Button>
+						<Button
+							className={`${commonTextClass} w-full`}
+							sx={{ color: '#F4B63D' }}
+							onClick={() => router.push('/')}
+						>
+							回到登入介面
+						</Button>
 					</form>
 				</CardContent>
 				<Snackbar
