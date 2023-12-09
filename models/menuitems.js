@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         itemImage: {
             // 品項圖片
             type: DataTypes.BLOB('long'), 
-            allowNull: false, 
+            allowNull: true, 
         },
         descriptionText: {
             // 品項描述
@@ -36,17 +36,17 @@ module.exports = (sequelize, DataTypes) => {
         calories: {
             // 品項熱量
             type: DataTypes.INTEGER, 
-            allowNull: false, 
+            allowNull: true, 
         },
         prepareTime: {
             // 品項準備時間
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         },
         price: {
             // 品項價格
             type: DataTypes.INTEGER,
-            allowNull: false,
+            allowNull: true,
         },
         isAvailable: {
             // 是否可售
@@ -54,13 +54,18 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: true,
         },
-        availableQuantity: {
-            // 可售數量
+        totalQuantity: {
+            // 總數量
             type: DataTypes.INTEGER,
-            allowNull: false,
-        }
-
-        
+            allowNull: true,
+            defaultValue: 0
+        },
+        soldQuantity: {
+            // 已售出數量
+            type: DataTypes.INTEGER,
+            allowNull: true,
+            defaultValue: 0
+        },
     },{
         timestamps: false, // 禁用 createdAt 和 updatedAt 欄位
 
