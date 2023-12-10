@@ -31,7 +31,39 @@ module.exports = (sequelize, DataTypes) => {
             // 整筆訂單備註，消費者預設備註可放這
             type: DataTypes.STRING,
             allowNull: true,
-        }, 
+        },
+        price: {
+            // 總價錢
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0,
+        },
+        quantity: {
+            // 總數量
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        },
+        /*totalPrepareTime: { 
+            // 預估製作完畢時間，可透過品項的準備時間推算
+            type: DataTypes.INTEGER, 
+            allowNull: false,
+            defaultValue: 0
+        },*/
+        reservationTime: {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
+        pickupMethod: { 
+            // 取餐方式
+            type: DataTypes.ENUM('外帶', '內用', '外帶內用'), 
+            allowNull: true, 
+        },
+        checkout: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        }
     }, {
         timestamps: false, // 禁用 createdAt 和 updatedAt 欄位
 
@@ -57,6 +89,12 @@ module.exports = (sequelize, DataTypes) => {
             onDelete: "cascade",
             onUpdate: "cascade",
         }); 
+        // 購物車與訂單表: 一對一
+        shoppingcarts.hasOne(models.orders, {
+            foreignKey: 'cartId',
+            onDelete: "cascade",
+            onUpdate: "cascade",
+        });
     };
     
     return shoppingcarts

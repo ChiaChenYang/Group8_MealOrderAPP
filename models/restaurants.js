@@ -131,6 +131,12 @@ module.exports = (sequelize, DataTypes) => {
             onDelete: "cascade",
             onUpdate: "cascade",
         });
+        // 餐廳對訂單: 多對一
+        restaurants.hasMany(models.orders, {
+            foreignKey: 'restaurantId',
+            onDelete: 'cascade',
+            onUpdate: 'cascade',
+        });
     };
     
     return restaurants

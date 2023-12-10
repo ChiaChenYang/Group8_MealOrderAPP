@@ -3,16 +3,25 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const debug = require('debug')('meal-order-app:server');
+const http = require('http');
+const { Server } = require('socket.io');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/Users');
 var restaurantsRouter = require('./routes/Restaurants');
 var consumersRouter = require('./routes/Consumers');
 const menusRouter = require('./routes/Menus');
+const ordersRouter = require('./routes/Orders');
+const shoppingCartsRouter = require('./routes/ShoppingCarts');
 
 const db = require('./models');
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  connectionStateRecovery: {}
+});
 
 app.use(express.json({ limit: '50mb' }));  // 設置請求體大小限制為 50MB
 
@@ -27,12 +36,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(function(req, res, next){
+  res.io = io;
+  next();
+});
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/restaurants', restaurantsRouter);
 app.use('/consumers', consumersRouter);
 app.use('/menus', menusRouter);
+app.use('/orders', ordersRouter);
+app.use('/shopping', shoppingCartsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -64,16 +79,65 @@ app.use(async function(req, res, next) {
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   console.error('Error:', err.message);
-  console.log(err.stack);  
-  res.locals.message = err.message;
+  /*res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // // set title variable
-  // res.locals.title = 'Error';
-
-  // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error');*/
+  res.status(err.status || 500);
+  res.json({ error: err.message });
 });
 
-module.exports = app;
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}

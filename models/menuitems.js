@@ -57,13 +57,13 @@ module.exports = (sequelize, DataTypes) => {
         totalQuantity: {
             // 總數量
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             defaultValue: 0
         },
         soldQuantity: {
             // 已售出數量
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             defaultValue: 0
         },
     },{

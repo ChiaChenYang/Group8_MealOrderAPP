@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         cartId: {
             // 購物車 id（FK）
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             references: {
                 model: 'shoppingcarts', // 表名
                 key: 'cartId'   // 列名
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         consumerId: {
             // 消費者 id（FK）
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             references: {
                 model: 'consumers', // 表名
                 key: 'consumerId'   // 列名
@@ -30,21 +30,33 @@ module.exports = (sequelize, DataTypes) => {
         restaurantId: {
             // 餐廳 id（FK）
             type: DataTypes.INTEGER,
-            allowNull: true,
+            allowNull: false,
             references: {
                 model: 'restaurants', // 表名
                 key: 'restaurantId'   // 列名
             },
         },
+        totalQuantity: {
+            // 訂單品項總數量
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+        },
         totalPrice: { 
             // 訂單總金額
             type: DataTypes.INTEGER, 
             allowNull: false, 
+            defaultValue: 0
         },
         orderTime: { 
             // 訂購時間（使用者按下訂單送出的時間）
             type: DataTypes.DATE, 
             allowNull: false, 
+        },
+        reservationTime: {
+            // 使用者預定取餐的時間
+            type: DataTypes.DATE,
+            allowNull: false
         },
         orderNote: {
             // 整筆訂單備註，消費者預設備註可放這
@@ -52,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
         },
         expectedFinishedTime: { 
-            // 預估製作完畢時間，好像是說可以不用有這個，可透過品項的準備時間推算
+            // 預估製作完畢時間
             type: DataTypes.DATE, 
             allowNull: true, 
         },
@@ -64,40 +76,46 @@ module.exports = (sequelize, DataTypes) => {
         receivedTime: { 
             // 訂單接收時間
             type: DataTypes.DATE, 
-            allowNull: false, 
+            allowNull: true, 
         },
         finishTime: { 
             // 訂單製作完畢時間
             type: DataTypes.DATE, 
-            allowNull: false, 
+            allowNull: true, 
         },
         completeTime: { 
-            // 訂單以取餐時間
+            // 訂單已取餐時間
             type: DataTypes.DATE, 
-            allowNull: false, 
+            allowNull: true, 
+        },
+        rejectTime : {
+            type: DataTypes.DATE,
+            allowNull: true
         },
         status: { 
-            // 訂單狀態，如已接單、製作完畢、已取餐、預購？
-            type: DataTypes.STRING(16), 
+            // 訂單狀態
+            type: DataTypes.ENUM('incoming', 'progressing', 'waiting', 'completed', 'rejected'), 
             allowNull: false, 
         },
         paymentMethod: {
             // 付款方式，如信用卡、現金等
             type: DataTypes.STRING(16), 
-            allowNull: false, 
+            allowNull: true, 
         },
         pickupMethod: { 
             // 取餐方式
             type: DataTypes.ENUM('外帶', '內用', '外帶內用'), 
-            allowNull: false, 
+            allowNull: true, 
         },
         orderRating: {
             // 評價
-            type: DataTypes.FLOAT,
-            allowNull: false,
+            type: DataTypes.INTEGER,
+            allowNull: true,
         },
-        
-
+        comment: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        }
     }, {
         timestamps: false, // 禁用 createdAt 和 updatedAt 欄位
 
@@ -128,7 +146,7 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'orderId',
             onDelete: "cascade",
             onUpdate: "cascade",
-        }); 
+        });
     };
     return orders
 };
