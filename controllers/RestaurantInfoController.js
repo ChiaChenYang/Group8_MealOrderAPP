@@ -52,3 +52,9 @@ exports.showTempRestaurantsNews = asyncHandler(async(req, res, next) => {
     temprestaurantsnews = await RestaurantsInfoService.showTempRestaurantsNews(location);
     res.json(temprestaurantsnews);
 });
+
+exports.showTime = asyncHandler(async(req, res, next) => {
+    const restaurantId = req.params.restaurantId;
+    restaurantTime = await RestaurantsInfoService.showTime(restaurantId);
+    res.json(restaurantTime);
+});

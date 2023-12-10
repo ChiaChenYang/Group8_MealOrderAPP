@@ -297,7 +297,7 @@ exports.showAllRestaurants = async (location) => {
     // console.log(allrestaurants);
 
     let results = {};
-
+    let index = 1;
     for (const restaurant of allrestaurants) {
         let restaurantId = restaurant.dataValues.restaurantId;
 
@@ -328,9 +328,11 @@ exports.showAllRestaurants = async (location) => {
         result['type'] = restaurant.dataValues.categories[0].dataValues.categoryName;
         result['image'] = restaurant.dataValues.restaurantImage;
         result['service'] = restaurant.dataValues.serviceMethod;
+        result['preparetime'] = restaurant.dataValues.prepareTime;
         result['rating'] = roundedHistoryRating;
 
-        results[restaurantId] = result;
+        results[index] = result;
+        index += 1;
     }
     
     return results;
@@ -367,7 +369,7 @@ exports.showCategoryRestaurants = async (location, category) => {
     // console.log(allrestaurants);
 
     let results = {};
-
+    let index = 1;
     for (const restaurant of allrestaurants) {
         let restaurantId = restaurant.dataValues.restaurantId;
 
@@ -398,9 +400,11 @@ exports.showCategoryRestaurants = async (location, category) => {
         result['type'] = restaurant.dataValues.categories[0].dataValues.categoryName;
         result['image'] = restaurant.dataValues.restaurantImage;
         result['service'] = restaurant.dataValues.serviceMethod;
+        result['preparetime'] = restaurant.dataValues.prepareTime;
         result['rating'] = roundedHistoryRating;
 
-        results[restaurantId] = result;
+        results[index] = result;
+        index += 1;
     }
     
     return results;
@@ -440,7 +444,7 @@ exports.showTempRestaurantsNews = async(location) => {
     let currentDate = new Date();
     currentDate = currentDate.setHours(currentDate.getHours()+8);
     currentDate = new Date(currentDate);
-
+    let index = 1;
     for (const restaurantnews of restaurantnewses) {
         
         let result = {};
@@ -487,27 +491,93 @@ exports.showTempRestaurantsNews = async(location) => {
             const roundedHistoryRating = parseFloat(historyRatingValue.toFixed(2));
             
             result['isBetweenStartEndTime'] = true;
-            // result['id'] = restaurantId;
+            result['id'] = restaurantId;
             result['name'] = restaurantnews.dataValues.restaurantName;
             result['type'] = restaurantnews.dataValues.categories[0].dataValues.categoryName;
-            // result['image'] = restaurantnews.dataValues.restaurantImage;
+            result['image'] = restaurantnews.dataValues.restaurantImage;
             result['service'] = restaurantnews.dataValues.serviceMethod;
-            result['rating'] = roundedHistoryRating;
-
-            results[restaurantId] = result;
-
-        } else {
-            result['isBetweenStartEndTime'] = false;
-            result['name'] = restaurantnews.dataValues.restaurantName;
-            // result['image'] = restaurantnews.dataValues.restaurantImage;
+            result['evaluate'] = roundedHistoryRating;
+            result['prepare_time'] = restaurantnews.dataValues.prepareTime;
             let newscontents = []
             for (const content of restaurantnews.restaurantlatestnews){
                 newscontents.push(content.newsContent);
             }
             result['LatestNews'] = newscontents;
-            results[restaurantnews.dataValues.restaurantId] = result;
+
+            results[index] = result;
+            index += 1;
+
+        } else {
+            result['isBetweenStartEndTime'] = false;
+            result['id'] = restaurantnews.dataValues.restaurantId;
+            result['name'] = restaurantnews.dataValues.restaurantName;
+            // result['type'] = restaurantnews.dataValues.categories[0].dataValues.categoryName; //暫時放著
+            result['image'] = restaurantnews.dataValues.restaurantImage;
+            // result['service'] = restaurantnews.dataValues.serviceMethod; //暫時放著
+            // result['prepare_time'] = restaurantnews.dataValues.prepareTime; //暫時放著
+            let newscontents = []
+            for (const content of restaurantnews.restaurantlatestnews){
+                newscontents.push(content.newsContent);
+            }
+            result['LatestNews'] = newscontents;
+            results[index] = result;
+            index += 1;
         }
     }
     
     return results;
+};
+
+exports.showTime = async(restaurantId) => {
+    const restaurantinfo = await restaurants.findByPk(restaurantId, {
+        attributes: [
+            'restaurantId', 
+            'stationStartDate',
+            'stationEndDate',
+            'prepareTime'
+        ],
+        where:{
+            restaurantId: restaurantId,
+        }
+    });
+    console.log(restaurantinfo);
+    let startTime = restaurantinfo.dataValues.stationStartDate;
+    if (typeof startTime === 'string') {
+        startTime = new Date(startTime);
+        // startTime = startTime.setHours(startTime.getHours()+8);
+        // startTime = new Date(startTime);
+    } else {
+        startTime = restaurantinfo.dataValues.stationStartDate;
+    }
+    let endTime = restaurantinfo.dataValues.stationEndDate;
+    if (typeof endTime === 'string') {
+        endTime = new Date(endTime);
+        // endTime = endTime.setHours(endTime.getHours()+8);
+        // endTime = new Date(endTime);
+    } else {
+        endTime = restaurantinfo.dataValues.stationEndDate;
+    }
+
+    let result = {};
+
+    const startyear = startTime.getFullYear();
+    const startmonth = startTime.getMonth() + 1;
+    const startday = startTime.getDate(); 
+    const endyear = endTime.getFullYear();
+    const endmonth = endTime.getMonth() + 1;
+    const endday = endTime.getDate();
+
+    result['start_time'] = {
+        year: startyear,
+        month: startmonth,
+        date: startday
+    }
+    result['end_time'] = {
+        year: endyear,
+        month: endmonth,
+        date: endday
+    }
+    result['prepare_time'] = restaurantinfo.dataValues.prepareTime;
+
+    return result;
 };
