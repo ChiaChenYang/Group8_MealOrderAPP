@@ -256,7 +256,7 @@ exports.addNote = async (user_id, shop_id, note) => {
     }
 };
 
-exports.setReservationTime = async (user_id, shop_id, estimate_time_hour, estimate_time_minute) => {
+exports.setReservationTime = async (user_id, shop_id, pick_up_method, estimate_time_month, estimate_time_date, estimate_time_hour, estimate_time_minute) => {
     const shop_cart = await shoppingcarts.findOne({
         include: [{
             model: consumers,
@@ -279,10 +279,12 @@ exports.setReservationTime = async (user_id, shop_id, estimate_time_hour, estima
     }
     else {
         var reservation_time = new Date();
+        reservation_time.setMonth(estimate_time_month-1);
+        reservation_time.setDate(estimate_time_date);
         reservation_time.setHours(estimate_time_hour);
         reservation_time.setMinutes(estimate_time_minute);
         reservation_time.setSeconds(0);
-        await shop_cart.update({ reservationTime: reservation_time });
+        await shop_cart.update({ reservationTime: reservation_time, pickupMethod: pick_up_method });
     }
 };
 
@@ -354,6 +356,7 @@ exports.checkout = async (user_id, shop_id) => {
 
         const return_order = {
             order_id: new_order.orderId,
+            shop_id: new_order.restaurantId,
             name: shop_cart.restaurant.restaurantName,
             prepare_time: `${shop_cart.restaurant.prepareTime} min`,
             location: shop_cart.restaurant.factoryLocation,

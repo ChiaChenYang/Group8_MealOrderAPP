@@ -54,11 +54,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             allowNull: true
         },
+        pickupMethod: { 
+            // 取餐方式
+            type: DataTypes.ENUM('外帶', '內用', '外帶內用'), 
+            allowNull: true, 
+        },
         checkout: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false
-        } 
+        }
     }, {
         timestamps: false, // 禁用 createdAt 和 updatedAt 欄位
 

@@ -362,4 +362,4 @@ exports.getRatingInfo = async (restaurant_id) => {
         evaluation: avg_rating,
         comment: all_orders.length
     };
-}
+};
