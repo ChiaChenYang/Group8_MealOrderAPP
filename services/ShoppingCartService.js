@@ -328,6 +328,7 @@ exports.checkout = async (user_id, shop_id) => {
             /*expectedFinishedTime: sequelize.fn('ADDDATE', sequelize.col('orderTime'), 
                 sequelize.literal(`INTERVAL ${shop_cart.totalPrepareTime} MINUTE`)),*/
             expectedFinishedTime: shop_cart.reservationTime,
+            pickupMethod: shop_cart.pickupMethod,
             status: 'incoming'
         });
 

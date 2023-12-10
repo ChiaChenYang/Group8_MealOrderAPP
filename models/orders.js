@@ -88,6 +88,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE, 
             allowNull: true, 
         },
+        rejectTime : {
+            type: DataTypes.DATE,
+            allowNull: true
+        },
         status: { 
             // 訂單狀態
             type: DataTypes.ENUM('incoming', 'progressing', 'waiting', 'completed', 'rejected'), 

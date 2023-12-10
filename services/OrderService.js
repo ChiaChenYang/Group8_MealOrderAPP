@@ -81,10 +81,14 @@ exports.updateOrderStatus = async (order_id, old_status, new_status) => {
         else if (new_status === 'completed'){
             await order.update({ status: new_status, completeTime: new Date() });
         }
+        else if (new_status === 'rejected'){
+            await order.update({ status: new_status, rejectTime: new Date() });
+        }
         else {
             await order.update({ status: new_status });
         }
     }
+    return order.consumerId;
 };
 
 exports.updateSoldQuantity = async (order_id) => {
@@ -124,6 +128,7 @@ exports.delayOrder = async (order_id, delay_time) => {
             expectedFinishedTime: sequelize.fn('ADDDATE', sequelize.col('expectedFinishedTime'), sequelize.literal(`INTERVAL ${delay_time} MINUTE`)) 
         });
     }
+    return order.consumerId;
 };
 
 exports.getSingleOrder = async (order_id) => {
@@ -361,5 +366,43 @@ exports.getRatingInfo = async (restaurant_id) => {
     return {
         evaluation: avg_rating,
         comment: all_orders.length
+    };
+};
+
+exports.getOrderStateChangeMessage = async (order_id) => {
+    const order = await orders.findByPk(order_id, {
+        include: [{
+            model: restaurants,
+            attributes: ['restaurantName']
+        }]
+    });
+
+    const estimate_finish_time = utils.formatDate(order.expectedFinishedTime);
+    const restaurant_name = order.restaurant.restaurantName;
+    var message = null;
+    var completed = false;
+    if (order.status === 'progressing') {
+        const event_time = utils.formatDate(order.receivedTime);
+        message = `您好，已於 ${event_time} 接收到您的訂單!`;
+    }
+    else if (order.status === 'waiting') {
+        const event_time = utils.formatDate(order.finishTime);
+        message = `您好，您的餐點已於 ${event_time} 製作完畢，可前往取餐!`;
+    }
+    else if (order.status === 'completed'){
+        const event_time = utils.formatDate(order.finishTime);
+        message = `您好，您的餐點已於 ${event_time} 製作完畢，可前往取餐!`;
+        completed = true;
+    }
+    else if (order.status === 'rejected'){
+        const event_time = utils.formatDate(order.rejectTime);
+        message = `很抱歉，您的訂單已於 ${event_time} 被取消!`;
+    }
+    return {
+        restaurant: restaurant_name,
+        order_id: order_id,
+        message: message,
+        receive_state: completed,
+        estimated_time: estimate_finish_time
     };
 };
