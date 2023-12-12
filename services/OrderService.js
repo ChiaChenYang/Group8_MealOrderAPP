@@ -331,13 +331,13 @@ exports.getRestaurantInfo = async (order_id) => {
     };
 };
 
-exports.setOrderRating = async (order_id, rating) => {
+exports.setOrderRating = async (order_id, rating, comment) => {
     const order = await orders.findByPk(order_id);
     if (order === null){
         throw new Error(`The order with id ${order_id} does not exist`);
     }
 
-    await order.update({ orderRating: rating });
+    await order.update({ orderRating: rating, comment: comment });
 };
 
 exports.getRatingInfo = async (restaurant_id) => {
