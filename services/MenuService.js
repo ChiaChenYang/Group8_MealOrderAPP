@@ -4,7 +4,7 @@ const { menus, restaurants,  menucategories, menuitems, tags, itemtags, itemmenu
 
 exports.createNewMenu = asyncHandler(async (restaurantId, newMenuName, newMenuType, newMenuTime) => {
 
-  // 檢查 restaurantId 是否存在於 restaurants 表
+  // 檢查 restaurantId 是否存在於 restaurants 表中
   const existingRestaurant = await restaurants.findByPk(restaurantId);
   if (!existingRestaurant) {
     throw new Error(`Invalid restaurantId: ${restaurantId}`);
@@ -21,131 +21,7 @@ exports.createNewMenu = asyncHandler(async (restaurantId, newMenuName, newMenuTy
   // 回傳新增的菜單的 ID
   return { menuId: createdMenu.menuId };
 });
-/*
-exports.createNewMenuDetails = asyncHandler(async (menuId, newCategories) => {
-  try {
-    // 確保菜單存在
-    const existingMenu = await menus.findByPk(menuId);
-    if (!existingMenu) {
-      throw new Error(`Menu not found with ID: ${menuId}`);
-    }
 
-    const createdItems = []; // 用來存放新增的 item id
-
-    for (const categoryInfo of newCategories) {
-      // 檢查是否已存在相同的菜單 id 跟類別名稱組合
-      let existingCategory = await menucategories.findOne({
-        where: { menuCategoryName: categoryInfo.categoryName, menuId },
-      });
-
-      if (!existingCategory) {
-        // 如果在該菜單底下沒有該類別，就新增至 menucategories 表
-        existingCategory = await menucategories.create({
-          menuId: menuId,
-          menuCategoryName: categoryInfo.categoryName,
-        });
-      }
-
-      const categoryId = existingCategory.menuCategoryId;
-      // 判斷是單純新增類別或是同時新增類別跟餐點
-      if (categoryInfo.items) {
-        // 如果有 items，表示同時新增類別及餐點
-        for (const itemInfo of categoryInfo.items) {
-          // 檢查一個菜單中是否已存在相同的餐點
-          let existingItem = await menuitems.findOne({
-            where: { itemName: itemInfo.itemName, menuId },
-          });
-
-          try {
-            if (existingItem) {
-              // 如果餐點已存在，使用現有的 itemId
-              const itemId = existingItem.itemId;
-              createdItems.push(itemId); // 將現有的 item id 加入陣列
-            } else {
-              // 新增餐點
-              const base64Image = itemInfo.itemImage;
-              const decodedImage = Buffer.from(base64Image, 'base64');
-
-              existingItem = await menuitems.create({
-                menuId: menuId,
-                itemName: itemInfo.itemName,
-                itemImage: decodedImage,
-                descriptionText: itemInfo.description,
-                price: itemInfo.price,
-                calories: itemInfo.calories,
-              });
-              const itemId = existingItem.itemId;
-              createdItems.push(itemId); // 將新增的 item id 加入陣列
-            }
-            // 新增 item 與 menucategories 之間的關聯
-            const existingItemMenucategories = await itemmenucategories.findOne({
-              where: {
-                itemId: existingItem.itemId,
-                menuCategoryId: categoryId,
-              },
-            });
-            console.log(existingItemMenucategories);
-            if (!existingItemMenucategories) {
-              // 如果關聯不存在，則進行插入
-              await itemmenucategories.create({
-                itemId: existingItem.itemId,
-                menuCategoryId: categoryId,
-              });
-            } else {
-              console.log('ItemMenucategories relationship already exists.');
-              // 如果關聯已存在，您可以選擇忽略或執行其他處理邏輯
-            }
-
-            // 新增或取得 tags
-            for (const tagInfo of itemInfo.tags) {
-              // 檢查是否已存在相同標籤
-              let existingTag = await tags.findOne({
-                where: { tagName: tagInfo },
-              });
-
-              if (!existingTag) {
-                existingTag = await tags.create({
-                  tagName: tagInfo,
-                });
-              }
-              const tagId = existingTag.tagId;
-              // 新增 item 與 tag 之間的關聯
-              const existingItemTag = await itemtags.findOne({
-                where: {
-                  itemId: existingItem.itemId,
-                  tagId: tagId,
-                },
-              });
-
-              if (!existingItemTag) {
-                // 如果關聯不存在，則進行插入
-                await itemtags.create({
-                  itemId: existingItem.itemId,
-                  tagId: tagId,
-                });
-              } else {
-                console.log('ItemTag relationship already exists.');
-                // 如果關聯已存在，您可以選擇忽略或執行其他處理邏輯
-              }
-            }
-          } catch (error) {
-            console.error('Error creating item:', error.message);
-            // 在這裡你可以選擇拋出異常或者執行其他適當的處理邏輯
-          }
-        }
-      } else {
-        // 如果沒有 items，表示單純新增類別而已
-        console.log(`Category '${categoryInfo.categoryName}' added.`);
-      }
-    }
-
-    // 回傳新增的菜單的 ID 和新增的 item ID 陣列
-    return { menuId: existingMenu.menuId, createdItems };
-  } catch (error) {
-    throw new Error(`Error creating menu details: ${error.message}`);
-  }
-});
-*/
 exports.getAllMenuDetails = asyncHandler(async (restaurantId) => {
   try {
     // 檢查該餐廳 id 是否存在餐廳表
@@ -221,13 +97,19 @@ exports.getAllMenuDetails = asyncHandler(async (restaurantId) => {
   }
 });
 
-exports.processMenu = asyncHandler(async (menuId, categories) => {
+exports.processMenu = asyncHandler(async (menuId, menuName, menuTime, menuType, categories) => {
   try {
     // 確保菜單存在
     const existingMenu = await menus.findByPk(menuId);
     if (!existingMenu) {
       throw new Error(`Menu not found with ID: ${menuId}`);
     }
+    await menus.update({ 
+      menuName: menuName,
+      menuTime: menuTime, 
+      menuType: menuType }, {
+      where: { menuId: existingMenu.menuId },
+    });
 
     // 取得資料庫中該菜單底下的所有 menuCategoryId
     const existingMenuCategoryIds = await menucategories.findAll({
@@ -442,8 +324,6 @@ exports.processMenu = asyncHandler(async (menuId, categories) => {
               existingTag = await tags.findOne({
                 where: { tagName: tagName },
               });
-              console.log('她是誰', existingItem.itemId);
-              console.log('妳是誰', existingTag.tagId);
               if (!existingTag) {
                 existingTag = await tags.create({
                   tagName: tagName,
@@ -506,3 +386,130 @@ exports.processMenu = asyncHandler(async (menuId, categories) => {
     throw new Error(`Error processing menu details: ${error.message}`);
   }
 });
+
+/*
+exports.createNewMenuDetails = asyncHandler(async (menuId, newCategories) => {
+  try {
+    // 確保菜單存在
+    const existingMenu = await menus.findByPk(menuId);
+    if (!existingMenu) {
+      throw new Error(`Menu not found with ID: ${menuId}`);
+    }
+
+    const createdItems = []; // 用來存放新增的 item id
+
+    for (const categoryInfo of newCategories) {
+      // 檢查是否已存在相同的菜單 id 跟類別名稱組合
+      let existingCategory = await menucategories.findOne({
+        where: { menuCategoryName: categoryInfo.categoryName, menuId },
+      });
+
+      if (!existingCategory) {
+        // 如果在該菜單底下沒有該類別，就新增至 menucategories 表
+        existingCategory = await menucategories.create({
+          menuId: menuId,
+          menuCategoryName: categoryInfo.categoryName,
+        });
+      }
+
+      const categoryId = existingCategory.menuCategoryId;
+      // 判斷是單純新增類別或是同時新增類別跟餐點
+      if (categoryInfo.items) {
+        // 如果有 items，表示同時新增類別及餐點
+        for (const itemInfo of categoryInfo.items) {
+          // 檢查一個菜單中是否已存在相同的餐點
+          let existingItem = await menuitems.findOne({
+            where: { itemName: itemInfo.itemName, menuId },
+          });
+
+          try {
+            if (existingItem) {
+              // 如果餐點已存在，使用現有的 itemId
+              const itemId = existingItem.itemId;
+              createdItems.push(itemId); // 將現有的 item id 加入陣列
+            } else {
+              // 新增餐點
+              const base64Image = itemInfo.itemImage;
+              const decodedImage = Buffer.from(base64Image, 'base64');
+
+              existingItem = await menuitems.create({
+                menuId: menuId,
+                itemName: itemInfo.itemName,
+                itemImage: decodedImage,
+                descriptionText: itemInfo.description,
+                price: itemInfo.price,
+                calories: itemInfo.calories,
+              });
+              const itemId = existingItem.itemId;
+              createdItems.push(itemId); // 將新增的 item id 加入陣列
+            }
+            // 新增 item 與 menucategories 之間的關聯
+            const existingItemMenucategories = await itemmenucategories.findOne({
+              where: {
+                itemId: existingItem.itemId,
+                menuCategoryId: categoryId,
+              },
+            });
+            console.log(existingItemMenucategories);
+            if (!existingItemMenucategories) {
+              // 如果關聯不存在，則進行插入
+              await itemmenucategories.create({
+                itemId: existingItem.itemId,
+                menuCategoryId: categoryId,
+              });
+            } else {
+              console.log('ItemMenucategories relationship already exists.');
+              // 如果關聯已存在，您可以選擇忽略或執行其他處理邏輯
+            }
+
+            // 新增或取得 tags
+            for (const tagInfo of itemInfo.tags) {
+              // 檢查是否已存在相同標籤
+              let existingTag = await tags.findOne({
+                where: { tagName: tagInfo },
+              });
+
+              if (!existingTag) {
+                existingTag = await tags.create({
+                  tagName: tagInfo,
+                });
+              }
+              const tagId = existingTag.tagId;
+              // 新增 item 與 tag 之間的關聯
+              const existingItemTag = await itemtags.findOne({
+                where: {
+                  itemId: existingItem.itemId,
+                  tagId: tagId,
+                },
+              });
+
+              if (!existingItemTag) {
+                // 如果關聯不存在，則進行插入
+                await itemtags.create({
+                  itemId: existingItem.itemId,
+                  tagId: tagId,
+                });
+              } else {
+                console.log('ItemTag relationship already exists.');
+                // 如果關聯已存在，您可以選擇忽略或執行其他處理邏輯
+              }
+            }
+          } catch (error) {
+            console.error('Error creating item:', error.message);
+            // 在這裡你可以選擇拋出異常或者執行其他適當的處理邏輯
+          }
+        }
+      } else {
+        // 如果沒有 items，表示單純新增類別而已
+        console.log(`Category '${categoryInfo.categoryName}' added.`);
+      }
+    }
+
+    // 回傳新增的菜單的 ID 和新增的 item ID 陣列
+    return { menuId: existingMenu.menuId, createdItems };
+  } catch (error) {
+    throw new Error(`Error creating menu details: ${error.message}`);
+  }
+});
+*/
+
