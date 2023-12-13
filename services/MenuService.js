@@ -4,7 +4,7 @@ const { menus, restaurants,  menucategories, menuitems, tags, itemtags, itemmenu
 
 exports.createNewMenu = asyncHandler(async (restaurantId, newMenuName, newMenuType, newMenuTime) => {
 
-  // 檢查 restaurantId 是否存在於 restaurants 表中
+  // 檢查 restaurantId 是否存在於 restaurants 表
   const existingRestaurant = await restaurants.findByPk(restaurantId);
   if (!existingRestaurant) {
     throw new Error(`Invalid restaurantId: ${restaurantId}`);
