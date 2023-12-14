@@ -1,5 +1,6 @@
 node_modules
 node_modules/*
 config.json
+config/*
 .env
 generate_jwt_secret.js

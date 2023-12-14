@@ -56,7 +56,8 @@ exports.getOrdersWithStatus = async (rid, s) => {
                 noteFromUser: restaurant.orders[i].orderNote,
                 totalPrice: restaurant.orders[i].totalPrice,
                 finishTime: utils.formatDate(restaurant.orders[i].finishTime),
-                completeTime: utils.formatDate(restaurant.orders[i].completeTime)
+                completeTime: utils.formatDate(restaurant.orders[i].completeTime),
+                expectedFinishedTime: restaurants.orders[i].expectedFinishedTime
             });
         }
         return all_orders;
@@ -156,6 +157,7 @@ exports.getSingleOrder = async (order_id) => {
         return_order.totalPrice = order.totalPrice;
         return_order.finishTime = order.finishTime;
         return_order.completeTime = order.completeTime;
+        return_order.expectedFinishedTime = order.expectedFinishedTime;
 
         const items_number = order.menuitems.length;
         for (let i = 0; i < items_number; i++){
