@@ -228,8 +228,10 @@ exports.getWeeklyReport = async (restaurantId, year, month, day, timeOfDay) => {
     // 每週銷售額統計
     ordersData.forEach(order => {
         let orderDate = new Date(order.getDataValue('orderDate'));
-        let dayIndex = orderDate.getDate() - startDate.getDate();
-        dailySales[dayIndex] = parseFloat(order.getDataValue('totalSales'));
+        let dayIndex = Math.floor((orderDate - startDate) / (24 * 60 * 60 * 1000));
+        if (dayIndex >= 0 && dayIndex < 7) {
+            dailySales[dayIndex] = parseFloat(order.getDataValue('totalSales'));
+        }
     });
 
     return dailySales;
