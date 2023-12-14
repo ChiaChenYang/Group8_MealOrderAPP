@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "test": "jest",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -27,5 +28,8 @@
     "websocket": "^1.0.34",
     "ws": "^8.14.2",
     "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
