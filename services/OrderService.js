@@ -1,7 +1,7 @@
 const express = require('express');
 const asyncHandler = require("express-async-handler");
 const { orders, restaurants, menuitems, orderitems, consumers } = require("../models");
-const utils = require("../utils");
+const utils = require("../utils.js");
 const { Sequelize, DataTypes, Op } = require('sequelize');
 const sequelize = new Sequelize('sqlite::memory:');
 
@@ -57,7 +57,7 @@ exports.getOrdersWithStatus = async (rid, s) => {
                 totalPrice: restaurant.orders[i].totalPrice,
                 finishTime: utils.formatDate(restaurant.orders[i].finishTime),
                 completeTime: utils.formatDate(restaurant.orders[i].completeTime),
-                expectedFinishedTime: restaurants.orders[i].expectedFinishedTime
+                expectedFinishedTime: utils.formatDate(restaurants.orders[i].expectedFinishedTime)
             });
         }
         return all_orders;

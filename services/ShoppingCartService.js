@@ -1,6 +1,6 @@
 const express = require('express');
 const { shoppingcarts, consumers, restaurants, menus, cartitems, orders, menuitems, orderitems } = require("../models");
-const utils = require('../utils');
+const utils = require('../utils.js');
 const { Sequelize, DataTypes, Op } = require('sequelize');
 const sequelize = new Sequelize('sqlite::memory:');
 
