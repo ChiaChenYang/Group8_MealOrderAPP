@@ -164,7 +164,7 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
       stationStartDate: stationStartDate,
       stationEndDate: stationEndDate,
       news: restaurant.restaurantlatestnews.map(news => news.newsContent),
-      // menus: []
+      menus: []
     };
     
     menuDetails.forEach((menu) => {
@@ -193,13 +193,13 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
         menuObj.type.push(menucategory.menuCategoryName);
         menuObj[categoryIndex + 1] = items;
       });
-      // 使用 menu.menuName 當 key
-      // formattedMenus.push({
-      //   [menu.menuName]: menuObj
-      // });
-      if (menuObj.type.length > 0) {
-        formattedMenus[menu.menuName] = menuObj;
-      }
+      // 使用 menu.menuTime 當 key
+      formattedMenus.menus.push({
+        [menu.menuTime]: menuObj
+      });
+      // if (menuObj.type.length > 0) {
+      //   formattedMenus[menu.menuName] = menuObj;
+      // }
     });
     return formattedMenus;
     
@@ -363,3 +363,4 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
   }
 });
 */
+
