@@ -69,9 +69,11 @@ export function SingleItem({ item }: { item: ItemMenuProps }) {
 				onClick={() => setIsModalOpen(true)}
 			>
 				<Image
+					width={85}
+					height={85}
 					src={imageUrl}
 					alt={item.itemName}
-					style={{ width: '85px', height: '85px', objectFit: 'cover' }}
+					style={{ objectFit: 'cover' }}
 				/>
 			</Box>
 			<Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
