@@ -101,7 +101,7 @@ exports.validateConsumerUserCredential = async (ConsumerUser) => {
 		return {
             status: 200,
 			user: {
-				id: existingConsumer.ownerId,
+				id: existingConsumer.consumerId,
 				name: existingConsumer.displayName,
 				email: existingConsumer.consumerEmail,
 			},
