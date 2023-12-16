@@ -7,6 +7,13 @@ const debug = require('debug')('meal-order-app:server');
 const http = require('http');
 const { Server } = require('socket.io');
 
+// 設定 prometheus 監控告警
+const promClient = require('prom-client')
+// 創建一個 Prometheus Registry
+// const promRegistry = new promClient.Registry();
+// Enable the collection of default metrics
+promClient.collectDefaultMetrics()
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/Users');
 var restaurantsRouter = require('./routes/Restaurants');
@@ -48,6 +55,19 @@ app.use('/consumers', consumersRouter);
 app.use('/menus', menusRouter);
 app.use('/orders', ordersRouter);
 app.use('/shopping', shoppingCartsRouter);
+
+// 設定 Prometheus 指標端點
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', promClient.register.contentType);
+
+  try {
+    const metrics = await promClient.register.metrics(); // 等待 Promise 解析完成
+    res.end(metrics);
+  } catch (err) {
+    console.error('Error while processing /metrics:', err);
+    res.status(500).end(); // 回傳 500 錯誤
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

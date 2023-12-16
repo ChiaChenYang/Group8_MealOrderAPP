@@ -17,7 +17,7 @@ exports.getYearlyReport = async (restaurantId, year, timeOfDay) => {
                 ]
             };
             break;
-        case 'night':
+        case 'evening':
             timeConstraints = {
                 [Op.and]: [
                     sequelize.where(sequelize.fn('hour', sequelize.col('orderTime')), '>=', 17),
@@ -98,7 +98,7 @@ exports.getMonthlyReport = async (restaurantId, year, month, timeOfDay) => {
                 ]
             };
             break;
-        case 'night':
+        case 'evening':
             timeConstraints = {
                 [Op.and]: [
                     sequelize.where(sequelize.fn('hour', sequelize.col('orderTime')), '>=', 17),
@@ -184,7 +184,7 @@ exports.getWeeklyReport = async (restaurantId, year, month, day, timeOfDay) => {
                 ]
             };
             break;
-        case 'night':
+        case 'evening':
             // 設置每天的時間範圍為 17:00 到 21:00
             timeConstraints = {
                 [Op.and]: [
@@ -228,8 +228,10 @@ exports.getWeeklyReport = async (restaurantId, year, month, day, timeOfDay) => {
     // 每週銷售額統計
     ordersData.forEach(order => {
         let orderDate = new Date(order.getDataValue('orderDate'));
-        let dayIndex = orderDate.getDate() - startDate.getDate();
-        dailySales[dayIndex] = parseFloat(order.getDataValue('totalSales'));
+        let dayIndex = Math.floor((orderDate - startDate) / (24 * 60 * 60 * 1000));
+        if (dayIndex >= 0 && dayIndex < 7) {
+            dailySales[dayIndex] = parseFloat(order.getDataValue('totalSales'));
+        }
     });
 
     return dailySales;
@@ -251,7 +253,7 @@ exports.getDailyReport = async (restaurantId, year, month, day, timeOfDay) => {
             startTime = new Date(targetDate.getTime() + (11 * 60 * 60 * 1000)); // 11:00
             endTime = new Date(targetDate.getTime() + (17 * 60 * 60 * 1000)); // 17:00
             break;
-        case 'night':
+        case 'evening':
             hourlySales = new Array(4).fill(0); // 17:00 到 21:00，共 4 小時
             startTime = new Date(targetDate.getTime() + (17 * 60 * 60 * 1000)); // 17:00
             endTime = new Date(targetDate.getTime() + (21 * 60 * 60 * 1000)); // 21:00
@@ -363,9 +365,9 @@ exports.getHistoryRating = async (restaurantId) => {
         const currentMonthRatingValue = currentMonthRating[0].dataValues.avgRating || 0;
 
         // 四捨五入到小數點第二位
-        const roundedHistoryRating = parseFloat(historyRatingValue.toFixed(2));
-        const roundedLastMonthRating = parseFloat(lastMonthRatingValue.toFixed(2));
-        const roundedCurrentMonthRating = parseFloat(currentMonthRatingValue.toFixed(2));
+        const roundedHistoryRating = parseFloat(historyRatingValue);
+        const roundedLastMonthRating = parseFloat(lastMonthRatingValue);
+        const roundedCurrentMonthRating = parseFloat(currentMonthRatingValue);
 
         return [
             roundedHistoryRating, 
