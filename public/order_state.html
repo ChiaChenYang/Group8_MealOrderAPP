@@ -11,15 +11,11 @@
     <ul id="messages"></ul>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      let counter = 0;
+      const user_id = 2;
   
-      const socket = io({
-        auth: {
-          user_id: 1
-        }
-      });
+      const socket = io();
   
-      socket.on('order state message', (msg) => {
+      socket.on(`${user_id} order state message`, (msg) => {
         const item = document.createElement('li');
         item.textContent = JSON.stringify(msg);
         messages.appendChild(item);

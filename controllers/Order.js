@@ -31,11 +31,12 @@ exports.acceptOrder = asyncHandler(async (req, res, next) => {
     const consumer_id = await OrderService.updateOrderStatus(order_id, 'incoming', 'progressing');
     await OrderService.updateSoldQuantity(order_id);
     const message = await OrderService.getOrderStateChangeMessage(order_id);
-    res.io.on('connection', async (socket) => {
+    /*res.io.on('connection', async (socket) => {
         if (socket.handshake.auth.user_id === consumer_id) {
             socket.emit('order state message', message);
         }
-    });
+    });*/
+    res.io.emit(`${consumer_id} order state message`, message);
     res.status(200).end();
 });
 
@@ -43,11 +44,7 @@ exports.finishPreparingOrder = asyncHandler(async (req, res, next) => {
     const order_id = parseInt(req.params.id);
     const consumer_id = await OrderService.updateOrderStatus(order_id, 'progressing', 'waiting');
     const message = await OrderService.getOrderStateChangeMessage(order_id);
-    res.io.on('connection', async (socket) => {
-        if (socket.handshake.auth.user_id === consumer_id) {
-            socket.emit('order state message', message);
-        }
-    });
+    res.io.emit(`${consumer_id} order state message`, message);
     res.status(200).end();
 });
 
@@ -55,11 +52,7 @@ exports.completeOrder = asyncHandler(async (req, res, next) => {
     const order_id = parseInt(req.params.id);
     const consumer_id = await OrderService.updateOrderStatus(order_id, 'waiting', 'completed');
     const message = await OrderService.getOrderStateChangeMessage(order_id);
-    res.io.on('connection', async (socket) => {
-        if (socket.handshake.auth.user_id === consumer_id) {
-            socket.emit('order state message', message);
-        }
-    });
+    res.io.emit(`${consumer_id} order state message`, message);
     res.status(200).end();
 });
 
@@ -67,11 +60,7 @@ exports.rejectOrder = asyncHandler(async (req, res, next) => {
     const order_id = parseInt(req.params.id);
     const consumer_id = await OrderService.updateOrderStatus(order_id, 'incoming', 'rejected');
     const message = await OrderService.getOrderStateChangeMessage(order_id);
-    res.io.on('connection', async (socket) => {
-        if (socket.handshake.auth.user_id === consumer_id) {
-            socket.emit('order state message', message);
-        }
-    });
+    res.io.emit(`${consumer_id} order state message`, message);
     res.status(200).end();
 });
 
