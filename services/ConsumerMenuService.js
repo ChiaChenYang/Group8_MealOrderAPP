@@ -56,7 +56,7 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
           }
       ]
   });
-    if (!restaurant.restaurantId) {
+    if (!restaurant) {
       throw new Error(`Restaurant not found with ID: ${restaurantId}`);
     }
 
