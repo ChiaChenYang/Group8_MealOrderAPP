@@ -48,7 +48,8 @@ exports.getExpenseReport = async(consumerId, year, month) => {
     let historyOrderResults = {};
     results['user_id'] = consumerId;
     results['accumulate_fee'] = 0;
-    results['time'] = {'year': year, 'month': month};
+    // results['time'] = {'year': year, 'month': month};
+    results['time'] = `${year}年${month}月`;
 
     for (const historyOrder of historyOrders) {
         let historyOrderResult = {};
