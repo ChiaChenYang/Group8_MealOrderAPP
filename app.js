@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const debug = require('debug')('meal-order-app:server');
 const http = require('http');
+const cors = require('cors');
 const { Server } = require('socket.io');
 
 var indexRouter = require('./routes/index');
