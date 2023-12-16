@@ -295,7 +295,8 @@ exports.showAllRestaurants = async (location) => {
         ],
         where: {
             factoryLocation: location,
-            istemporaryRestaurant: false
+            istemporaryRestaurant: false,
+            isOpening: true
         }
     });
     // console.log(allrestaurants);
@@ -367,7 +368,8 @@ exports.showCategoryRestaurants = async (location, category) => {
         ],
         where: {
             factoryLocation: location,
-            istemporaryRestaurant: false
+            istemporaryRestaurant: false,
+            isOpening: true
         }
     });
     // console.log(allrestaurants);
@@ -438,7 +440,8 @@ exports.showTempRestaurantsNews = async(location) => {
         ],
         where:{
             factoryLocation: location,
-            istemporaryRestaurant: true
+            istemporaryRestaurant: true,
+            isOpening: true
         }
     });
     // console.log(restaurantnewses);
