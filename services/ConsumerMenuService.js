@@ -55,7 +55,7 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
               attributes: ['newsContent']
           }
       ]
-  });
+    });
     if (!restaurant) {
       throw new Error(`Restaurant not found with ID: ${restaurantId}`);
     }
