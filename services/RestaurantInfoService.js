@@ -295,7 +295,8 @@ exports.showAllRestaurants = async (location) => {
         ],
         where: {
             factoryLocation: location,
-            istemporaryRestaurant: false
+            istemporaryRestaurant: false,
+            isOpening: true
         }
     });
     // console.log(allrestaurants);
@@ -330,7 +331,7 @@ exports.showAllRestaurants = async (location) => {
         result['id'] = restaurantId;
         result['name'] = restaurant.dataValues.restaurantName;
         result['type'] = restaurant.dataValues.categories[0].dataValues.categoryName;
-        result['image'] = restaurant.dataValues.restaurantImage;
+        result['image'] = restaurant.dataValues.restaurantImage?.toString();
         result['service'] = restaurant.dataValues.serviceMethod;
         result['preparetime'] = restaurant.dataValues.prepareTime;
         result['rating'] = roundedHistoryRating;
@@ -367,7 +368,8 @@ exports.showCategoryRestaurants = async (location, category) => {
         ],
         where: {
             factoryLocation: location,
-            istemporaryRestaurant: false
+            istemporaryRestaurant: false,
+            isOpening: true
         }
     });
     // console.log(allrestaurants);
@@ -402,7 +404,7 @@ exports.showCategoryRestaurants = async (location, category) => {
         result['id'] = restaurantId;
         result['name'] = restaurant.dataValues.restaurantName;
         result['type'] = restaurant.dataValues.categories[0].dataValues.categoryName;
-        result['image'] = restaurant.dataValues.restaurantImage;
+        result['image'] = restaurant.dataValues.restaurantImage?.toString();
         result['service'] = restaurant.dataValues.serviceMethod;
         result['preparetime'] = restaurant.dataValues.prepareTime;
         result['rating'] = roundedHistoryRating;
@@ -438,7 +440,8 @@ exports.showTempRestaurantsNews = async(location) => {
         ],
         where:{
             factoryLocation: location,
-            istemporaryRestaurant: true
+            istemporaryRestaurant: true,
+            isOpening: true
         }
     });
     // console.log(restaurantnewses);
@@ -498,7 +501,7 @@ exports.showTempRestaurantsNews = async(location) => {
             result['id'] = restaurantId;
             result['name'] = restaurantnews.dataValues.restaurantName;
             result['type'] = restaurantnews.dataValues.categories[0].dataValues.categoryName;
-            result['image'] = restaurantnews.dataValues.restaurantImage;
+            result['image'] = restaurantnews.dataValues.restaurantImage?.toString();
             result['service'] = restaurantnews.dataValues.serviceMethod;
             result['evaluate'] = roundedHistoryRating;
             result['prepare_time'] = restaurantnews.dataValues.prepareTime;
@@ -516,7 +519,7 @@ exports.showTempRestaurantsNews = async(location) => {
             result['id'] = restaurantnews.dataValues.restaurantId;
             result['name'] = restaurantnews.dataValues.restaurantName;
             // result['type'] = restaurantnews.dataValues.categories[0].dataValues.categoryName; //暫時放著
-            result['image'] = restaurantnews.dataValues.restaurantImage;
+            result['image'] = restaurantnews.dataValues.restaurantImage?.toString();
             // result['service'] = restaurantnews.dataValues.serviceMethod; //暫時放著
             // result['prepare_time'] = restaurantnews.dataValues.prepareTime; //暫時放著
             let newscontents = []

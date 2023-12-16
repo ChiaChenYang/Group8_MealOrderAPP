@@ -21,7 +21,7 @@ exports.showInfo = async(consumerId) => {
     results['name'] = consumerinfo.dataValues.displayName;
     results['division'] = consumerinfo.dataValues.department;
     results['position'] = consumerinfo.dataValues.jobTitle;
-    results['image'] = consumerinfo.dataValues.consumerImage;
+    results['image'] = consumerinfo.dataValues.consumerImage?.toString();
 
     return results;
 };
