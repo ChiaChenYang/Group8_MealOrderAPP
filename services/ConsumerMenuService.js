@@ -1,6 +1,6 @@
 const express = require('express');
 const asyncHandler = require("express-async-handler");
-const { menus, restaurants,  menucategories, menuitems, tags, itemtags, itemmenucategories, orders, Sequelize } = require('../models');
+const { menus, restaurants,  restaurantlatestnews, menucategories, menuitems, tags, itemtags, itemmenucategories, orders, Sequelize } = require('../models');
 
 exports.getSingleItem = asyncHandler(async (itemId) => {
   try {
@@ -30,17 +30,13 @@ exports.getSingleItem = asyncHandler(async (itemId) => {
       ],
     });
     const formattedItem = {
-      restaurantId: SingleItemDetails.restaurantId,
-      itemId: SingleItemDetails.menuitems[0].itemId,
-      itemName: SingleItemDetails.menuitems[0].itemName,
-      itemImage: SingleItemDetails.menuitems[0].itemImage.toString('base64'),
-      descriptionText: SingleItemDetails.menuitems[0].descriptionText,
-      price: SingleItemDetails.menuitems[0].price,
-      calories: SingleItemDetails.menuitems[0].calories,
-      tags: SingleItemDetails.menuitems[0].tags.map((tag) => ({
-        tagId: tag.tagId,
-        tagName: tag.tagName,
-      })),
+      shop_id: SingleItemDetails.restaurantId,
+      name: SingleItemDetails.menuitems[0].itemName,
+      price: SingleItemDetails.menuitems[0].price,    
+      Calorie: SingleItemDetails.menuitems[0].calories,
+      tag: SingleItemDetails.menuitems[0].tags.map((tag) => tag.tagName),
+      description: SingleItemDetails.menuitems[0].descriptionText,
+      image: item.itemImage ? item.itemImage.toString() : null,
     };
     return formattedItem;
   } catch (error) {
@@ -51,7 +47,15 @@ exports.getSingleItem = asyncHandler(async (itemId) => {
 exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
   try {
     // 檢查該餐廳 id 是否存在餐廳表
-    const restaurant = await restaurants.findByPk(restaurantId);
+    // const restaurant = await restaurants.findByPk(restaurantId);
+    const restaurant = await restaurants.findByPk(restaurantId, {
+      include: [
+          {
+              model: restaurantlatestnews,
+              attributes: ['newsContent']
+          }
+      ]
+    });
     if (!restaurant) {
       throw new Error(`Restaurant not found with ID: ${restaurantId}`);
     }
@@ -146,57 +150,105 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
               ],
             },
           ],
-        },
+        }
       ],
     });
 
     const formattedMenus = {
-      restaurant: {
-        // 新增 restaurant 資訊
-        restaurantId: restaurant.restaurantId,
-        restaurantName: restaurant.restaurantName,
-        stationStartDate: stationStartDate,
-        stationEndDate: stationEndDate,
-        prepareTime: prepareTime,
-        rating: rating,
-        commentsCount: commentsCount,
-      },
-      menus: menuDetails.map((menu) => {
-        const menuCategories = menu.menucategories.map((menucategory) => {
-          const items = menucategory.menuitems.map((item) => {
-            const tags = item.tags.map((tag) => {
-              return {
-                tagId: tag.tagId,
-                tagName: tag.tagName,
-              };
-            });
-            return {
-              itemId: item.itemId,
-              itemName: item.itemName,
-              itemImage: item.itemImage.toString('base64'),
-              descriptionText: item.descriptionText,
-              price: item.price,
-              calories: item.calories,
-              tags: tags,
-            };
-          });
-          return {
-            categoryId: menucategory.menuCategoryId,
-            categoryName: menucategory.menuCategoryName,
-            items: items,
+      restaurantId: restaurant.restaurantId,
+      restaurantName: restaurant.restaurantName,
+      evaluate: rating,
+      comment: commentsCount,
+      prepare_time: prepareTime,
+      location: restaurant.factoryArea + restaurant.factoryLocation + restaurant.restaurantLocation,
+      stationStartDate: stationStartDate,
+      stationEndDate: stationEndDate,
+      news: restaurant.restaurantlatestnews.map(news => news.newsContent),
+      menu_lunch: { type: [], dish: {} },
+      menu_dinner: { type: [], dish: {} },
+      menu_allday: { type: [], dish: {} },
+      menu_preorder: { type: [], dish: {} },
+    };
+    
+    menuDetails.forEach((menu) => {
+      const menuObj = {
+        // menuId: menu.menuId,
+        type: [], // 新增一個 type 陣列
+        dish: {}, // 新增一個 dish 物件
+      };
+    
+      menu.menucategories.forEach((menucategory, categoryIndex) => {
+        const typeIndex = menuObj.type.length + 1;
+    
+        // 將 dish 加入 menuObj
+        menuObj.dish[typeIndex] = { };
+    
+        menucategory.menuitems.forEach((item, itemIndex) => {
+          const tags = item.tags.map((tag) => tag.tagName);
+    
+          // 直接將 item 加到 items 中
+          menuObj.dish[typeIndex][itemIndex + 1] = {
+            id: item.itemId,
+            name: item.itemName,
+            price: item.price,
+            Calorie: item.calories,
+            tag: tags,
+            description: item.descriptionText,
+            image: item.itemImage ? item.itemImage.toString() : null,
           };
         });
-        return {
-          menuId: menu.menuId,
-          menuName: menu.menuName,
-          menuTime: menu.menuTime,
-          menuType: menu.menuType,
-          categories: menuCategories,
-        };
-      }),
-    };
-
+    
+        // 加入 type
+        menuObj.type.push(menucategory.menuCategoryName);
+      });
+    
+      if (menu.menuType === '預購') {
+        formattedMenus['menu_preorder'] = menuObj;
+      } else {
+        // 判斷 menuTime
+        switch (menu.menuTime) {
+          case '午段':
+            // 在 menu_lunch 同一層加入 dish
+            formattedMenus['menu_lunch'] = {
+              ...menuObj,
+            };
+            break;
+          case '晚段':
+            // 在 menu_dinner 同一層加入 dish
+            formattedMenus['menu_dinner'] = {
+              ...menuObj,
+            };
+            break;
+          case '全日':
+            // 在 menu_allday 同一層加入 dish
+            formattedMenus['menu_allday'] = {
+              ...menuObj,
+            };
+            break;
+          default:
+        }
+      }
+    });
+    
+    // // 如果 type 為空，則將對應的屬性值設為空物件
+    // if (formattedMenus.menu_lunch.type.length === 0) {
+    //   formattedMenus.menu_lunch = {};
+    // }
+    
+    // if (formattedMenus.menu_dinner.type.length === 0) {
+    //   formattedMenus.menu_dinner = {};
+    // }
+    
+    // if (formattedMenus.menu_allday.type.length === 0) {
+    //   formattedMenus.menu_allday = {};
+    // }
+    
+    // if (formattedMenus.menu_preorder.type.length === 0) {
+    //   formattedMenus.menu_preorder = {};
+    // }
+    
     return formattedMenus;
+    
   } catch (error) {
     throw new Error(`Error getting all menu details: ${error.message}`);
   }

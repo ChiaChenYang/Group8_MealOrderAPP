@@ -86,7 +86,56 @@ exports.getCartInfo = async (user_id, shop_id) => {
         };
         return return_shop_cart;
     }
+};
 
+exports.getCartInfoToCheckout = async (user_id, shop_id) => {
+    var shop_cart = await shoppingcarts.findOne({
+        include: [{
+            model: consumers,
+            where: {
+                consumerId: user_id
+            }
+        }, {
+            model: restaurants,
+            where: {
+                restaurantId: shop_id
+            }
+        }, {
+            model: menuitems,
+            through: {
+                attributes: ['cartQuantity']
+            }
+        }],
+        where: {
+            checkout: false
+        }
+    });
+
+    if (shop_cart === null) {
+        throw new Error(`The shopping cart does not exist! (consumerId: ${user_id}, restaurantId: ${shop_id})`);        
+    }
+    else {
+        var all_cart_items = {};
+        for (let i=0; i<shop_cart.menuitems.length; i++){
+            all_cart_items[i+1] = {
+                name: shop_cart.menuitems[i].itemName,
+                price: shop_cart.menuitems[i].price,
+                image: shop_cart.menuitems[i].itemImage,
+                quantity: shop_cart.menuitems[i].cartitems.cartQuantity,
+                addition: shop_cart.menuitems[i].cartitems.cartItemNote
+            };
+        }
+
+        var return_shop_cart = {
+            name: shop_cart.restaurant.restaurantName,
+            prepare_time: `${shop_cart.restaurant.prepareTime} min`,
+            location: shop_cart.restaurant.factoryLocation,
+            total: shop_cart.price,
+            addition: shop_cart.cartNote,
+            meals: all_cart_items,
+        };
+        return return_shop_cart;
+    }
 };
 
 exports.addItemToCart = async (item_info) => {
@@ -332,8 +381,6 @@ exports.checkout = async (user_id, shop_id) => {
             status: 'incoming'
         });
 
-        var all_meals = {};
-
         // create order items
         for ( let i=0; i<shop_cart.menuitems.length; i++ ){
             const new_order_item = await orderitems.create({
@@ -342,30 +389,13 @@ exports.checkout = async (user_id, shop_id) => {
                 orderQuantity: shop_cart.menuitems[i].cartitems.cartQuantity,
                 orderItemNote: shop_cart.menuitems[i].cartitems.cartItemNote
             });
-
-            all_meals[i+1] = {
-                name: shop_cart.menuitems[i].itemName,
-                price: shop_cart.menuitems[i].price,
-                image: shop_cart.menuitems[i].itemImage,
-                quantity: shop_cart.menuitems[i].cartitems.cartQuantity,
-                addition: shop_cart.menuitems[i].cartitems.cartItemNote
-            }
         };
 
         // set checkout to true
         await shop_cart.update({ checkout: true });
 
-        const return_order = {
-            order_id: new_order.orderId,
-            shop_id: new_order.restaurantId,
-            name: shop_cart.restaurant.restaurantName,
-            prepare_time: `${shop_cart.restaurant.prepareTime} min`,
-            location: shop_cart.restaurant.factoryLocation,
-            total: new_order.totalPrice,
-            addition: new_order.orderNote,
-            meals: all_meals
-        }
-
-        return return_order;
+        return {
+            order_id: new_order.orderId
+        };
     }
 };

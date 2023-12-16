@@ -57,7 +57,7 @@ exports.getOrdersWithStatus = async (rid, s) => {
                 totalPrice: restaurant.orders[i].totalPrice,
                 finishTime: utils.formatDate(restaurant.orders[i].finishTime),
                 completeTime: utils.formatDate(restaurant.orders[i].completeTime),
-                expectedFinishedTime: utils.formatDate(restaurants.orders[i].expectedFinishedTime)
+                expectedFinishedTime: utils.formatDate(restaurant.orders[i].expectedFinishedTime)
             });
         }
         return all_orders;
