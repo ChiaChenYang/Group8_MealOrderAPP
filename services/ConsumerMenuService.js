@@ -36,7 +36,7 @@ exports.getSingleItem = asyncHandler(async (itemId) => {
       Calorie: SingleItemDetails.menuitems[0].calories,
       tag: SingleItemDetails.menuitems[0].tags.map((tag) => tag.tagName),
       description: SingleItemDetails.menuitems[0].descriptionText,
-      image: item.itemImage ? item.itemImage.toString('base64') : null,
+      image: item.itemImage ? item.itemImage.toString() : null,
     };
     return formattedItem;
   } catch (error) {
