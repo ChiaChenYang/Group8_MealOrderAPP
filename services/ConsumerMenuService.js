@@ -164,12 +164,15 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
       stationStartDate: stationStartDate,
       stationEndDate: stationEndDate,
       news: restaurant.restaurantlatestnews.map(news => news.newsContent),
-      menus: []
+      menu_lunch: {},
+      menu_dinner: {},
+      menu_allday: {},
+      menu_preorder: {},
     };
     
     menuDetails.forEach((menu) => {
       const menuObj = {
-        menuId: menu.menuId,
+        // menuId: menu.menuId,
         type: [], // 新增一個 type 陣列
       };
     
@@ -193,20 +196,47 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
         menuObj.type.push(menucategory.menuCategoryName);
         menuObj[categoryIndex + 1] = items;
       });
-      // 使用 menu.menuTime 當 key
-      formattedMenus.menus.push({
-        [menu.menuTime]: menuObj
-      });
-      // if (menuObj.type.length > 0) {
-      //   formattedMenus[menu.menuName] = menuObj;
-      // }
-    });
-    return formattedMenus;
     
+      if (menu.menuType === '預購') {
+        formattedMenus['menu_preorder'] = menuObj;
+      } else {
+        // 判斷 menuTime
+        switch (menu.menuTime) {
+          case '午段':
+            formattedMenus['menu_lunch'] = menuObj;
+            break;
+          case '晚段':
+            formattedMenus['menu_dinner'] = menuObj;
+            break;
+          case '全日':
+            formattedMenus['menu_allday'] = menuObj;
+            break;
+          default:
+        }
+      }
+    }); 
+    // 如果 type 為空，則將對應的屬性值設為空物件
+    if (formattedMenus.menu_lunch.type.length === 0) {
+      formattedMenus.menu_lunch = {};
+    }
+
+    if (formattedMenus.menu_dinner.type.length === 0) {
+      formattedMenus.menu_dinner = {};
+    }
+
+    if (formattedMenus.menu_allday.type.length === 0) {
+      formattedMenus.menu_allday = {};
+    }
+
+    if (formattedMenus.menu_preorder.type.length === 0) {
+      formattedMenus.menu_preorder = {};
+    }   
+    return formattedMenus;   
   } catch (error) {
     throw new Error(`Error getting all menu details: ${error.message}`);
   }
 });
+
 
 /*
 exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
