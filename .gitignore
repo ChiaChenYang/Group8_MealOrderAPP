@@ -4,3 +4,7 @@ config.json
 config/*
 .env
 generate_jwt_secret.js
+*/__test__/*
+__test__/*
+jest.config.js
+public/*
