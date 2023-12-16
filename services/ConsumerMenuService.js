@@ -164,10 +164,10 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
       stationStartDate: stationStartDate,
       stationEndDate: stationEndDate,
       news: restaurant.restaurantlatestnews.map(news => news.newsContent),
-      menu_lunch: {},
-      menu_dinner: {},
-      menu_allday: {},
-      menu_preorder: {},
+      menu_lunch: { type: [] },
+      menu_dinner: { type: [] },
+      menu_allday: { type: [] },
+      menu_preorder: { type: [] },
     };
     
     menuDetails.forEach((menu) => {
