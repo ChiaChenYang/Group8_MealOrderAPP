@@ -320,6 +320,8 @@ function RestaurantForm() {
 							{preview && (
 								<div className="h-[126px] w-[224px]">
 									<Image
+										width={224}
+										height={126}
 										src={preview}
 										alt="Preview"
 										className="h-full w-full object-cover"

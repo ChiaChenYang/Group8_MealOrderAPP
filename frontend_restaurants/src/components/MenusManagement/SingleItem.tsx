@@ -82,6 +82,8 @@ function SingleItem({ item, setItem }: SingleItemProps) {
 						{preview && (
 							<div style={{ width: '100px', height: '100px' }}>
 								<Image
+									width={100}
+									height={100}
 									src={preview}
 									alt="Preview"
 									className="h-full w-full object-cover"
