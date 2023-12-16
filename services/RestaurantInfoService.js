@@ -20,7 +20,7 @@ exports.createRestaurantInfo = async(restaurantInfo) => {
                 startTime, 
                 endTime, 
                 acceptingOrderType,
-                logo,
+                restaurantImage,
                 // 其他欄位
                 // ownerId,
                 // restaurantPhone,
@@ -51,7 +51,7 @@ exports.createRestaurantInfo = async(restaurantInfo) => {
             isOpening: isOpening,
             stationStartDate: new Date(startTime),
             stationEndDate: new Date(endTime),
-            restaurantImage: logo,
+            restaurantImage: restaurantImage,
             prepareTime: prepareTime,
             // 其他欄位
             ownerId: restaurantId, // restaurantId 為 ownerId
@@ -108,7 +108,7 @@ exports.modifyRestaurantInfo = async(restaurantInfo) => {
             startTime, 
             endTime, 
             acceptingOrderType,
-            logo,
+            restaurantImage,
             // 其他欄位
             // ownerId,
             // restaurantPhone,
@@ -144,7 +144,7 @@ exports.modifyRestaurantInfo = async(restaurantInfo) => {
                 isOpening: isOpening,
                 stationStartDate: new Date(startTime),
                 stationEndDate: new Date(endTime),
-                restaurantImage: logo,
+                restaurantImage: restaurantImage,
                 prepareTime: prepareTime,
                 // 其他欄位
                 // ownerId: restaurantId, 
@@ -209,7 +209,7 @@ exports.getRestaurantInfo = async (restaurantId) => {
         return 'restaurantInfo 出現錯誤';
     }
 
-    const restaurantGroup = '固定櫃';
+    let restaurantGroup = '固定櫃';
     if (restaurantInfo.istemporaryRestaurant){
         restaurantGroup = '流動櫃';
     }
@@ -229,11 +229,15 @@ exports.getRestaurantInfo = async (restaurantId) => {
         prepareTime: restaurantInfo.prepareTime,
         startTime: restaurantInfo.stationStartDate,
         endTime: restaurantInfo.stationEndDate,
-        // logo: restaurantInfo.restaurantImage,
+        // restaurantImage: restaurantInfo.restaurantImage,
         acceptingOrderType: restaurantInfo.serviceMethod
     };
 
-    console.log("Formatted Restaurant Info:", JSON.stringify(formattedRestaurantInfo, null, 2));
+    if (restaurantInfo.restaurantImage) {
+        formattedRestaurantInfo.restaurantImage = restaurantInfo.restaurantImage.toString();
+    }
+
+    // console.log("Formatted Restaurant Info:", JSON.stringify(formattedRestaurantInfo, null, 2));
     return formattedRestaurantInfo;
 };
 
