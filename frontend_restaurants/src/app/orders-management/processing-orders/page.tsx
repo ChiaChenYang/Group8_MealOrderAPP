@@ -35,7 +35,7 @@ export default function Management() {
 			}));
 			setOrderList(displayOrders);
 		};
-		if (restaurantId !== 1) getData();
+		if (restaurantId !== -1) getData();
 	}, [restaurantId, refreshKey]);
 
 	const ordersPerPage = 6;
