@@ -2,9 +2,9 @@
 
 ## Project structure
 
-- web : NextJS frontend website
-- server : Login / Signup Authentication
-- package: Database schema shared by server and web
+-   web : NextJS frontend website
+-   server : Login / Signup Authentication
+-   package: Database schema shared by server and web
 
 ## Install Latest NodeJS, Yarn, and MySQL
 
@@ -56,10 +56,12 @@ DB_HOST=127.0.0.1
     cd ./server
     yarn dev
     ```
+
 2. Start the web
 
     ```bash
     cd ./web
     yarn dev
     ```
+
 3. Go to `http://localhost:3000` in your browser
