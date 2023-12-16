@@ -1,5 +1,5 @@
 <!-- index.html -->
-
+​
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,12 +10,12 @@
 <body>
   <script>
     // app.js
-    const user_id = 2;
-    const shop_id = 1;
-
+    const user_id = 1;
+//     const shop_id = 1;
+// ​
     const fetchData = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/orders/1/orderstate`);
+            const response = await fetch(`http://localhost:3000/consumers/${user_id}/report?year=2023&month=11`);
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
