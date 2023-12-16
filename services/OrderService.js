@@ -292,12 +292,17 @@ exports.getOrderState = async (order_id) => {
         }
 
         var process = false;
-        var accept = true;
-        if (order.status === 'waiting' || order.status === 'completed'){
-            process = true;
-        }
+        var accept = false;
+        var reject = false;
         if (order.status === 'rejected'){
-            accept = false;
+            reject = true;
+        }
+        else if (order.status === 'progressing'){
+            accept = true;
+        }
+        else if (order.status === 'waiting' || order.status === 'completed'){
+            process = true;
+            accept = true;
         }
 
         var order_state = {
@@ -307,6 +312,7 @@ exports.getOrderState = async (order_id) => {
             time: utils.formatDate(order.expectedFinishedTime),
             process: process,
             accept: accept,
+            reject: reject,
             Meals: all_order_items,
             addition: order.orderNote
         };
