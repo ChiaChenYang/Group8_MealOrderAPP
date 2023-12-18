@@ -407,6 +407,7 @@ exports.getOrderStateChangeMessage = async (order_id) => {
         message = `很抱歉，您的訂單已於 ${event_time} 被取消!`;
     }
     return {
+        id: order.restaurantId,
         restaurant: restaurant_name,
         order_id: order_id,
         message: message,
