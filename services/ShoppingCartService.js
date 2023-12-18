@@ -56,7 +56,7 @@ exports.getCartInfo = async (user_id, shop_id) => {
         }, {
             model: menuitems,
             through: {
-                attributes: ['cartQuantity']
+                attributes: ['cartQuantity', 'cartItemNote']
             }
         }],
         where: {
@@ -74,7 +74,8 @@ exports.getCartInfo = async (user_id, shop_id) => {
                 name: shop_cart.menuitems[i].itemName,
                 price: shop_cart.menuitems[i].price,
                 quantity: shop_cart.menuitems[i].cartitems.cartQuantity,
-                image: shop_cart.menuitems[i].itemImage
+                image: shop_cart.menuitems[i].itemImage,
+                addition: shop_cart.menuitems[i].cartitems.cartItemNote
             };
         }
 
