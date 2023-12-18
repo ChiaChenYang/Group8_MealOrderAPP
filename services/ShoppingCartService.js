@@ -104,7 +104,7 @@ exports.getCartInfoToCheckout = async (user_id, shop_id) => {
         }, {
             model: menuitems,
             through: {
-                attributes: ['cartQuantity']
+                attributes: ['cartQuantity', 'cartItemNote']
             }
         }],
         where: {
