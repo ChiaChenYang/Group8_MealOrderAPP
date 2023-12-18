@@ -212,11 +212,20 @@ exports.addItemToCart = async (item_info) => {
         else {
             const old_quantity = cart_item.cartQuantity;
             const new_quantity = item_info.quantity;
+            const old_item_note = cart_item.cartItemNote;
+            const new_item_note = item_info.note;
             if (new_quantity > 0){
                 console.log("Change the quantity of an original cart item");
+                const merge_item_note = old_item_note;
+                if (old_item_note && new_item_note){
+                    merge_item_note = old_item_note + ' ' + new_item_note;
+                }
+                else if (new_item_note){
+                    merge_item_note = new_item_note;
+                }
                 await cart_item.update({
                     cartQuantity: old_quantity + new_quantity, 
-                    cartItemNote: item_info.note
+                    cartItemNote: merge_item_note
                 })
                 shop_cart.quantity += new_quantity;
                 shop_cart.price += (added_item.price * new_quantity);
@@ -248,7 +257,7 @@ exports.syncAllCartItems = async (user_id, shop_id, items) => {
         }, {
             model: menuitems,
             through: {
-                attributes: ['cartQuantity', 'cartItemId']
+                attributes: ['cartQuantity', 'cartItemNote', 'cartItemId']
             }
         }],
         where: {
@@ -266,8 +275,15 @@ exports.syncAllCartItems = async (user_id, shop_id, items) => {
                 if (items[key].name === shop_cart.menuitems[i].itemName && items[key].quantity != shop_cart.menuitems[i].cartitems.cartQuantity){
                     const saved_item = await cartitems.findByPk(shop_cart.menuitems[i].cartitems.cartItemId); 
                     shop_cart.menuitems[i].cartitems.cartQuantity = items[key].quantity;
+                    shop_cart.menuitems[i].cartitems.cartItemNote = items[key].addition;
                     saved_item.cartQuantity = items[key].quantity;
-                    await saved_item.save();
+                    saved_item.cartItemNote = items[key].addition;
+                    if (saved_item.cartQuantity <= 0) {
+                        await saved_item.destroy();
+                    }
+                    else {
+                        await saved_item.save();
+                    }
                     console.log("update the quantity of a cart item");
                 }
             }
@@ -387,12 +403,14 @@ exports.checkout = async (user_id, shop_id) => {
 
         // create order items
         for ( let i=0; i<shop_cart.menuitems.length; i++ ){
-            const new_order_item = await orderitems.create({
-                itemId: shop_cart.menuitems[i].itemId,
-                orderId: new_order.orderId,
-                orderQuantity: shop_cart.menuitems[i].cartitems.cartQuantity,
-                orderItemNote: shop_cart.menuitems[i].cartitems.cartItemNote
-            });
+            if (shop_cart.menuitems[i].cartitems.cartQuantity > 0){
+                const new_order_item = await orderitems.create({
+                    itemId: shop_cart.menuitems[i].itemId,
+                    orderId: new_order.orderId,
+                    orderQuantity: shop_cart.menuitems[i].cartitems.cartQuantity,
+                    orderItemNote: shop_cart.menuitems[i].cartitems.cartItemNote
+                });
+            }
         };
 
         // set checkout to true
