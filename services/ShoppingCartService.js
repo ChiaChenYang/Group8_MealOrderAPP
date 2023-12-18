@@ -214,9 +214,12 @@ exports.addItemToCart = async (item_info) => {
             const new_quantity = item_info.quantity;
             if (new_quantity > 0){
                 console.log("Change the quantity of an original cart item");
-                await cart_item.update({ cartQuantity: new_quantity })
-                shop_cart.quantity += (new_quantity - old_quantity);
-                shop_cart.price += (added_item.price * (new_quantity - old_quantity));
+                await cart_item.update({
+                    cartQuantity: old_quantity + new_quantity, 
+                    cartItemNote: item_info.note
+                })
+                shop_cart.quantity += new_quantity;
+                shop_cart.price += (added_item.price * new_quantity);
                 await shop_cart.save();
             }
             else {
