@@ -6,16 +6,11 @@ import FastfoodRoundedIcon from '@mui/icons-material/FastfoodRounded';
 import NoFoodRoundedIcon from '@mui/icons-material/NoFoodRounded';
 import { Box, Button, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import type { GridColDef, GridValidRowModel, GridValueGetterParams } from '@mui/x-data-grid';
+import type { GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { GridToolbarContainer, useGridApiContext } from '@mui/x-data-grid';
 
 import { modifyItem } from '@/lib/api/menu/api';
 import type { ItemControlList, ItemControl } from '@/lib/api/menu/types';
-
-function changeRowSelling(rows: GridValidRowModel[]) {
-	console.log(rows);
-	alert('Change item status not implemented');
-}
 
 const colWidth = 150;
 
@@ -84,7 +79,6 @@ export default function ItemStatistics({
 				setRows((prevRows) =>
 					prevRows.map((row) => (row.itemId === updatedRow.itemId ? updatedRow : row)),
 				);
-				console.log(`Item ${updatedRow.itemId} updated successfully.`);
 			} else {
 				console.error(
 					`Failed to update item ${updatedRow.itemId}. Status code: ${responseStatus}`,
@@ -123,7 +117,6 @@ export default function ItemStatistics({
 						row.totalNumber,
 					);
 					if (responseStatus === 200) {
-						console.log(`Item ${row.itemId} selling status updated successfully.`);
 						setRows((prevRows) =>
 							prevRows.map((r) =>
 								r.itemId === row.itemId ? { ...r, isSelling: newSellingStatus } : r,
@@ -148,14 +141,6 @@ export default function ItemStatistics({
 				<Box className="flex justify-end">
 					<Button variant="text" onClick={toggleSellingStatus}>
 						{isSelling ? '暫停販售' : '恢復販售'}
-					</Button>
-
-					<Button
-						variant="text"
-						onClick={() => changeRowSelling(selectedRows)}
-						className="m-2 text-[#fa1f1f]"
-					>
-						刪除
 					</Button>
 				</Box>
 			</GridToolbarContainer>

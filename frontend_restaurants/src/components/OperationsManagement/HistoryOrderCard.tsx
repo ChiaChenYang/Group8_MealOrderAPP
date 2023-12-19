@@ -34,13 +34,13 @@ export default function HistoryCard({ order }: HistoryOrderCardProps) {
 	return (
 		<Paper
 			sx={{
-				mb: 2,
+				mb: 0,
 				mr: 1.5,
 				ml: 1.5,
 				p: 2,
 				borderRadius: '16px',
 				backgroundColor: '#ffffff',
-				height: '150px',
+				height: '170px',
 			}}
 			elevation={3}
 		>

@@ -19,11 +19,9 @@ import type {
 export const getSellingItem: GetSellingItem = async (menuId) => {
 	try {
 		const response = await api.get(`menus/sellingitems/${menuId}`);
-		console.log('response.data: ', response.data);
 		if (Array.isArray(response.data.data)) {
 			return ItemControlListSchema.parse(response.data.data);
 		} else {
-			console.log('No items found for the specified menuId.');
 			return [];
 		}
 	} catch (error) {
@@ -38,7 +36,6 @@ export const getPausingItem: GetPausingItem = async (menuId) => {
 		if (Array.isArray(response.data.data)) {
 			return ItemControlListSchema.parse(response.data.data);
 		} else {
-			console.log('No items found for the specified menuId.');
 			return [];
 		}
 	} catch (error) {
@@ -63,7 +60,6 @@ export const getAllMenu: GetAllMenu = async (restaurantId) => {
 	try {
 		const response = await api.get(`menus/allmenudetails/${restaurantId}`);
 		const rawData: BackendMenu[] = response.data.data.menus;
-		console.log('rawData: ', rawData);
 
 		const processedData = rawData.map((menu) => ({
 			...menu,
@@ -79,7 +75,6 @@ export const getAllMenu: GetAllMenu = async (restaurantId) => {
 			})),
 		}));
 		const menuList = MenuListSchema.parse(processedData);
-		console.log('menuList: ', menuList);
 		return menuList;
 	} catch (error) {
 		console.error('Error getting menu:', error);
@@ -114,7 +109,6 @@ export const modifyMenu: ModifyMenu = async (menuId, menuName, menuType, menuTim
 			categories,
 		});
 
-		console.log('Validated Data', validatedData);
 		const postingData = {
 			menuId,
 			menuName,

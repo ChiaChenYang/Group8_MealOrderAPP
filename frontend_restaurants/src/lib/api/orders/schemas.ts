@@ -30,7 +30,7 @@ export const HistoryOrderSchema = OrderSchema.omit({
 	completeTime: true,
 }).extend({
 	Rating: z.union([z.number(), z.null()]),
-	Comment: z.union([z.number(), z.null()]),
+	Comment: z.union([z.string(), z.null()]),
 });
 
 export const HistoryOrderSchemaList = z.array(HistoryOrderSchema);

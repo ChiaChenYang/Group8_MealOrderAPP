@@ -25,7 +25,6 @@ function Page() {
 
 	const handleSignIn = async () => {
 		try {
-			console.log('email: ', email, 'password: ', password);
 			const { user } = await login(email, password);
 			showSnackbar('Sign in successful', 'success');
 			localStorage.setItem('id', `${user.id}`);

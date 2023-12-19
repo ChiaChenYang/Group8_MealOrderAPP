@@ -62,9 +62,7 @@ export const modifyRestaurantInfo: ModifyRestaurantInfo = async (restaurantInfo)
 			startTime: restaurantInfo.startTime.toString(),
 			endTime: restaurantInfo.endTime.toString(),
 		};
-		console.log('Before parsing', dateToStr);
 		const validatedData = RestaurantInfoSchema.parse(dateToStr);
-		console.log('ValidatedData', validatedData);
 		await api.put(`/restaurants/info/modify`, validatedData);
 	} catch (error) {
 		console.error('Error modifying restaurant info:', error);

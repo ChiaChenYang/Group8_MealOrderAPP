@@ -42,7 +42,7 @@ export default function Management() {
 			setOrderList(displayOrders);
 			setHistoryRating(ratings);
 		};
-		getData();
+		if (restaurantId !== -1) getData();
 	}, [restaurantId]);
 
 	const [page, setPage] = useState(1);

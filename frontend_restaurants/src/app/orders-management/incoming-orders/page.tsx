@@ -33,7 +33,6 @@ export default function Management() {
 		const socket = io(BACKEND_URL);
 
 		socket.on(`${restaurantId} incoming orders`, () => {
-			console.log('incoming orders');
 			setRefreshKey((prev) => prev + 1);
 		});
 

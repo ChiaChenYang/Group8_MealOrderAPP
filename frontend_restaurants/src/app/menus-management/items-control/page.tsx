@@ -57,7 +57,6 @@ export default function ItemsControl() {
 				if (selectedMenu && selectedMenu.menuId && selectedMenu.menuId !== -1) {
 					const sellingItems = await getSellingItem(selectedMenu.menuId);
 					const pausingItems = await getPausingItem(selectedMenu.menuId);
-					console.log('sellingItems: ', sellingItems);
 					setSellingItems(sellingItems);
 					setPausingItems(pausingItems);
 				}

@@ -64,7 +64,7 @@ const sampleTypes: RestaruantTypes = [
 ];
 const sampleGroups: RestaruantGroups = ['固定櫃', '流動櫃'];
 const sampleAreas = ['桃園', '新竹', '苗栗', '台中', '台南'];
-const sampleOrderTypes = ['內用', '外帶', '皆可'];
+const sampleOrderTypes = ['內用', '外帶', '外帶內用'];
 const locationsMap: LocationMapType = {
 	桃園: ['先進封測三廠'],
 	新竹: [
@@ -224,13 +224,9 @@ function RestaurantForm() {
 				};
 
 				const status = await getRestaurantInfoStatus(parsedId);
-				console.log(status);
 				if (!status) {
-					// Restaurant not exist
-					console.log('Restaurant not exist');
 					await createRestaurantInfo(modifiedData);
 				} else {
-					console.log('Restaurant exist');
 					await modifyRestaurantInfo(modifiedData);
 				}
 				// Call the API to modify the restaurant info

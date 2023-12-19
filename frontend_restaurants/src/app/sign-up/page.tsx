@@ -47,7 +47,6 @@ function Page() {
 
 			router.push('/operations-management/basic-information');
 		} catch (error) {
-			console.log('error: ', error);
 			showSnackbar('User already exists', 'error');
 		}
 	};
