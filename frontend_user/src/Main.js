@@ -91,46 +91,6 @@ function Main() {
     fetchData();
   }, [selectedLocation]);
 
-  //
-  // let restaurant_information = {
-  //   //全類別
-  //   1: {
-  //     id: 1,
-  //     name: "麥當勞",
-  //     image:
-  //       "https://yt3.googleusercontent.com/ytc/APkrFKZi46pled4Gcj8WhRnYE1vO9Py1S-hDB1ntiybvCQ=s900-c-k-c0x00ffffff-no-rj",
-  //     prepare_time: 20,
-  //     evaluate: 5,
-  //     service: "內用|外帶",
-  //   },
-  //   2: {
-  //     id: 2,
-  //     name: "麥當勞2",
-  //     image:
-  //       "https://yt3.googleusercontent.com/ytc/APkrFKZi46pled4Gcj8WhRnYE1vO9Py1S-hDB1ntiybvCQ=s900-c-k-c0x00ffffff-no-rj",
-  //     prepare_time: 20,
-  //     evaluate: 5,
-  //     service: "內用|外帶",
-  //   },
-  //   3: {
-  //     id: 3,
-  //     name: "麥當勞3",
-  //     image:
-  //       "https://yt3.googleusercontent.com/ytc/APkrFKZi46pled4Gcj8WhRnYE1vO9Py1S-hDB1ntiybvCQ=s900-c-k-c0x00ffffff-no-rj",
-  //     prepare_time: 20,
-  //     evaluate: 5,
-  //     service: "內用|外帶",
-  //   },
-  //   4: {
-  //     id: 4,
-  //     name: "麥當勞4",
-  //     image:
-  //       "https://yt3.googleusercontent.com/ytc/APkrFKZi46pled4Gcj8WhRnYE1vO9Py1S-hDB1ntiybvCQ=s900-c-k-c0x00ffffff-no-rj",
-  //     prepare_time: 20,
-  //     evaluate: 5,
-  //     service: "內用|外帶",
-  //   },
-  // };
   console.log("data:", restaurant_information);
   const [cabinet_information, setCabinet] = useState([]);
   useEffect(() => {
@@ -155,28 +115,6 @@ function Main() {
 
     fetchData();
   }, [selectedLocation]);
-
-  // let cabinet_information = {
-  //   1: {
-  //     isBetweenStartEndTime: true,
-  //     id: 5,
-  //     name: "蘿拉點心舖1",
-  //     image:
-  //       "https://yt3.googleusercontent.com/ytc/APkrFKZi46pled4Gcj8WhRnYE1vO9Py1S-hDB1ntiybvCQ=s900-c-k-c0x00ffffff-no-rj",
-  //     service: "內用|外帶",
-  //     evaluate: 5,
-  //     prepare_time: 20,
-  //     LatestNews: "情人節預購開始了",
-  //   },
-  //   2: {
-  //     isBetweenStartEndTime: false,
-  //     id: 6,
-  //     name: "蘿拉點心舖2",
-  //     image:
-  //       "https://yt3.googleusercontent.com/ytc/APkrFKZi46pled4Gcj8WhRnYE1vO9Py1S-hDB1ntiybvCQ=s900-c-k-c0x00ffffff-no-rj",
-  //     LatestNews: "情人節預購開始了",
-  //   },
-  // };
 
   const handleClassChange = (selectedValue) => {
     setSelectedClass(selectedValue);

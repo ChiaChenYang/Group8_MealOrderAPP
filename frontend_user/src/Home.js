@@ -27,28 +27,6 @@ function Home() {
     });
   }, [userId]);
 
-  // const fetchUser = useCallback(async () => {
-  //   try {
-  //     const result = await fetch(`http://localhost:8081/user/${userId}`).then(
-  //       (res) => res.json()
-  //     );
-  //     setData(result);
-  //   } catch (error) {
-  //     console.error("Error fetching user data:", error);
-  //   }
-  // }, [userId]);
-  
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     await fetchUser();
-  //   };
-
-  //   fetchData(); // Call fetchUser directly
-
-  // }, [fetchUser, userId]);
-
-  // // Access the user directly from the data array
-  // const User = Array.isArray(data) && data.length > 0 ? data[0] : null;
 
   const [User, setUser] = useState({});
   const [error, setError] = useState(null);
@@ -62,6 +40,7 @@ function Home() {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
+
 
         const responseData = await response.text();
         console.log("Response Data:", responseData);
@@ -200,16 +179,6 @@ function Home() {
             <Link to={`/${userId}/fee`} style={a_style}>
               <EqualizerIcon style={{ marginBottom: 3.5 }} /> 月結餐費
             </Link>
-            {/* <Link to={`/${userId}/order-history`} style={a_style}>
-              <HistoryIcon style={{ marginBottom: 3.5 }} /> 歷史訂單
-            </Link>
-            <Link to={`/${userId}/settings`} style={a_style}>
-              <SettingsIcon style={{ marginBottom: 3.5 }} /> 飲食偏好設定
-            </Link>
-            <Link to={`/${userId}/notifications`} style={a_style}>
-              <NotificationsIcon style={{ marginBottom: 3.5 }} />{" "}
-              健保食品服用提醒設定
-            </Link> */}
           </div>
         </div>
       </div>

@@ -1,38 +1,57 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { MemoryRouter, Route } from 'react-router-dom';
-import Home from '../Home';
+import { render, screen, waitFor } from '@testing-library/react';
+import Home from '../Home.js';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useParams: () => ({ userId: '123' }),
+  useNavigate: jest.fn(),
+}));
 
-// Mock the API call
-beforeAll(() => {
-  jest.spyOn(global, 'fetch').mockResolvedValue({
-    ok: true,
-    json: () => Promise.resolve({
-      id: 1,
-      name: 'John Doe',
-      division: 'Mock Division',
-      position: 'Mock Position',
-    }),
-  });
-});
+const mockUserData = {
+  id: 123,
+  name: "John Doe",
+  division: "Engineering",
+  position: "Developer",
+  image: "image_url.jpg",
+};
 
-afterAll(() => {
-  global.fetch.mockRestore();
-});
-
-test('renders user information correctly', async () => {
-  render(
-    <MemoryRouter initialEntries={['/1']}>
-      <Route path="/:userId">
-        <Home />
-      </Route>
-    </MemoryRouter>
+beforeEach(() => {
+  global.fetch = jest.fn();
+  global.fetch.mockImplementation(() =>
+    Promise.resolve({
+      ok: true,
+      text: () => Promise.resolve(JSON.stringify(mockUserData)),
+    })
   );
+});
 
-  // Wait for the element to appear in the DOM
-  await screen.findByText(/姓名: John Doe/i);
+describe('Home Component', () => {
 
-  // Make assertions based on the mocked data
-  expect(screen.getByText(/單位: Mock Division/i)).toBeInTheDocument();
-  expect(screen.getByText(/職稱: Mock Position/i)).toBeInTheDocument();
+  const renderHomeComponent = () => render(
+	  <Router>
+		  <Home />
+	  </Router>
+	);
+
+
+  test('renders without crashing', async () => {
+		await act(async () => {
+		  renderHomeComponent();
+		});
+	});
+
+  it('fetches and displays user information successfully', async () => {
+    await act(async () => {
+      renderHomeComponent();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("姓名： John Doe")).toBeInTheDocument();
+      expect(screen.getByText("單位： Engineering")).toBeInTheDocument();
+      expect(screen.getByText("職稱： Developer")).toBeInTheDocument();
+      // Additional checks for each piece of user data
+    });
+  });
 });
