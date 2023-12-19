@@ -1,0 +1,35 @@
+<!-- index.html -->
+​
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch Menu Details</title>
+</head>
+<body>
+  <script>
+    // app.js
+    const user_id = 1;
+//     const shop_id = 1;
+// ​
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`http://localhost:3000/consumers/${user_id}/report?year=2023&month=11`);
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const responseData = await response.json();
+            console.log(responseData);
+
+            // Handle the data as needed
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+    fetchData();
+  </script>
+</body>
+</html>

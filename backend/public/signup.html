@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="./stylesheets/style.css">
+    </head>
+
+    <body>
+        <h1>Add a user credential here:</h1>
+
+        <div class="username_form">
+            <label for="username">Username: </label>
+            <input type="text" class="username">
+        </div>
+        <div class="password_form">
+            <label for="password">Password: </label>
+            <input type="text" class="password">
+        </div>
+        <div class="userrole_form">
+            <label for="userrole">Userrole: </label>
+            <input type="text" class="userrole">
+        </div>
+        <div class="submit_register">
+            <input type="submit" class="registerSubmit">
+        </div>
+
+        <script>
+            const usernameText = document.querySelector(".username");
+            const passwordText = document.querySelector(".password");
+            const userroleText = document.querySelector(".userrole");
+            const submitButton = document.querySelector(".registerSubmit");
+
+            function submitAccount(){
+                var username = usernameText.value;
+                var password = passwordText.value;
+                var userrole = userroleText.value;
+                const url = "/users/signup";
+                var account = {"username":username,"password":password,"userrole":userrole};
+                var accountString = JSON.stringify(account);
+                console.log(accountString);
+                fetch(url,{
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: accountString
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error: ${response.status}`);
+                        }
+                        else{
+                            alert("You have registered your account successfully!");
+                        }
+                    })
+                    .catch((err) => console.error(`Failed to register user account: ${err.message}`));
+            }
+
+            submitButton.addEventListener('click',submitAccount);
+        </script>
+    </body>
+</html>
