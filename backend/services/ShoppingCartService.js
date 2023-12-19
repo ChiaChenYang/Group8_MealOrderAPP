@@ -216,7 +216,7 @@ exports.addItemToCart = async (item_info) => {
             const new_item_note = item_info.note;
             if (new_quantity > 0){
                 console.log("Change the quantity of an original cart item");
-                const merge_item_note = old_item_note;
+                var merge_item_note = old_item_note;
                 if (old_item_note && new_item_note){
                     merge_item_note = old_item_note + ' ' + new_item_note;
                 }
