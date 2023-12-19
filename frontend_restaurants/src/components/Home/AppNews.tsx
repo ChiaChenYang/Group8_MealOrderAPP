@@ -7,32 +7,26 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MobileStepper from '@mui/material/MobileStepper';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
 const images = [
 	{
-		label: '最新消息1',
-		imgPath:
-			'https://images.unsplash.com/photo-1537944434965-cf4679d1a598?auto=format&fit=crop&w=400&h=250&q=60',
+		label: '最新消息',
+		imgPath: '/home/1.jpg',
 	},
 	{
-		label: '最新消息2',
-		imgPath:
-			'https://images.unsplash.com/photo-1538032746644-0212e812a9e7?auto=format&fit=crop&w=400&h=250&q=60',
+		label: '最新消息',
+		imgPath: '/home/2.jpg',
 	},
 	{
-		label: '最新消息3',
-		imgPath:
-			'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&h=250',
+		label: '最新消息',
+		imgPath: '/home/3.jpg',
 	},
 	{
-		label: '最新消息4',
-		imgPath:
-			'https://images.unsplash.com/photo-1512341689857-198e7e2f3ca8?auto=format&fit=crop&w=400&h=250&q=60',
+		label: '最新消息',
+		imgPath: '/home/4.jpg',
 	},
 ];
 
@@ -55,18 +49,6 @@ function AppNews() {
 
 	return (
 		<Box sx={{ width: '85%', height: '30%' }}>
-			<Paper
-				square
-				elevation={0}
-				sx={{
-					display: 'flex',
-					alignItems: 'center',
-					height: '20%',
-					bgcolor: '#FFFFFF',
-				}}
-			>
-				<Typography>{images[activeStep].label}</Typography>
-			</Paper>
 			<AutoPlaySwipeableViews
 				axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
 				index={activeStep}
@@ -74,16 +56,13 @@ function AppNews() {
 				enableMouseEvents
 			>
 				{images.map((step, index) => (
-					<div key={index}>
-						{Math.abs(activeStep - index) <= 2 ? (
+					<div key={index} className="flex justify-center">
+						{activeStep == index ? (
 							<Box
 								component="img"
 								sx={{
 									height: 180,
-									display: 'block',
-									maxWidth: '100%',
-									overflow: 'hidden',
-									width: '100%',
+									width: 770,
 								}}
 								src={step.imgPath}
 								alt={step.label}

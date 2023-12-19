@@ -7,6 +7,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { type SelectChangeEvent } from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 
 import type { SingleItemProps } from '@/lib/types';
@@ -29,6 +31,14 @@ function SingleItem({ item, setItem }: SingleItemProps) {
 			const newItem = { ...item, itemTags: [...item.itemTags, tagInput] };
 			setItem(newItem);
 			setTagInput('');
+		}
+	};
+
+	const handleSelect = (event: SelectChangeEvent) => {
+		const newTag = event.target.value as string;
+		if (newTag && !item.itemTags.includes(newTag)) {
+			const newItem = { ...item, itemTags: [...item.itemTags, newTag] };
+			setItem(newItem);
 		}
 	};
 
@@ -64,6 +74,23 @@ function SingleItem({ item, setItem }: SingleItemProps) {
 		const newItem = { ...item, [name]: updatedValue };
 		setItem(newItem);
 	};
+
+	const existingTags = [
+		'全素',
+		'蛋奶素',
+		'牛肉',
+		'羊肉',
+		'甲殼',
+		'花生',
+		'牛奶',
+		'蛋',
+		'低脂飲食',
+		'低糖飲食',
+		'助眠飲食',
+		'護肝飲食',
+		'降血壓飲食',
+		'有機食材',
+	];
 
 	return (
 		<Box className="relative mx-auto flex h-full w-full rounded-lg bg-white outline-none">
@@ -149,6 +176,17 @@ function SingleItem({ item, setItem }: SingleItemProps) {
 						endAdornment: <InputAdornment position="end">大卡</InputAdornment>,
 					}}
 				/>
+
+				<div className="my-4 flex w-full flex-wrap items-center gap-2">
+					<div className="items-center">選擇標籤：</div>
+					<Select className="w-1/3" value="" onChange={handleSelect}>
+						{existingTags.map((tag) => (
+							<MenuItem key={tag} value={tag}>
+								{tag}
+							</MenuItem>
+						))}
+					</Select>
+				</div>
 
 				<div className="my-4 flex flex-wrap gap-2">
 					<div className="items-center">標籤：</div>
