@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from "react";
 import io from "socket.io-client";
 import { useParams, useNavigate } from "react-router-dom";
+import BackButton from "../component/return";
 
 function Notify() {
   const { userId } = useParams();
@@ -21,8 +22,8 @@ function Notify() {
   // let m = {
   //   id:1,
   //   order_id:1,
-  //   restaurant: "麥當勞",
-  //   messenge: "您好，已於 12:05 接收到您的訂單！",
+  //   restaurant: "元記古早味",
+  //   messenge: "訂單已完成",
   //   receive_state: false,
   //   estimated_time: "12:20",
   // };

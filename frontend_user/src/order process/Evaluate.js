@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import HalfRating from "../component/rating-component";
 import { useNavigate, useParams } from "react-router-dom";
 import menupng from "../image/defaultImage.jpg";
+import BackButton from "../component/return";
 
 function Evaluate() {
   const { userId } = useParams();
@@ -112,6 +113,7 @@ function Evaluate() {
             position: "relative",
           }}
         >
+          <BackButton />
           <div style={{ position: "absolute", top: "60px", left: "20px" }}>
             <div style={{ marginLeft: "40px", textAlign: "center" }}>
               <h1 style={{ marginLeft: "25px", margin: "0" }}>

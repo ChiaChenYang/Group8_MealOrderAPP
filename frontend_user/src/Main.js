@@ -38,8 +38,9 @@ function Main() {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/restaurants/all?location=${selectedLocation}`
+          `http://localhost:3000/restaurants/all?location=${encodeURIComponent(selectedLocation)}`
         );
+        console.log("目前廠區",String(selectedLocation),"respond：",response)
 
         if (!response.ok) {
           throw new Error("Network response was not ok");

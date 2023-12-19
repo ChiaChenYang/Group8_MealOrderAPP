@@ -55,6 +55,10 @@ function OrderState() {
   //   addition: "備註的事項",
   // };
 
+  const handleClick = () => {
+    navigate(`/${userId}/evaluation/${id}/${order_id}`);
+  };
+
   if (order_state.process) {
     navigate(`/${userId}/evaluation/${id}/${order_id}`);
     return null;
@@ -91,7 +95,11 @@ function OrderState() {
           <span style={{ fontSize: "15px", marginLeft: "140px" }}>
             {order_state.location}
           </span>
-          <p style={{ fontSize: "15px" }}>{order_state.time.split(':').slice(0, 2).join(':')}</p>
+          {order_state.time && (
+            <p style={{ fontSize: "15px" }}>
+              {order_state.time.split(":").slice(0, 2).join(":")}
+            </p>
+          )}
         </div>
       </div>
       {Object.keys(order_state).length > 0 && (
@@ -126,7 +134,12 @@ function OrderState() {
                 <img
                   src={meal.image || defaultImage}
                   alt={`${meal.name}`}
-                  style={{ marginLeft: "40px",marginTop:"-20px", width: "60%", height: "auto" }}
+                  style={{
+                    marginLeft: "40px",
+                    marginTop: "-20px",
+                    width: "60%",
+                    height: "auto",
+                  }}
                 />
               </div>
             </div>
@@ -139,6 +152,22 @@ function OrderState() {
       <p style={{ marginLeft: "10px", backgroundColor: "#f4f4f4" }}>
         {order_state.addition}
       </p>
+      {/* <p style={{padding:"10px"}}></p> */}
+      <button
+        id="evaluate_btn"
+        className="rounded"
+        onClick={handleClick}
+        style={{
+          border: "none",
+          height: "30px",
+          width: "90%",
+          marginLeft: "20px",
+          backgroundColor: "#F4B63D",
+        }}
+      ><strong>
+        前往評論
+      </strong>
+      </button>
     </div>
   );
 }

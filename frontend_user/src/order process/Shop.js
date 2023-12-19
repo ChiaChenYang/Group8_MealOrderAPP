@@ -107,7 +107,7 @@ function Shop() {
   }
 
   const handleClick = (shop_id) => {
-    navigate(`/${userId}/restaurant/${shop_id}`);
+    navigate(`/${userId}/restaurant/${id}`);
   };
 
   const handleClick2 = async () => {
@@ -125,7 +125,7 @@ function Shop() {
           name: currentItem.name,
           price: currentItem.price,
           quantity: count,
-          addition: noteValue, // Use the input value as the note
+          addition: noteValue,
         };
         return acc;
       }, {}),

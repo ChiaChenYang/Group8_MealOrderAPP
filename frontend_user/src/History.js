@@ -48,10 +48,11 @@ console.log(error);
             ...acc,
             [intKey]: {
               id: data[key].id,
+              order_id: data[key].order_id,
               shop_name: data[key].shop_name,
               quantity: data[key].quantity,
               price: data[key].price,
-              image: data[key].image || defaultImage,
+              image: data[key].image || menupng,
               time: data[key].time, // Assuming the server provides 'time'
             },
           };
@@ -86,8 +87,8 @@ console.log(error);
   //     time: "12:50", //預計可取餐時間
   //   },
   // };
-  const handleClick = (id) => {
-    navigate(`/${userId}/orderstate/${id}`);
+  const handleClick = (id,order_id) => {
+    navigate(`/${userId}/orderstate/${id}/${order_id}`);
   };
 
   if (mes && mes.receive_state && mes.receive_state === true){
@@ -104,7 +105,7 @@ console.log(error);
           <strong>進行中的訂單</strong>
         </h1>
         <p></p>
-        <div style={{ paddingBottom: "30px" }}>
+        <div style={{ paddingBottom: "60px" }}>
           {Object.keys(now_order).map((itemId) => {
             const item = now_order[itemId];
             return (
@@ -144,12 +145,13 @@ console.log(error);
                   <p style={{ marginBottom: "0.5rem", marginTop: "-15px" }}>
                     $ {item.price} | {item.quantity}項餐點
                   </p>
-                  <p style={{ fontSize: "small", marginBottom: "0.75rem" }}>
-                    <strong>預計取餐時間: {item.time}</strong>
+                  <p style={{ fontSize: "small" }}>
+                  <strong>預計取餐時間: </strong></p>
+                  <p style={{fontSize: "small",marginTop:"-10px", marginBottom: "0.75rem"}}><strong>{item.time.split(':').slice(0, 2).join(':')}</strong>
                   </p>
                   <button
                     id="trace_order_btn"
-                    onClick={() => handleClick(item.id)}
+                    onClick={() => handleClick(item.id,item.order_id)}
                     className="rounded"
                     style={{
                       width: "118px",
