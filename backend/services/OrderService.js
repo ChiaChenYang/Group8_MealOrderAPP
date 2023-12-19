@@ -255,6 +255,7 @@ exports.getCurrentOrdersForConsumer = async (consumer_id) => {
             }
             return_orders[i+1] = {
                 "id": progressing_orders[i].restaurant.restaurantId,
+                "order_id": progressing_orders[i].orderId,
                 "shop_name": progressing_orders[i].restaurant.restaurantName,
                 "quantity": progressing_orders[i].totalQuantity,
                 "price": progressing_orders[i].totalPrice,
