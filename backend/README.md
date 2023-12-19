@@ -4,22 +4,12 @@ Install the dependency
 ```shell
 npm install
 ```
+Create a file .env and set the JWT_SECRET variable by inserting
+```shell
+JWT_SECRET=''
+```
+Modify the file config/config.json and set the username and password of the database.
 ## Execution
 ```shell
 npm start
 ```
-or
-```shell
-DEBUG=application:* npm start
-```
-## Routing
-### signup
-```POST /users/signup```
-### show all users
-```GET /users/showall```
-
-## Test
-### signup (add an user credential)
-[http://localhost:3000/signup.html](http://localhost:3000/signup.html)
-### show all users
-[http://localhost:3000/users/showall](http://localhost:3000/users/showall)
