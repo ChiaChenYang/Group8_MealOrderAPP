@@ -272,7 +272,7 @@ exports.syncAllCartItems = async (user_id, shop_id, items) => {
         //console.log(items);
         for (const key in items){
             for (let i=0; i<shop_cart.menuitems.length; i++){
-                if (items[key].name === shop_cart.menuitems[i].itemName && items[key].quantity != shop_cart.menuitems[i].cartitems.cartQuantity){
+                if (items[key].name === shop_cart.menuitems[i].itemName){
                     const saved_item = await cartitems.findByPk(shop_cart.menuitems[i].cartitems.cartItemId); 
                     shop_cart.menuitems[i].cartitems.cartQuantity = items[key].quantity;
                     shop_cart.menuitems[i].cartitems.cartItemNote = items[key].addition;
