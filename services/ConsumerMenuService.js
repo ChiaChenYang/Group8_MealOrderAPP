@@ -97,7 +97,7 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
         rating = historyRating[0].dataValues.avgRating || 0;
         commentsCount = historyRating[0].dataValues.commentsCount || 0;
         // 四捨五入到小數點第二位
-        rating = parseFloat(rating.toFixed(2));
+        rating = parseFloat(rating).toFixed(1);
       }
     } else {
       // 如果不是輪動櫃，直接使用餐廳的 prepareTime
@@ -117,7 +117,7 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
       rating = historyRating[0].dataValues.avgRating || 0;
       commentsCount = historyRating[0].dataValues.commentsCount || 0;
       // 四捨五入到小數點第二位
-      rating = parseFloat(rating.toFixed(2));
+      rating = parseFloat(rating).toFixed(1);
       prepareTime = restaurant.prepareTime;
     }
 
