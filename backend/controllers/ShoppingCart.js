@@ -43,6 +43,7 @@ exports.setReservationTimeAndCheckout = asyncHandler(async (req, res, next) => {
     // inform the restaurant
     const incoming_orders = await OrderService.getOrdersWithStatus(shop_id, 'incoming');
     res.io.emit(`${new_order.shop_id} incoming orders`, incoming_orders);
+    console.log(`send new orders to restaurant ${new_order.shop_id}`);
 
     // respond to the consumer
     res.json(new_order);

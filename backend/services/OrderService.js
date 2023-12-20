@@ -37,7 +37,7 @@ exports.getOrdersWithStatus = async (rid, s) => {
         for (let i = 0; i < num_orders; i++){
             order_id = restaurant.orders[i].orderId;
             num_items = restaurant.orders[i].menuitems.length;
-            console.log(`Order ${order_id} has ${num_items} items`);
+            //console.log(`Order ${order_id} has ${num_items} items`);
 
             var all_items = []
             for (let j=0; j < num_items; j++){
