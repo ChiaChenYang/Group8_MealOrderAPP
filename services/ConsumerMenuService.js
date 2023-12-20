@@ -157,6 +157,7 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
     const formattedMenus = {
       restaurantId: restaurant.restaurantId,
       restaurantName: restaurant.restaurantName,
+      image: restaurant.restaurantImage?.toString(),
       evaluate: rating,
       comment: commentsCount,
       prepare_time: prepareTime,
