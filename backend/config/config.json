@@ -2,7 +2,7 @@
   "development": {
     "username": "edward",
     "password": "how910530",
-    "database": "mealorderdbtest",
+    "database": "MealOrderDB",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
