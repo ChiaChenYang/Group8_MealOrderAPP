@@ -324,7 +324,7 @@ exports.showAllRestaurants = async (location) => {
         });
         const historyRatingValue = historyRating[0].dataValues.avgRating || 0;
         // 四捨五入到小數點第二位
-        const roundedHistoryRating = parseFloat(historyRatingValue).toFixed(2);
+        const roundedHistoryRating = parseFloat(historyRatingValue).toFixed(1);
         
         let result = {};
         // console.log('這裡這裡這裡這裡這裡這裡這裡', restaurant.dataValues.categories)
@@ -397,7 +397,7 @@ exports.showCategoryRestaurants = async (location, category) => {
         });
         const historyRatingValue = historyRating[0].dataValues.avgRating || 0;
         // 四捨五入到小數點第二位
-        const roundedHistoryRating = parseFloat(historyRatingValue).toFixed(2);
+        const roundedHistoryRating = parseFloat(historyRatingValue).toFixed(1);
         
         let result = {};
        
@@ -495,7 +495,7 @@ exports.showTempRestaurantsNews = async(location) => {
             });
             const historyRatingValue = historyRating[0].dataValues.avgRating || 0;
             // 四捨五入到小數點第二位
-            const roundedHistoryRating = parseFloat(historyRatingValue).toFixed(2);
+            const roundedHistoryRating = parseFloat(historyRatingValue).toFixed(1);
             
             result['isBetweenStartEndTime'] = true;
             result['id'] = restaurantId;
