@@ -80,7 +80,19 @@ export default function SortFilterOrderList(
 			} else {
 				return timeA - timeB;
 			}
-		} else {
+		} else if (sortBy == 'completeTimeDesc') {
+			const completedA = orderA as CompletedOrderType;
+			const completedB = orderB as CompletedOrderType;
+
+			const timeA = completedA.completeTime.getTime();
+			const timeB = completedB.completeTime.getTime();
+			if (timeA == timeB) {
+				return orderA.orderId - orderB.orderId;
+			} else {
+				return timeB - timeA;
+			}
+		}
+		else {
 			alert('Sorting Error!');
 			return 0;
 		}

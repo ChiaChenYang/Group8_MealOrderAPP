@@ -153,6 +153,8 @@ function Checkout() {
       console.error("Error:", error);
     }
   };
+  const start = parseInt(checking.prepare_time, 10);
+  const end = start + 10;
 
   return (
     <div>
@@ -160,7 +162,7 @@ function Checkout() {
         style={{
           height: "70px",
           background: "#F4B63D",
-          borderRadius: "0px 0px 30px 30px", 
+          borderRadius: "0px 0px 30px 30px",
         }}
       >
         <BackButton style={{ color: "white" }} />
@@ -176,7 +178,7 @@ function Checkout() {
           </span>
         </p>
         <p style={{ fontSize: "15px", marginLeft: "10px" }}>
-          {checking.prepare_time}~{checking.prepare_time + 10} min
+          {start}~{end} min
         </p>
         <p style={{ fontSize: "20px", marginLeft: "10px" }}>
           <strong>用餐方式</strong>

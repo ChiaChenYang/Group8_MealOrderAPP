@@ -64,7 +64,11 @@ function OrderState() {
     return null;
   }
 
-  // reject 結束
+  if (order_state.reject === true) {
+    window.alert("訂單已被拒絕");
+    navigate(`/${userId}/main`);
+    return null;
+  }
 
   return (
     <div>

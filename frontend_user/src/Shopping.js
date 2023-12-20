@@ -53,7 +53,7 @@ function Shopping() {
               shop_name: data[key].shop_name,
               quantity: data[key].quantity,
               price: data[key].price,
-              image: data[key].image || defaultImage,
+              image: data[key].image,
             },
           };
         }, {});

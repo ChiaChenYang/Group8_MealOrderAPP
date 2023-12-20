@@ -259,7 +259,7 @@ exports.getCurrentOrdersForConsumer = async (consumer_id) => {
                 "shop_name": progressing_orders[i].restaurant.restaurantName,
                 "quantity": progressing_orders[i].totalQuantity,
                 "price": progressing_orders[i].totalPrice,
-                "image": progressing_orders[i].restaurant.restaurantImage,
+                "image": progressing_orders[i].restaurant.restaurantImage.toString(),
                 "time": utils.formatDate(progressing_orders[i].expectedFinishedTime)
             };
         }
@@ -286,7 +286,7 @@ exports.getOrderState = async (order_id) => {
         for (let i=0; i<order.menuitems.length; i++) {
             all_order_items[i+1] = {
                 name: order.menuitems[i].itemName,
-                image: order.menuitems[i].itemImage,
+                image: order.menuitems[i].itemImage.toString(),
                 quantity: order.menuitems[i].orderitems.orderQuantity,
                 addition: order.menuitems[i].orderitems.orderItemNote
             }
@@ -336,7 +336,7 @@ exports.getRestaurantInfo = async (order_id) => {
     return {
         name: order.restaurant.restaurantName,
         location: order.restaurant.factoryLocation,
-        image: order.restaurant.restaurantImage
+        image: order.restaurant.restaurantImage.toString()
     };
 };
 
