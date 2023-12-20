@@ -34,7 +34,7 @@ exports.getShoppingCartsForUser = async (user_id) => {
                 shop_name: shop_carts[i].restaurant.restaurantName,
                 quantity: shop_carts[i].quantity,
                 price: shop_carts[i].price,
-                image: shop_carts[i].restaurant.restaurantImage.toString()
+                image: shop_carts[i].restaurant.restaurantImage?.toString()
             }
         }
         return return_shop_carts;
@@ -74,7 +74,7 @@ exports.getCartInfo = async (user_id, shop_id) => {
                 name: shop_cart.menuitems[i].itemName,
                 price: shop_cart.menuitems[i].price,
                 quantity: shop_cart.menuitems[i].cartitems.cartQuantity,
-                image: shop_cart.menuitems[i].itemImage.toString(),
+                image: shop_cart.menuitems[i].itemImage?.toString(),
                 addition: shop_cart.menuitems[i].cartitems.cartItemNote
             };
         }
@@ -121,7 +121,7 @@ exports.getCartInfoToCheckout = async (user_id, shop_id) => {
             all_cart_items[i+1] = {
                 name: shop_cart.menuitems[i].itemName,
                 price: shop_cart.menuitems[i].price,
-                image: shop_cart.menuitems[i].itemImage.toString(),
+                image: shop_cart.menuitems[i].itemImage?.toString(),
                 quantity: shop_cart.menuitems[i].cartitems.cartQuantity,
                 addition: shop_cart.menuitems[i].cartitems.cartItemNote
             };
