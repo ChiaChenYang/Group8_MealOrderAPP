@@ -151,13 +151,13 @@ exports.getSingleOrder = async (order_id) => {
         var return_order = {};
         return_order.orderId = order.orderId;
         return_order.type = order.status;
-        return_order.orderTime = order.orderTime;
+        return_order.orderTime = utils.formatDate(order.orderTime);
         return_order.orderItems = [];
         return_order.noteFromUser = order.orderNote;
         return_order.totalPrice = order.totalPrice;
-        return_order.finishTime = order.finishTime;
-        return_order.completeTime = order.completeTime;
-        return_order.expectedFinishedTime = order.expectedFinishedTime;
+        return_order.finishTime = utils.formatDate(order.finishTime);
+        return_order.completeTime = utils.formatDate(order.completeTime);
+        return_order.expectedFinishedTime = utils.formatDate(order.expectedFinishedTime);
 
         const items_number = order.menuitems.length;
         for (let i = 0; i < items_number; i++){
@@ -211,7 +211,8 @@ exports.getHistoryOrders = async (rid) => {
             return_orders.push({
                 orderId: history_orders[i].orderId,
                 type: history_orders[i].status,
-                orderTime: history_orders[i].orderTime,
+                orderTime: utils.formatDate(history_orders[i].orderTime),
+                completeTime: utils.formatDate(history_orders[i].completeTime),
                 orderItems: all_items,
                 totalPrice: history_orders[i].totalPrice,
                 Rating: history_orders[i].orderRating,
