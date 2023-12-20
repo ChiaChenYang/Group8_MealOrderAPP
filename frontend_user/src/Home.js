@@ -4,7 +4,7 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import EqualizerIcon from "@mui/icons-material/Equalizer";
 // import HistoryIcon from "@mui/icons-material/History";
 // import SettingsIcon from "@mui/icons-material/Settings";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+// import NotificationsIcon from "@mui/icons-material/Notifications";
 import Navbar from "./component/navbar-component";
 import ImageUploader from "./component/imageLoader";
 import Notify from "./component/messenge-component";
@@ -188,9 +188,9 @@ function Home() {
             <Link to={`/${userId}/fee`} style={a_style}>
               <EqualizerIcon style={{ marginBottom: 3.5 }} /> 月結餐費
             </Link>
-            <Link to={`/${userId}/temp`} style={a_style}>
+            {/* <Link to={`/${userId}/temp`} style={a_style}>
               <NotificationsIcon style={{ marginBottom: 3.5 }} /> 查看通知
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
