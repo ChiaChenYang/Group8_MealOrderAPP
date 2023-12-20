@@ -333,8 +333,8 @@ exports.showAllRestaurants = async (location) => {
         result['type'] = restaurant.dataValues.categories[0].dataValues.categoryName;
         result['image'] = restaurant.dataValues.restaurantImage?.toString();
         result['service'] = restaurant.dataValues.serviceMethod;
-        result['preparetime'] = restaurant.dataValues.prepareTime;
-        result['rating'] = roundedHistoryRating;
+        result['prepare_time'] = restaurant.dataValues.prepareTime;
+        result['evaluate'] = roundedHistoryRating;
 
         results[index] = result;
         index += 1;
@@ -406,8 +406,8 @@ exports.showCategoryRestaurants = async (location, category) => {
         result['type'] = restaurant.dataValues.categories[0].dataValues.categoryName;
         result['image'] = restaurant.dataValues.restaurantImage?.toString();
         result['service'] = restaurant.dataValues.serviceMethod;
-        result['preparetime'] = restaurant.dataValues.prepareTime;
-        result['rating'] = roundedHistoryRating;
+        result['prepare_time'] = restaurant.dataValues.prepareTime;
+        result['evaluate'] = roundedHistoryRating;
 
         results[index] = result;
         index += 1;
