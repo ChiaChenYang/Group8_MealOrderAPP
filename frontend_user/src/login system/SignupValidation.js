@@ -44,13 +44,15 @@ function Validation(values) {
     error.password = "欄位不得為空";
   } else if (!password_pattern.test(values.password)) {
     error.password = "密碼不符合格式，需要有英文大小寫加上數字";
+  }else if(values.password === '0'){
+    error.password = "密碼不符合格式，需要有英文大小寫加上數字";
   } else {
     error.password = "";
   }
 
   if (values.check_password === "") {
     error.check_password = "欄位不得為空";
-  } else if (values.check_password[0] !== values.password[0]) {
+  } else if (!values.password || !values.check_password || values.check_password[0] !== values.password[0]) {
     error.check_password = "與上述密碼不同";
     console.log(values.check_password);
     console.log(values.password);

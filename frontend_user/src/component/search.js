@@ -60,7 +60,7 @@ const Search = ({ restaurantInformation, onRestaurantClick }) => {
         {searchResults.map((key) => (
           <div key={key}>
             <Link
-              to={`/${userId}/restaurant/${key}`}
+              to={`/${userId}/restaurant/${restaurantInformation[key]?.id}`}
               className="mb-3"
               style={{ textDecoration: "none", color: "inherit" }}
             >
@@ -75,8 +75,8 @@ const Search = ({ restaurantInformation, onRestaurantClick }) => {
               >
                 <div style={{ flex: "0 0 60%" }}>
                   <img
-                    src={restaurantInformation[key].image || defaultImage}
-                    alt={restaurantInformation[key].name}
+                    src={restaurantInformation[key]?.image || defaultImage}
+                    alt={restaurantInformation[key]?.name}
                     style={{
                       height: "100%",
                       width: "100%",
@@ -93,18 +93,18 @@ const Search = ({ restaurantInformation, onRestaurantClick }) => {
                   }}
                 >
                   <h4 style={{marginTop:"10px"}}>
-                    <strong>{restaurantInformation[key].name}</strong>
+                    <strong>{restaurantInformation[key]?.name}</strong>
                   </h4>
                   <p style={{marginTop:"0px"}}>
-                    {restaurantInformation[key].evaluate}{" "}
+                    {restaurantInformation[key]?.evaluate}{" "}
                     <StarIcon style={{ fontSize: "20px", color: "#F4B63D" }} />
                     </p>
                     <p style={{marginTop:"-10px"}}>
-                      {restaurantInformation[key].service}
+                      {restaurantInformation[key]?.service}
                       </p>
                       <p style={{marginTop:"-15px"}}>
-                        {restaurantInformation[key].prepare_time}~
-                        {restaurantInformation[key].prepare_time + 10} min
+                        {restaurantInformation[key]?.prepare_time}~
+                        {restaurantInformation[key]?.prepare_time + 10} min
                   </p>
                 </div>
               </div>

@@ -1,44 +1,37 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const ImageUploader = ({ onImageChange }) => {
   const [image, setImage] = useState(null);
   const { userId } = useParams();
 
-  const [User, setUser] = useState({});
+  const [user, setUser] = useState({});
   const [error, setError] = useState(null);
-  console.log(error);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userIdInt = parseInt(userId, 10);
-        const response = await fetch(`http://localhost:3000/consumers/${userIdInt}/info`);
+        const response = await fetch(
+          `http://localhost:3000/consumers/${userIdInt}/info`
+        );
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
 
-        const responseData = await response.text();
+        const responseData = await response.json();
         console.log("Response Data:", responseData);
 
-        const data = JSON.parse(responseData);
+        const transformedData = {
+          id: responseData.id,
+          name: responseData.name,
+          division: responseData.division,
+          position: responseData.position,
+          image: responseData.image || null, // Assuming there's a default image
+        };
 
-        // Check if data is an object
-        if (typeof data === "object" && data !== null) {
-          // Transform object into the desired format
-          const transformedData = {
-            id: data.id,
-            name: data.name,
-            division: data.division,
-            position: data.position,
-            image: data.image || "./image/home.png", // Assuming there's a default image
-          }; 
-
-          setUser(transformedData);
-        } else {
-          // Handle the case when data is not in the expected format
-          throw new Error("Data is not in the expected format");
-        }
+        setUser(transformedData);
       } catch (error) {
         console.error("Error fetching data:", error);
         setError("Error fetching data");
@@ -82,7 +75,7 @@ const ImageUploader = ({ onImageChange }) => {
             }}
           >
             <img
-              src={User.image || image}
+              src={image || user.image || "default-image-url"} // "default-image-url" is a placeholder for a default image URL
               alt="Uploaded"
               style={{
                 width: "100%",

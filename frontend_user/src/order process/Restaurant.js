@@ -9,31 +9,32 @@ import BasicTabs from "../component/tab-component";
 function Restaurant() {
   const { id } = useParams();
   const [menu, setMenuDetails] = useState({});
-const [error, setError] = useState(null);
-console.log(error);
+  const [error, setError] = useState(null);
+  console.log(error);
 
-useEffect(() => {
-  const fetchMenuDetails = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/menus/allmenudetailsforconsumer/${id}`);
+  useEffect(() => {
+    const fetchMenuDetails = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/menus/allmenudetailsforconsumer/${id}`
+        );
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        let responseData = await response.json();
+        console.log("Response Data:", responseData.data);
+
+        setMenuDetails(responseData.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError("Error fetching data");
       }
+    };
 
-      let responseData = await response.json(); 
-      console.log('Response Data:', responseData.data);
-
-      setMenuDetails(responseData.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setError('Error fetching data');
-    }
-  };
-
-  fetchMenuDetails();
-}, [id]);
-
+    fetchMenuDetails();
+  }, [id]);
 
   // let menu = {
   //   restaurantName: "麥當勞",
@@ -131,7 +132,11 @@ useEffect(() => {
               {menu.evaluate} ({menu.comment}+)
               <span style={{ marginLeft: "70px" }}>{menu.location}</span>
             </div>
-            <p>{menu.prepare_time}~{menu.prepare_time+10} min</p>
+            {menu && menu.prepare_time && (
+              <p>
+                {menu.prepare_time}~{menu.prepare_time + 10} min
+              </p>
+            )}
             <div>
               <NotificationsIcon
                 style={{ fontSize: "20px", color: "#F4B63D" }}

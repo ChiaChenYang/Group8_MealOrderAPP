@@ -78,13 +78,10 @@ function Home() {
   }
 
   const handleImageChange = (newImage) => {
-    // Convert the image to base64
     const base64Image = newImage.toString('base64');
   
-    // Update the User state with the new image
     setUser((prevUser) => ({ ...prevUser, image: base64Image }));
   
-    // Send a PUT request to update the user's information including the image in the database
     fetch(`http://localhost:3000/consumers/info/modify`, {
       method: "PUT",
       headers: {
@@ -96,17 +93,32 @@ function Home() {
         division: User.division,
         position: User.position,
         image: {
-          type: "Buffer", // You may not need this property depending on your server
+          type: "Buffer",
           data: base64Image,
         },
       }),
     })
-      .then((response) => response.json())
-      .then((data) => console.log("Image updated successfully", data))
+      .then(async (response) => {
+        const responseData = await response.text();
+  
+        if (!response.ok) {
+          throw new Error(`Server returned status ${response.status}: ${responseData}`);
+        }
+  
+        if (!responseData.trim()) {
+          console.error("Empty response data");
+          return;
+        }
+  
+        try {
+          const parsedData = JSON.parse(responseData);
+          console.log("Image updated successfully", parsedData);
+        } catch (parseError) {
+          console.error("Error parsing response:", parseError);
+        }
+      })
       .catch((error) => console.error("Error updating image:", error));
   };
-  
-  
 
 
   let a_style = {

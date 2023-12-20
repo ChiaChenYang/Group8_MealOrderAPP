@@ -324,7 +324,7 @@ exports.showAllRestaurants = async (location) => {
         });
         const historyRatingValue = historyRating[0].dataValues.avgRating || 0;
         // 四捨五入到小數點第二位
-        const roundedHistoryRating = parseFloat(historyRatingValue.toFixed(2));
+        const roundedHistoryRating = parseFloat(historyRatingValue).toFixed(1);
         
         let result = {};
         // console.log('這裡這裡這裡這裡這裡這裡這裡', restaurant.dataValues.categories)
@@ -333,8 +333,8 @@ exports.showAllRestaurants = async (location) => {
         result['type'] = restaurant.dataValues.categories[0].dataValues.categoryName;
         result['image'] = restaurant.dataValues.restaurantImage?.toString();
         result['service'] = restaurant.dataValues.serviceMethod;
-        result['preparetime'] = restaurant.dataValues.prepareTime;
-        result['rating'] = roundedHistoryRating;
+        result['prepare_time'] = restaurant.dataValues.prepareTime;
+        result['evaluate'] = roundedHistoryRating;
 
         results[index] = result;
         index += 1;
@@ -397,7 +397,7 @@ exports.showCategoryRestaurants = async (location, category) => {
         });
         const historyRatingValue = historyRating[0].dataValues.avgRating || 0;
         // 四捨五入到小數點第二位
-        const roundedHistoryRating = parseFloat(historyRatingValue.toFixed(2));
+        const roundedHistoryRating = parseFloat(historyRatingValue).toFixed(1);
         
         let result = {};
        
@@ -406,8 +406,8 @@ exports.showCategoryRestaurants = async (location, category) => {
         result['type'] = restaurant.dataValues.categories[0].dataValues.categoryName;
         result['image'] = restaurant.dataValues.restaurantImage?.toString();
         result['service'] = restaurant.dataValues.serviceMethod;
-        result['preparetime'] = restaurant.dataValues.prepareTime;
-        result['rating'] = roundedHistoryRating;
+        result['prepare_time'] = restaurant.dataValues.prepareTime;
+        result['evaluate'] = roundedHistoryRating;
 
         results[index] = result;
         index += 1;
@@ -495,7 +495,7 @@ exports.showTempRestaurantsNews = async(location) => {
             });
             const historyRatingValue = historyRating[0].dataValues.avgRating || 0;
             // 四捨五入到小數點第二位
-            const roundedHistoryRating = parseFloat(historyRatingValue.toFixed(2));
+            const roundedHistoryRating = parseFloat(historyRatingValue).toFixed(1);
             
             result['isBetweenStartEndTime'] = true;
             result['id'] = restaurantId;
