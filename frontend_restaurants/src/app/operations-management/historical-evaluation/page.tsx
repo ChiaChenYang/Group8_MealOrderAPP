@@ -46,7 +46,7 @@ export default function Management() {
 	}, [restaurantId]);
 
 	const [page, setPage] = useState(1);
-	const [sortBy, setSortBy] = useState('orderTime');
+	const [sortBy, setSortBy] = useState('completeTimeDesc');
 
 	const handleChange = (_: React.ChangeEvent<unknown>, value: number) => {
 		setPage(value);
@@ -111,7 +111,7 @@ export default function Management() {
 							value={sortBy}
 							onChange={(e) => setSortBy(e.target.value)}
 						>
-							<MenuItem key="orderTime" value="orderTime">
+							<MenuItem key="completeTimeDesc" value="completeTimeDesc">
 								訂單日期
 							</MenuItem>
 							<MenuItem key="ratingHigh" value="ratingHigh">

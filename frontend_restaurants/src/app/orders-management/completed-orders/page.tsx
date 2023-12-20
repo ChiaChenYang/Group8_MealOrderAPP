@@ -41,7 +41,7 @@ export default function Management() {
 
 	const ordersPerPage = 6;
 	const [page, setPage] = useState(1);
-	const [sortBy, setSortBy] = useState('orderTime');
+	const [sortBy, setSortBy] = useState('completeTimeDesc');
 	const [searchText, setSearchText] = useState('');
 
 	const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -68,7 +68,7 @@ export default function Management() {
 							value={sortBy}
 							onChange={(e) => setSortBy(e.target.value)}
 						>
-							<MenuItem key="orderTime" value="orderTime">
+							<MenuItem key="completeTimeDesc" value="completeTimeDesc">
 								訂單日期
 							</MenuItem>
 							<MenuItem key="totalPrice" value="totalPrice">
