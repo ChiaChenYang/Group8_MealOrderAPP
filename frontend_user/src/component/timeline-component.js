@@ -56,13 +56,23 @@ const Timeline = ({ orderState }) => {
     fontWeight: "bold",
   };
 
-  const orderTime = orderState.time.split(' ')[1].split(':').slice(0, 2).join(':');;
+  const orderTime = orderState.time
+    .split(" ")[1]
+    .split(":")
+    .slice(0, 2)
+    .join(":");
 
   return (
     <div style={timelineStyle}>
       <div style={lineStyle}></div>
       <div style={currentTimeStyle}></div>
-      <div style={{ ...timeTextStyle, left: "22%" }}>{getCurrentTime()}</div>
+      <div style={{ ...timeTextStyle, left: "22%" }}>
+        {new Date(orderState.order_time).toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })}
+      </div>
       <div
         style={{
           position: "absolute",
@@ -74,7 +84,9 @@ const Timeline = ({ orderState }) => {
         訂單已送出
       </div>
       <div style={acceptTimeStyle}></div>
-      <div style={{ ...timeTextStyle, left: "50%" }}>{orderState.acceptTime}</div>
+      <div style={{ ...timeTextStyle, left: "50%" }}>
+        {orderState.acceptTime}
+      </div>
       <div
         style={{
           position: "absolute",

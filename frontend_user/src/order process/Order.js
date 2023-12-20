@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import menupng from "../image/menu.png";
+import menupng from "../image/defaultMenu.png";
 import BackButton from "../component/return-restaurant";
 import QuantityInputWithButton from "../component/plus_minus-component";
+import DishComponent from "../component/calorie-component";
 
 function Order() {
   const navigate = useNavigate();
@@ -17,22 +18,25 @@ function Order() {
     Calorie: 0,
     tag: [],
     description: "",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhG_cZjxXIlwfsjseD7-LMSMzWI7txguoSLjCbwM85&s",
+    image:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhG_cZjxXIlwfsjseD7-LMSMzWI7txguoSLjCbwM85&s",
   });
   const [error, setError] = useState(null);
   console.log(error);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/menus/singleitemdetails/${dishId}`);
-  
+        const response = await fetch(
+          `http://localhost:3000/menus/singleitemdetails/${dishId}`
+        );
+
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
-  
+
         const responseData = await response.json(); // Assuming the response is JSON
-        console.log('Response Data:', responseData.data);
-  
+        console.log("Response Data:", responseData.data);
+
         // Assuming responseData is an object with the desired structure
         setItem({
           shop_id: responseData.data.shop_id || 0,
@@ -44,14 +48,14 @@ function Order() {
           image: responseData.data.image || menupng,
         });
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Error fetching data');
+        console.error("Error fetching data:", error);
+        setError("Error fetching data");
       }
     };
-  
+
     fetchData();
   }, [dishId]);
-  
+
   const handleNoteChange = (event) => {
     // Update the note value in the state
     setNote(event.target.value);
@@ -78,25 +82,24 @@ function Order() {
   };
 
   const handleClick = async (shopId) => {
+    try {
+      const response = await fetch("http://localhost:3000/shopping/add/item", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-      try {
-        const response = await fetch('http://localhost:3000/shopping/add/item', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-
-        if (response.ok) {
-          console.log('Data posted successfully');
-          console.log(formData);
-        } else {
-          console.error(`Error: ${response.status}, ${await response.text()}`);
-        }
-      } catch (error) {
-        console.error('Error:', error);
+      if (response.ok) {
+        console.log("Data posted successfully");
+        console.log(formData);
+      } else {
+        console.error(`Error: ${response.status}, ${await response.text()}`);
       }
+    } catch (error) {
+      console.error("Error:", error);
+    }
 
     console.log("Quantity:", quantity);
     setNote("");
@@ -121,9 +124,9 @@ function Order() {
         />
         <div
           style={{
-            borderRight: "2px solid gray",
-            borderLeft: "2px solid gray",
-            borderTop: "2px solid gray",
+            // borderRight: "2px solid gray",
+            // borderLeft: "2px solid gray",
+            // borderTop: "2px solid gray",
             flex: 1,
             display: "flex",
             flexDirection: "column",
@@ -134,10 +137,31 @@ function Order() {
           <div style={{ paddingLeft: "20px", paddingTop: "70px" }}>
             <div>
               <div style={{ display: "inline" }}>
-                <span style={{ fontSize: "30px" }}>
+                <span
+                  style={{
+                    fontSize: "30px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
                   <strong>{item.name}</strong>
-                </span>
-                <span style={{ marginLeft: "90px" }}> </span>
+                  <span style={{ marginLeft: "10px",marginTop:"10px" }}>
+                    <DishComponent dish={item} />
+                  </span>
+                  {/* Your other content */}
+                  
+                {/* <span
+                    style={{
+                      display: "inline-block",
+                      margin: "2px",
+                      padding: "5px",
+                      borderRadius: "50%",
+                      backgroundColor: "#D3D3D3",
+                    }}
+                  >
+                    {item.Calorie} 大卡
+                  </span> */}
+                <span style={{ marginLeft: "100px" }}> </span>
                 {item.tag.map((tag, index) => (
                   <div
                     key={index}
@@ -147,23 +171,14 @@ function Order() {
                       padding: "5px",
                       borderRadius: "50%",
                       backgroundColor: "#D3D3D3",
+                      fontSize:"0.55em"
                     }}
                   >
                     {tag}
                   </div>
                 ))}
+                </span>
               </div>
-              <span
-                style={{
-                  display: "inline-block",
-                  margin: "2px",
-                  padding: "5px",
-                  borderRadius: "50%",
-                  backgroundColor: "#D3D3D3",
-                }}
-              >
-                {item.Calorie} 大卡
-              </span>
             </div>
             <p>$ {item.price}</p>
             <p>{item.description}</p>
