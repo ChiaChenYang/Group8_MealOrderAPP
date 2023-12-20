@@ -128,6 +128,7 @@ exports.getCartInfoToCheckout = async (user_id, shop_id) => {
         }
 
         var return_shop_cart = {
+            type: shop_cart.restaurant.istemporaryRestaurant,
             name: shop_cart.restaurant.restaurantName,
             prepare_time: `${shop_cart.restaurant.prepareTime} min`,
             location: shop_cart.restaurant.factoryLocation,
