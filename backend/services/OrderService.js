@@ -310,6 +310,7 @@ exports.getOrderState = async (order_id) => {
             id: order.restaurant.restaurantId,
             name: order.restaurant.restaurantName,
             location: order.restaurant.factoryLocation,
+            order_time: utils.formatDate(order.orderTime),
             time: utils.formatDate(order.expectedFinishedTime),
             process: process,
             accept: accept,
