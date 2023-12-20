@@ -19,7 +19,8 @@ function Home() {
   useEffect(() => {
     const user_id = userId;
 
-    const socket = io();
+    const socket = io('http://localhost:3000');
+    socket.connect();
 
     socket.on(`${user_id} order state message`, (msg) => {
       console.log(msg);

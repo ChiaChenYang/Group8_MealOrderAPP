@@ -25,6 +25,7 @@ exports.addNoteAndSyncCartItems = asyncHandler(async (req, res, next) => {
 });
 
 exports.setReservationTimeAndCheckout = asyncHandler(async (req, res, next) => {
+    console.log(req.body);
     const user_id = req.body.user_id;
     const shop_id = req.body.shop_id;
     const pick_up_method = req.body.pick_up_meals;
@@ -42,8 +43,8 @@ exports.setReservationTimeAndCheckout = asyncHandler(async (req, res, next) => {
 
     // inform the restaurant
     const incoming_orders = await OrderService.getOrdersWithStatus(shop_id, 'incoming');
-    res.io.emit(`${new_order.shop_id} incoming orders`, incoming_orders);
-    console.log(`send new orders to restaurant ${new_order.shop_id}`);
+    res.io.emit(`${shop_id} incoming orders`, incoming_orders);
+    console.log(`send new orders to restaurant ${shop_id}`);
 
     // respond to the consumer
     res.json(new_order);

@@ -353,6 +353,7 @@ exports.setReservationTime = async (user_id, shop_id, pick_up_method, estimate_t
         reservation_time.setHours(estimate_time_hour);
         reservation_time.setMinutes(estimate_time_minute);
         reservation_time.setSeconds(0);
+        console.log(reservation_time);
         await shop_cart.update({ reservationTime: reservation_time, pickupMethod: pick_up_method });
     }
 };
