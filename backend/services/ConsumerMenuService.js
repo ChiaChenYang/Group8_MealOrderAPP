@@ -172,7 +172,7 @@ exports.getAllMenuDetailsForConsumer = asyncHandler(async (restaurantId) => {
     
     menuDetails.forEach((menu) => {
       const menuObj = {
-        // menuId: menu.menuId,
+        menuId: menu.menuId,
         type: [], // 新增一個 type 陣列
         dish: {}, // 新增一個 dish 物件
       };
