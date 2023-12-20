@@ -21,7 +21,6 @@
 // };
 import React, { useState, useEffect, useId } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import BackButton from "../component/return-order";
 import Counter from "../component/plus_minus";
 import defaultImage from "../image/defaultMenu.png";
 import menupng from "../image/defaultImage.jpg";
@@ -106,7 +105,48 @@ function Shop() {
     total = subtotals.reduce((acc, subtotal) => acc + subtotal, 0);
   }
 
-  const handleClick = (shop_id) => {
+  const handleClick = async (shop_id) => {
+    try {
+      const data = {
+        shop_id: id,
+        user_id: userId,
+        items: Object.keys(item.items).reduce((acc, itemId) => {
+          const currentItem = item.items[itemId];
+    
+          const count =
+            counts[itemId] !== undefined ? counts[itemId] : currentItem.quantity;
+          const noteValue = inputValues[itemId] || currentItem.addition;
+    
+          acc[itemId] = {
+            name: currentItem.name,
+            price: currentItem.price,
+            quantity: count,
+            addition: noteValue,
+          };
+          return acc;
+        }, {}),
+        addition: note,
+      };
+      const response = await fetch(
+        "http://localhost:3000/shopping/update/items/note",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (response.ok) {
+        console.log("Data posted successfully");
+        console.log(data);
+      } else {
+        console.error(`Error: ${response.status}, ${await response.text()}`);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
     navigate(`/${userId}/restaurant/${id}`);
   };
 
@@ -177,7 +217,6 @@ function Shop() {
             position: "relative",
           }}
         >
-          <BackButton />
           <h2
             style={{ marginTop: "50px", marginLeft: "20px", fontSize: "40px" }}
           >
