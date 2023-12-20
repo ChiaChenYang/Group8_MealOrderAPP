@@ -12,7 +12,7 @@ import Notify from "./component/messenge-component";
 import io from "socket.io-client";
 
 function Main() {
-  const [selectedClass, setSelectedClass] = useState("全類別");
+  const [selectedClass, setSelectedClass] = useState("all");
   const [selectedLocation, setSelectedLocation] = useState("晶圓二廠");
   const [searchResults, setSearchResults] = useState([]);
   const { userId } = useParams();
@@ -37,10 +37,21 @@ function Main() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:3000/restaurants/all?location=${encodeURIComponent(selectedLocation)}`
+        let apiUrl;
+
+        if (selectedClass === "all") {
+          apiUrl = `http://localhost:3000/restaurants/all?location=${selectedLocation}`;
+        } else {
+          apiUrl = `http://localhost:3000/restaurants/suball?location=${selectedLocation}&category=${selectedClass}`;
+        }
+
+        const response = await fetch(apiUrl);
+        console.log(
+          "目前廠區",
+          encodeURIComponent(selectedLocation),
+          "respond：",
+          response
         );
-        console.log("目前廠區",String(selectedLocation),"respond：",response)
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -55,7 +66,7 @@ function Main() {
         if (typeof data === "object" && data !== null) {
           // Transform object into the desired format
           const transformedData = Object.keys(data).reduce((acc, key) => {
-            const intKey = parseInt(key, 10); 
+            const intKey = parseInt(key, 10);
             const defaultValue = {
               name: "麥當勞",
               // image: "https://yt3.googleusercontent.com/ytc/APkrFKZi46pled4Gcj8WhRnYE1vO9Py1S-hDB1ntiybvCQ=s900-c-k-c0x00ffffff-no-rj",
@@ -69,7 +80,8 @@ function Main() {
                 id: data[key].id,
                 name: data[key].name || defaultValue.name,
                 image: data[key].image,
-                prepare_time: data[key].prepare_time || defaultValue.prepare_time,
+                prepare_time:
+                  data[key].prepare_time || defaultValue.prepare_time,
                 evaluate: data[key].evaluate || defaultValue.evaluate,
                 service: data[key].service || defaultValue.service,
               },
@@ -90,27 +102,29 @@ function Main() {
     };
 
     fetchData();
-  }, [selectedLocation]);
+  }, [selectedLocation,selectedClass]);
 
   console.log("data:", restaurant_information);
   const [cabinet_information, setCabinet] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/restaurants/news?location=${selectedLocation}`);
+        const response = await fetch(
+          `http://localhost:3000/restaurants/news?location=${selectedLocation}`
+        );
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
 
         const responseData = await response.text();
-        console.log('Response Data:', responseData);
+        console.log("Response Data:", responseData);
 
         const data = JSON.parse(responseData);
         setCabinet(data);
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Error fetching data');
+        console.error("Error fetching data:", error);
+        setError("Error fetching data");
       }
     };
 
@@ -125,7 +139,7 @@ function Main() {
     setSelectedLocation(selectedValue);
   };
 
-  if (mes && mes.receive_state && mes.receive_state === true){
+  if (mes && mes.receive_state && mes.receive_state === true) {
     navigate(`/${userId}/evaluation/${mes.id}/${mes.order_id}`);
     return null;
   }
@@ -135,7 +149,7 @@ function Main() {
       className="d-flex justify-content-center vh-100"
       style={{ backgroundColor: "#FFFEFD" }}
     >
-       {<Notify />}
+      {<Notify />}
       <div>
         <div className="mb-3 p-3">
           <ControllableStates onValueChange={handleLocationChange} />
@@ -175,16 +189,17 @@ function Main() {
           <Selector onValueChange={handleClassChange} />
           {console.log(selectedClass)}
         </div>
-        { load === true && (
-        <div className="mb-3 p-3">
-          <Search
-            restaurantInformation={restaurant_information}
-            onRestaurantClick={(key) =>
-              console.log(`Clicked on restaurant with key: ${key}`)
-            }
-            setSearchResults={setSearchResults} // Pass setSearchResults function to Search component
-          />
-        </div>)}
+        {load === true && (
+          <div className="mb-3 p-3">
+            <Search
+              restaurantInformation={restaurant_information}
+              onRestaurantClick={(key) =>
+                console.log(`Clicked on restaurant with key: ${key}`)
+              }
+              setSearchResults={setSearchResults} // Pass setSearchResults function to Search component
+            />
+          </div>
+        )}
         <div style={{ paddingBottom: "30px" }}>
           {/* Display search results */}
           {searchResults.length >= 0 && (
@@ -246,7 +261,7 @@ function Main() {
           )}
         </div>
       </div>
-      
+
       <div style={{ position: "fixed", bottom: 0, width: "100%" }}>
         <Navbar />
       </div>

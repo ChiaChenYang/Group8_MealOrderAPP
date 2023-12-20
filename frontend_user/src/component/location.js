@@ -8,7 +8,7 @@ import Select from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
 
 export default function ControllableStates({ onValueChange }) {
-  const [age, setAge] = React.useState("");
+  const [age, setAge] = React.useState("晶圓二廠");
 
   const handleChange = (event) => {
     const selectedValue = event.target.value;
@@ -18,9 +18,20 @@ export default function ControllableStates({ onValueChange }) {
 
   let region = {
     location: [
+      "先進封測一廠",
+      "先進封測二廠",
       "先進封測三廠",
+      "先進封測五廠",
+      "先進封測六廠",
       "台積總部及晶圓十二A廠",
       "研發中心及晶圓十二B廠",
+      "晶圓二廠",
+      "晶圓三廠",
+      "晶圓五廠",
+      "晶圓六廠",
+      "晶圓八廠",
+      "晶圓十四廠",
+      "晶圓十八廠",
     ],
     class: ["中式", "美式", "義式"],
   };
@@ -36,12 +47,8 @@ export default function ControllableStates({ onValueChange }) {
           label="location"
           onChange={handleChange}
           input={<OutlinedInput />}
-          displayEmpty
           sx={{ borderRadius: "20px", height: "30px", border: "2px solid #F4B63D" }}
         >
-          <MenuItem value="" disabled>
-            <em>主廠區</em>
-          </MenuItem>
           {region.location.map((item, index) => (
             <MenuItem key={index} value={region.location[index]}>
               {region.location[index]}

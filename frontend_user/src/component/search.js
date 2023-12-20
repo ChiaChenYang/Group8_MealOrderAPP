@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 import defaultImage from '../image/defaultImage.jpg';
@@ -12,16 +12,31 @@ const Search = ({ restaurantInformation, onRestaurantClick }) => {
   );
   const { userId } = useParams();
 
-  const handleInputChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
-  const handleSearchClick = () => {
+  useEffect(() => {
+    // Filter results based on search term
     const results = Object.keys(restaurantInformation).filter((key) =>
       restaurantInformation[key].name
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
     );
+
+    // Update searchResults
+    setSearchResults(results);
+  }, [searchTerm, restaurantInformation]);
+
+  const handleInputChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSearchClick = () => {
+    // Filter results based on search term
+    const results = Object.keys(restaurantInformation).filter((key) =>
+      restaurantInformation[key].name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
+
+    // Update searchResults
     setSearchResults(results);
   };
 
@@ -92,19 +107,19 @@ const Search = ({ restaurantInformation, onRestaurantClick }) => {
                     borderRadius: "0px 15px 15px px",
                   }}
                 >
-                  <h4 style={{marginTop:"10px"}}>
+                  <h4 style={{ marginTop: "10px" }}>
                     <strong>{restaurantInformation[key]?.name}</strong>
                   </h4>
-                  <p style={{marginTop:"0px"}}>
+                  <p style={{ marginTop: "0px" }}>
                     {restaurantInformation[key]?.evaluate}{" "}
                     <StarIcon style={{ fontSize: "20px", color: "#F4B63D" }} />
-                    </p>
-                    <p style={{marginTop:"-10px"}}>
-                      {restaurantInformation[key]?.service}
-                      </p>
-                      <p style={{marginTop:"-15px"}}>
-                        {restaurantInformation[key]?.prepare_time}~
-                        {restaurantInformation[key]?.prepare_time + 10} min
+                  </p>
+                  <p style={{ marginTop: "-10px" }}>
+                    {restaurantInformation[key]?.service}
+                  </p>
+                  <p style={{ marginTop: "-15px" }}>
+                    {restaurantInformation[key]?.prepare_time}~
+                    {restaurantInformation[key]?.prepare_time + 10} min
                   </p>
                 </div>
               </div>

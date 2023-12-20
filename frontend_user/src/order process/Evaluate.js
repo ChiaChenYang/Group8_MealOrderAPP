@@ -63,31 +63,31 @@ function Evaluate() {
   // };
 
   const handleRatingSubmit = async () => {
-    // const ratingData = {
-    //   id: id,
-    //   name: evaluation_information.name,
-    //   star: rating,
-    //   comment: note,
-    // };
+    const ratingData = {
+      id: id,
+      name: evaluation_information.name,
+      star: rating,
+      comment: note,
+    };
 
-    // try {
-    //   const response = await fetch("http://localhost:3000/orders/set/rating", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(ratingData),
-    //   });
+    try {
+      const response = await fetch("http://localhost:3000/orders/set/rating", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(ratingData),
+      });
 
-    //   if (response.ok) {
-    //     console.log("Rating posted successfully");
-    //     // You may want to perform additional actions upon successful submission
-    //   } else {
-    //     console.error(`Error: ${response.status}, ${await response.text()}`);
-    //   }
-    // } catch (error) {
-    //   console.error("Error:", error);
-    // }
+      if (response.ok) {
+        console.log("Rating posted successfully");
+        // You may want to perform additional actions upon successful submission
+      } else {
+        console.error(`Error: ${response.status}, ${await response.text()}`);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
     navigate(`/${userId}/main`);
   };
 

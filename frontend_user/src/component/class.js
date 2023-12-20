@@ -22,6 +22,7 @@ export default function Selector({ onValueChange }) {
       "研發中心及晶圓十二B廠",
     ],
     class: [
+      "all",
       "健康",
       "甜點",
       "飲品",
@@ -48,8 +49,8 @@ export default function Selector({ onValueChange }) {
           sx={{ borderRadius: "20px", height: "30px", border: "2px solid #F4B63D" }}
           displayEmpty
         >
-          <MenuItem value="">
-            <em>全類別</em>
+          <MenuItem value="" disabled>
+            <em>類別</em>
           </MenuItem>
           {region.class.map((item, index) => (
             <MenuItem key={index} value={region.class[index]}>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import menupng from "../image/menu.png";
-import BackButton from "../component/return";
+import BackButton from "../component/return-restaurant";
 import QuantityInputWithButton from "../component/plus_minus-component";
 
 function Order() {
