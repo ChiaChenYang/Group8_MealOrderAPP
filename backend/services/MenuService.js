@@ -1,5 +1,6 @@
 const express = require('express');
 const asyncHandler = require("express-async-handler");
+const { Op } = require('sequelize');
 const { menus, restaurants,  menucategories, menuitems, tags, itemtags, itemmenucategories } = require('../models');
 
 exports.createNewMenu = asyncHandler(async (restaurantId, newMenuName, newMenuType, newMenuTime) => {
@@ -117,6 +118,22 @@ exports.processMenu = asyncHandler(async (menuId, menuName, menuTime, menuType, 
       raw: true,
     })
     const menuCategoryIdsFromDB = existingMenuCategoryIds.map(category => category.menuCategoryId);
+    if (categories.length === 0 && menuCategoryIdsFromDB.length !== 0) {
+      console.log('應刪', menuCategoryIdsFromDB[0]);
+      try {
+        // 在 menucategories 表中刪除指定的類別
+        const deletedCategoryRows = await menucategories.destroy({
+          where: { menuCategoryId: menuCategoryIdsFromDB[0] },
+        });    
+        if (deletedCategoryRows > 0) {
+          console.log(`Category with ID ${menuCategoryIdsFromDB[0]} deleted successfully.`);
+        } else {
+          console.log(`Category with ID ${menuCategoryIdsFromDB[0]} not found.`);
+        }
+      } catch (error) {
+        console.error('Error deleting category:', error.message);
+      }
+    }
 
     // 迭代處理每個 category
     for (const category of categories) {
@@ -195,7 +212,28 @@ exports.processMenu = asyncHandler(async (menuId, menuName, menuTime, menuType, 
       })
       const menuItemIdsFromDB = existingItemIds.map(item => item.itemId);
       console.log('menuItemIdsFromDB:', menuItemIdsFromDB);
-      
+      if (items.length === 0 && menuItemIdsFromDB.length !== 0) {
+        console.log('應刪', menuItemIdsFromDB[0], existingCategory.menuCategoryId);
+        try {
+          // 在 itemmenucategories 表中刪除與該項目相關的關聯
+          const deletedItemCategoryRows = await itemmenucategories.destroy({
+            where: {
+              [Op.and]: [
+                { itemId: menuItemIdsFromDB[0] },
+                { menuCategoryId: existingCategory.menuCategoryId }
+              ]
+            }
+          });      
+          if (deletedItemCategoryRows > 0) {
+            console.log(`Related records in ItemMenuCategories table deleted successfully.`);
+          } else {
+            console.log(`No related records found in ItemMenuCategories table.`);
+          }
+        } catch (error) {
+          console.error('Error deleting item and related records:', error.message);
+        }
+      }
+
       // 迭代處理每個 item
       for (const item of items) {
         const { itemId, itemName, itemImage, descriptionText, price, calories, Tags } = item;
@@ -222,25 +260,29 @@ exports.processMenu = asyncHandler(async (menuId, menuName, menuTime, menuType, 
               price: price,
               calories: calories,
             });
-          } else {
-            throw new Error('Items under the same menu must have unique names.');
-          }
+          } 
+          // else {
+          //   throw new Error('Items under the same menu must have unique names.');
+          // }
           // 新增 item 與 menucategories 之間的關聯
+          console.log('這', existingItem.itemId, categoryId);
           const existingItemMenucategories = await itemmenucategories.findOne({
             where: {
               itemId: existingItem.itemId,
               menuCategoryId: categoryId,
             },
           });
+          console.log('這', existingItem.itemId, existingCategory.menuCategoryId);
           if (!existingItemMenucategories) {
             // 如果關聯不存在，則進行插入
             await itemmenucategories.create({
               itemId: existingItem.itemId,
               menuCategoryId: existingCategory.menuCategoryId,
             });
-          } else {
-            throw new Error('ItemMenucategories relationship already exists.');
-          }
+          } 
+          // else {
+          //   throw new Error('ItemMenucategories relationship already exists.');
+          // }
         } else {
           existingItem = await menuitems.findByPk(itemIdToUse);
           if (existingItem) {
@@ -278,9 +320,15 @@ exports.processMenu = asyncHandler(async (menuId, menuName, menuTime, menuType, 
           console.log(`Deleting item with ID: ${itemId}`);   
           try {
             // 在 itemmenucategories 表中刪除與該項目相關的關聯
+            console.log('刪除', itemId, existingCategory.menuCategoryId)
             const deletedItemCategoryRows = await itemmenucategories.destroy({
-              where: { itemId: itemId },
-            });       
+              where: {
+                [Op.and]: [
+                  { itemId: itemId },
+                  { menuCategoryId: existingCategory.menuCategoryId }
+                ]
+              }
+            });     
             // // 在 items 表中刪除指定的項目
             // const deletedItemRows = await menuitems.destroy({
             //   where: { itemId: itemId },
