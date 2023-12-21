@@ -107,6 +107,7 @@ exports.getRestaurantInfo = asyncHandler(async (req, res, next) => {
 });
 
 exports.setOrderRating = asyncHandler(async (req, res, next) => {
+    console.log(req.body);
     const order_id = req.body.id;
     const rating = req.body.star;
     const comment = req.body.comment;

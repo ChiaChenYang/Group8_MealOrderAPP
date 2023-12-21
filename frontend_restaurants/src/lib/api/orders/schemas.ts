@@ -27,7 +27,6 @@ export const ProgressingOrderSchemaList = z.array(ProcessingOrderSchema);
 
 export const HistoryOrderSchema = OrderSchema.omit({
 	finishTime: true,
-	completeTime: true,
 }).extend({
 	Rating: z.union([z.number(), z.null()]),
 	Comment: z.union([z.string(), z.null()]),
