@@ -37,6 +37,7 @@ function Notify() {
   // };
   const handleClick = () => {
     if (m && !m.receive_state) {
+      setM(null);
       navigate(`/${userId}/orderstate/${m.id}/${m.order_id}`);
     }
   };
