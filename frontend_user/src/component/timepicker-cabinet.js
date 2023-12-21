@@ -6,7 +6,7 @@ let cabinet_time = {
     month: 12,
     date: 30,
   },
-  prepare_time: 10, // Example: prepare_time is set to 10 minutes
+  prepare_time: 20, // Example: prepare_time is set to 10 minutes
 };
 
 const TimePicker2 = ({ onChange }) => {
@@ -54,10 +54,6 @@ const TimePicker2 = ({ onChange }) => {
   const [selectedMinute, setSelectedMinute] = useState(currentMinute);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth); // Default to the current month
   const [selectedDate, setSelectedDate] = useState(currentDay); // Default to the current date
-
-  useEffect(() => {
-    onChange(selectedMonth, selectedDate, selectedHour, selectedMinute);
-  }, [selectedMonth, selectedDate, selectedHour, selectedMinute]);
 
   const availableHours = Array.from(
     { length: 21 - currentHour },
@@ -114,7 +110,7 @@ const TimePicker2 = ({ onChange }) => {
 
   useEffect(() => {
     onChange(selectedMonth, selectedDate, selectedHour, selectedMinute);
-  }, [selectedMonth, selectedDate, availableHours[0], availableMinutes(selectedHour[0])[0]
+  }, [selectedMonth, selectedDate, selectedHour, selectedMinute
 ]);
 
   return (

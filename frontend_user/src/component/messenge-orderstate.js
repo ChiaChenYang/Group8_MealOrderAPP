@@ -53,7 +53,6 @@ function Notify() {
         borderRadius: "0px 0px 30px 30px",
         transition: "height 0.3s ease-in-out",
         opacity: m && !m.receive_state ? 1 : 0,
-        zIndex:10,
       }}
       onClick={handleClick}
     >

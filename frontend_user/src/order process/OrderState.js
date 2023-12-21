@@ -4,7 +4,8 @@ import Timeline from "../component/timeline-component";
 import imagepng from "../image/order_state.png";
 import { useParams, useNavigate } from "react-router-dom";
 import defaultImage from "../image/defaultMenu.png";
-import Notify from "../component/messenge-component";
+import Notify from "../component/messenge-orderstate";
+import io from "socket.io-client";
 
 function OrderState() {
   const { userId, id, order_id } = useParams();
@@ -60,7 +61,25 @@ function OrderState() {
     navigate(`/${userId}/evaluation/${id}/${order_id}`);
   };
 
-  if (order_state.process) {
+  const [mes, setMes] = useState();
+
+  useEffect(() => {
+    const user_id = userId;
+  
+    const socket = io('http://localhost:3000');
+    socket.connect();
+  
+    socket.on(`${user_id} order state message`, (msg) => {
+      console.log("the message is:", msg);
+      console.log(`${user_id} receive message:`, msg);
+      setMes((prevM) => {
+        console.log("m is:", prevM); // log previous state
+        return msg; // Update m with the received msg
+      });
+    });
+  }, [userId]);
+  
+  if (mes && mes.receive_state === true) {
     navigate(`/${userId}/evaluation/${id}/${order_id}`);
     return null;
   }
@@ -81,7 +100,7 @@ function OrderState() {
           borderRadius: "0px 0px 30px 30px",
         }}
       >
-        <BackButton style={{ color: "white" }} />
+        <BackButton style={{ color: "white"}} />
         <p
           style={{
             color: "white",

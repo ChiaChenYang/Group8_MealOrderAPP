@@ -65,7 +65,7 @@ function Evaluate() {
 
   const handleRatingSubmit = async () => {
     const ratingData = {
-      id: id,
+      id: order_id,
       name: evaluation_information.name,
       star: rating,
       comment: note,
